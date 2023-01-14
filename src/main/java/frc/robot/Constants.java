@@ -22,6 +22,7 @@ public class Constants {
         public static final int SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT = 2;
 	    public static final int SHIFT_HIGH_TORQUE_SOLENOID_PCM_PORT = 3;
         public static final int PCM_ADDRESS = 0;
+        public static final boolean IS_HIGH_SPEED = true;
 
         // encoder 
        public static final double HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION = 2.317175948;

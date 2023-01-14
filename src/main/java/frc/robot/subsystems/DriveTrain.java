@@ -13,11 +13,28 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.util.SimEncoder;
+import frc.robot.util.SimGyro;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain extends SubsystemBase {
 
@@ -40,6 +57,17 @@ public class DriveTrain extends SubsystemBase {
     static final double kF = 0;
 
     public static double outputSpeed;
+
+    private DoubleSolenoid shifter;
+
+    // simulation
+    private DifferentialDriveOdometry odometry;
+
+    public SimEncoder leftEncoderSim;
+    public SimEncoder rightEncoderSim;
+    public SimGyro gyroSim;
+    private DifferentialDrivetrainSim driveSim;
+    private Field2d field = new Field2d();
 
     public DriveTrain() {
 
@@ -78,6 +106,54 @@ public class DriveTrain extends SubsystemBase {
 
         ahrs = new AHRS(SPI.Port.kMXP);
         ahrs.reset();
+
+
+		shifter = new DoubleSolenoid(DriveConstants.PCM_ADDRESS, PneumaticsModuleType.CTREPCM, DriveConstants.SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT, 
+        DriveConstants.SHIFT_HIGH_TORQUE_SOLENOID_PCM_PORT);
+
+        if (DriveConstants.IS_HIGH_SPEED) {
+            shifter.set(Value.kReverse);
+
+            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION);
+            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION);
+        }
+        else {
+            shifter.set(Value.kForward);
+
+            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
+            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
+        }
+
+        // this code is instantiating the simulated sensors and actuators when the robot is in simulation
+        if (RobotBase.isSimulation()) {
+
+            leftEncoderSim = new SimEncoder("Left Drive");
+            rightEncoderSim = new SimEncoder("Right Drive");
+            gyroSim = new SimGyro("NavX");
+            odometry = new DifferentialDriveOdometry(gyroSim.getAngle(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
+            // Create the simulation model of our drivetrain.
+            driveSim = new DifferentialDrivetrainSim(
+                DCMotor.getNEO(3),       // 3 NEO motors on each side of the drivetrain.
+                8,                       // 8:1 gearing reduction. for now
+                6,                       // MOI of 6 kg m^2 (from CAD model). for now
+                Units.lbsToKilograms(140), // The mass of the robot is 140 lbs (with battery) which is 63 kg
+                Units.inchesToMeters(2.1), // The robot uses 2.1" radius wheels.
+                Units.inchesToMeters(27.811), // The track width is 27.811 inches.
+
+                // The standard deviations for measurement noise:
+                // x and y:          0 m
+                // heading:          0 rad
+                // l and r velocity: 0  m/s
+                // l and r position: 0 m
+                VecBuilder.fill(0, 0, 0, 0, 0, 0, 0)
+            );
+
+            field = new Field2d();
+
+            SmartDashboard.putData("Field", field);
+
+            field.setRobotPose(new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
+        }
     }
 
     @Override
@@ -87,6 +163,37 @@ public class DriveTrain extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
+         // This method will be called once per scheduler run when in simulation
+        // Set the inputs to the system. Note that we need to convert
+        // the [-1, 1] PWM signal to voltage by multiplying it by the
+        // robot controller voltage.
+
+        odometry.update(
+            // we want CCW positive, CW  negative
+            new Rotation2d(gyroSim.getAngle().getRadians()),
+            leftEncoderSim.getDistance(),
+            rightEncoderSim.getDistance()
+        );
+        field.setRobotPose(odometry.getPoseMeters());
+
+        driveSim.setInputs(
+            leftFrontMotorController.get() * RobotController.getInputVoltage(),
+            rightFrontMotorController.get() * RobotController.getInputVoltage()
+        );
+    
+        // Advance the model by 20 ms. Note that if you are running this
+        // subsystem in a separate thread or have changed the nominal timestep
+        // of TimedRobot, this value needs to match it.
+        driveSim.update(0.02);
+
+        // Update all of our sensors.
+        leftEncoderSim.setDistance(driveSim.getLeftPositionMeters());
+        leftEncoderSim.setSpeed(driveSim.getLeftVelocityMetersPerSecond());
+        rightEncoderSim.setDistance(driveSim.getRightPositionMeters());
+        rightEncoderSim.setSpeed(driveSim.getRightVelocityMetersPerSecond());
+
+        // we want CCW positive, CW negative
+        gyroSim.setAngle(new Rotation2d(driveSim.getHeading().getRadians()));
     }
 
     // Put methods for controlling this subsystem
@@ -98,12 +205,24 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double getLeftEncoderPosition() {
-        return leftEncoder.getPosition();
+        if (RobotBase.isSimulation()) {
+            return Units.metersToInches(leftEncoderSim.getDistance());
+        }
+        else {
+            //gets position in inches
+            return leftEncoder.getPosition();
+        }
     }
 
     public double getRightEncoderPosition() {
         // gets position in inches
-        return rightEncoder.getPosition();
+        if (RobotBase.isSimulation()) {
+            return Units.metersToInches(rightEncoderSim.getDistance());
+        }
+        else {
+            //gets position in inches
+            return rightEncoder.getPosition();
+        }
     }
 
     public double getAngle() {

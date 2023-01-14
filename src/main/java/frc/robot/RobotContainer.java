@@ -9,7 +9,6 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.ArcadeDriveCmd;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Shifter;
 import frc.robot.util.DriveTurnControls;
 
 /**
@@ -27,18 +26,12 @@ public class RobotContainer {
 
     // The robot's subsystems
     public final static DriveTrain driveTrain = new DriveTrain();
-    public final static Shifter shifter = new Shifter();
 
     // Joysticks
     public static Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
     public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
-
-    // Defining commands
-    private static InstantCommand shiftHighTorqueCommand = new InstantCommand(() -> shifter.setShifterHighTorque(),
-        shifter);
-    private static InstantCommand shiftHighSpeedCommand = new InstantCommand(() -> shifter.setShifterHighSpeed(), shifter);
 
     public RobotContainer() {
 
@@ -56,11 +49,6 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // Drive train
-        Trigger shiftHighTorqueTrigger = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
-        shiftHighTorqueTrigger.onTrue(shiftHighTorqueCommand);
-
-        Trigger shiftHighSpeedTrigger = new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
-        shiftHighSpeedTrigger.onTrue(shiftHighSpeedCommand);
         
 
     }
