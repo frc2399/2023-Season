@@ -1,6 +1,5 @@
 package frc.robot;
 
-public package frc.robot;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -218,10 +217,4 @@ public class Constants {
 
         public static final double ANGLE_ERROR_TOLERANCE = 3; 
     }
-}
-
-
-
-class Constants {
-    
 }
