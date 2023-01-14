@@ -43,12 +43,12 @@ public class DriveTrain extends SubsystemBase {
 
     public DriveTrain() {
 
-        leftFrontMotorController = new CANSparkMax(DriveConstants.LEFT_FRONT_MOTOR_CAN_ID, MotorType.kBrushless);
-        rightFrontMotorController = new CANSparkMax(DriveConstants.RIGHT_FRONT_MOTOR_CAN_ID, MotorType.kBrushless);
-        leftMiddleMotorController = new CANSparkMax(DriveConstants.LEFT_MIDDLE_MOTOR_CAN_ID, MotorType.kBrushless);
-        rightMiddleMotorController = new CANSparkMax(DriveConstants.RIGHT_MIDDLE_MOTOR_CAN_ID, MotorType.kBrushless);
-        leftBackMotorController = new CANSparkMax(DriveConstants.LEFT_BACK_MOTOR_CAN_ID, MotorType.kBrushless);
-        rightBackMotorController = new CANSparkMax(DriveConstants.RIGHT_BACK_MOTOR_CAN_ID, MotorType.kBrushless);
+        leftFrontMotorController = new CANSparkMax(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
+        rightFrontMotorController = new CANSparkMax(DriveConstants.RIGHT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
+        leftMiddleMotorController = new CANSparkMax(DriveConstants.LEFT_MIDDLE_DRIVE_CAN_ID, MotorType.kBrushless);
+        rightMiddleMotorController = new CANSparkMax(DriveConstants.RIGHT_MIDDLE_DRIVE_CAN_ID, MotorType.kBrushless);
+        leftBackMotorController = new CANSparkMax(DriveConstants.LEFT_BACK_DRIVE_CAN_ID, MotorType.kBrushless);
+        rightBackMotorController = new CANSparkMax(DriveConstants.RIGHT_BACK_DRIVE_CAN_ID, MotorType.kBrushless);
 
         // Set motors to coast mode
         teleopInit();

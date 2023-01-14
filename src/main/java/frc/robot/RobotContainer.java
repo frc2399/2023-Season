@@ -4,6 +4,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.JoystickConstants;
+import frc.robot.Constants.XboxConstants;
+import frc.robot.commands.ArcadeDriveCmd;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Shifter;
 import frc.robot.util.DriveTurnControls;
 
 /**
@@ -30,11 +36,11 @@ public class RobotContainer {
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
 
     // Defining commands
-    private static InstantCommand shiftHighTorque = new InstantCommand(() -> shifter.setShifterHighTorque(),
+    private static InstantCommand shiftHighTorqueCommand = new InstantCommand(() -> shifter.setShifterHighTorque(),
         shifter);
-    private static InstantCommand shiftHighSpeed = new InstantCommand(() -> shifter.setShifterHighSpeed(), shifter);
+    private static InstantCommand shiftHighSpeedCommand = new InstantCommand(() -> shifter.setShifterHighSpeed(), shifter);
 
-    private RobotContainer() {
+    public RobotContainer() {
 
         // Configure the button bindings
         configureButtonBindings();
@@ -47,10 +53,14 @@ public class RobotContainer {
 
     }
 
+
     private void configureButtonBindings() {
         // Drive train
-        new JoystickButton(xbox, XboxController.Button.kLeftBumper.value).whenPressed(shiftHighTorque);
-        new JoystickButton(xbox, XboxController.Button.kRightBumper.value).whenPressed(shiftHighSpeed);
+        Trigger shiftHighTorqueTrigger = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
+        shiftHighTorqueTrigger.onTrue(shiftHighTorqueCommand);
+
+        Trigger shiftHighSpeedTrigger = new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
+        shiftHighSpeedTrigger.onTrue(shiftHighSpeedCommand);
         
 
     }
