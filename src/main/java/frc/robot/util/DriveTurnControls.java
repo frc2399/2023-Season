@@ -2,6 +2,7 @@ package frc.robot.util;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
@@ -22,7 +23,7 @@ public class DriveTurnControls {
     }
 
     public double getDrive() {
-        double val = xbox.getRawAxis(XboxConstants.ARCADE_DRIVE_SPEED_AXIS);
+        double val = xbox.getRawAxis(XboxController.Axis.kLeftY.value);
 
         // have deadband to prevent joystick drifting
         if (Math.abs(val) <= XboxConstants.FORWARD_DEADBAND) {
@@ -40,8 +41,7 @@ public class DriveTurnControls {
     }
 
     public double getTurn() {
-        double val = xbox.getRawAxis(XboxConstants.ARCADE_DRIVE_TURN_AXIS);
-        SmartDashboard.putNumber("value", val);
+        double val = xbox.getRawAxis(XboxController.Axis.kRightX.value);
         if (Math.abs(val) <= XboxConstants.TURN_DEADBAND) {
             val = 0.0;
         }
@@ -55,7 +55,6 @@ public class DriveTurnControls {
         // val = Math.pow(val, 3);
 
         val = val * DriveConstants.MAX_TURN_SPEED;
-        SmartDashboard.putNumber("new value", val);
         
         return val;
     }
