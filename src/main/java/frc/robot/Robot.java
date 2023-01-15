@@ -5,7 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.DriveTrain;
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
@@ -13,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
-
+  private Command m_autonomousCommand;
   @Override
   public void robotInit() {
     // We need to invert one side of the drivetrain so that positive voltages
@@ -29,5 +31,18 @@ public class Robot extends TimedRobot {
     // and backward, and the X turns left and right.
 
     CommandScheduler.getInstance().run();
+  }
+
+  @Override
+
+  public void autonomousInit(){
+    DriveTrain.autonomousInit();
+        m_autonomousCommand = robotContainer.getAutonomousCommand();
+        System.out.println("We are in auton init!" + m_autonomousCommand);
+
+        // schedule the autonomous command (example)
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.schedule();
+        }
   }
 }
