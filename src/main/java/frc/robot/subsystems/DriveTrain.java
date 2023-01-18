@@ -70,7 +70,7 @@ public class DriveTrain extends SubsystemBase {
     public SimEncoder rightEncoderSim;
     public SimGyro gyroSim;
     private DifferentialDrivetrainSim driveSim;
-    private Field2d field = new Field2d();
+    public Field2d field = new Field2d();
 
     public DriveTrain() {
 
@@ -174,7 +174,7 @@ public class DriveTrain extends SubsystemBase {
         // robot controller voltage.
 
         odometry.update(
-            // we want CCW positive, CW  negative
+            // we want CCW positive, CW negative
             new Rotation2d(gyroSim.getAngle().getRadians()),
             leftEncoderSim.getDistance(),
             rightEncoderSim.getDistance()
@@ -249,6 +249,7 @@ public class DriveTrain extends SubsystemBase {
      * @param rightVolts the commanded right output
      */
     public void tankDriveVolts(double leftVolts, double rightVolts) {
+        System.out.println("Left + right volts: " + leftVolts + " " + rightVolts);
         leftFrontMotorController.setVoltage(leftVolts);
         rightFrontMotorController.setVoltage(rightVolts);
     }

@@ -30,6 +30,11 @@ public class Robot extends TimedRobot {
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
 
+  }
+
+  @Override
+  public void robotPeriodic() {
+
     CommandScheduler.getInstance().run();
   }
 
