@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -34,6 +36,21 @@ public class Constants {
         public static final double TURN_SENSITIVITY = 0;
 
         public static final double SLOW_SPEED_FRACTION = 0.3;
+
+
+        //path planning constants
+        public static final double ks = 0.0183;
+        public static final double kv = 0.165;
+        public static final double ka = 0.0166666667;
+        public static final double kPDriveVel = 8.5;
+        public static final double kTrackwidthMeters = 0.69;
+        public static final DifferentialDriveKinematics kDriveKinematics =
+          new DifferentialDriveKinematics(kTrackwidthMeters);
+        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+        // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
 
     }
 

@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -67,9 +68,11 @@ public class DriveTrain extends SubsystemBase {
     public SimEncoder rightEncoderSim;
     public SimGyro gyroSim;
     private DifferentialDrivetrainSim driveSim;
-    private Field2d field = new Field2d();
+    public Field2d field = new Field2d();
 
     public DriveTrain() {
+
+    
 
         leftFrontMotorController = new CANSparkMax(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
         rightFrontMotorController = new CANSparkMax(DriveConstants.RIGHT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
@@ -169,7 +172,7 @@ public class DriveTrain extends SubsystemBase {
         // robot controller voltage.
 
         odometry.update(
-            // we want CCW positive, CW  negative
+            // we want CCW positive, CW negative
             new Rotation2d(gyroSim.getAngle().getRadians()),
             leftEncoderSim.getDistance(),
             rightEncoderSim.getDistance()
@@ -203,6 +206,87 @@ public class DriveTrain extends SubsystemBase {
         leftFrontMotorController.set(leftSpeed);
         rightFrontMotorController.set(rightSpeed);
     }
+
+    /**
+     * Returns the current wheel speeds of the robot.
+     *
+     * @return The current wheel speeds.
+     */
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(leftEncoderSim.getSpeed(), rightEncoderSim.getSpeed());
+    }
+    public Pose2d getPoseMeters(){
+        return odometry.getPoseMeters();
+
+    }
+
+    /**
+     * Resets the odometry to the specified pose.
+     *
+     * @param pose The pose to which to set the odometry.
+     */
+    public void resetOdometry(Pose2d pose) {
+        odometry.resetPosition(
+            gyroSim.getAngle(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance(), pose);
+    }
+
+    /** Resets the drive encoders to currently read a position of 0. */
+    public void resetEncoders() {
+        leftEncoderSim.setDistance(0);
+        rightEncoderSim.setDistance(0);
+    }
+
+    /**
+     * Gets the average distance of the two encoders.
+     *
+     * @return the average of the two encoder readings
+     */
+    public double getAverageEncoderDistance() {
+        return (leftEncoderSim.getDistance() + rightEncoderSim.getDistance()) / 2.0;
+    }
+
+        /**
+     * Gets the left drive encoder.
+     *
+     * @return the left drive encoder
+     */
+    public SimEncoder getLeftEncoder() {
+        return leftEncoderSim;
+    }
+
+    /**
+     * Gets the right drive encoder.
+     *
+     * @return the right drive encoder
+     */
+    public SimEncoder getRightEncoder() {
+        return rightEncoderSim;
+    }
+
+     /** Zeroes the heading of the robot. */
+    public void zeroHeading() {
+     gyroSim.setAngle(new Rotation2d());
+    }
+
+    /**
+     * Returns the heading of the robot.
+     *
+     * @return the robot's heading in degrees, from -180 to 180
+     */
+    public double getHeading() {
+        return gyroSim.getAngle().getDegrees();
+    }
+
+    /**
+     * Returns the turn rate of the robot.
+     *
+     * @return The turn rate of the robot, in degrees per second
+     */
+    // public double getTurnRate() {
+    //     return -gyroSim.get;
+    // }
+
+
 
     public double getLeftEncoderPosition() {
         if (RobotBase.isSimulation()) {
