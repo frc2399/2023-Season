@@ -9,8 +9,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
-
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -215,11 +213,9 @@ public class DriveTrain extends SubsystemBase {
      * @return The current wheel speeds.
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        System.out.println("Running Get Wheel Speed");
         return new DifferentialDriveWheelSpeeds(leftEncoderSim.getSpeed(), rightEncoderSim.getSpeed());
     }
     public Pose2d getPoseMeters(){
-        System.out.println("Running Get Pose");
         return odometry.getPoseMeters();
 
     }
@@ -230,8 +226,6 @@ public class DriveTrain extends SubsystemBase {
      * @param pose The pose to which to set the odometry.
      */
     public void resetOdometry(Pose2d pose) {
-        leftEncoderSim.setDistance(0);;
-        rightEncoderSim.setDistance(0);
         odometry.resetPosition(
             gyroSim.getAngle(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance(), pose);
     }
@@ -240,18 +234,6 @@ public class DriveTrain extends SubsystemBase {
     public void resetEncoders() {
         leftEncoderSim.setDistance(0);
         rightEncoderSim.setDistance(0);
-    }
-
-    /**
-     * Controls the left and right sides of the drive directly with voltages.
-     *
-     * @param leftVolts the commanded left output
-     * @param rightVolts the commanded right output
-     */
-    public void tankDriveVolts(double leftVolts, double rightVolts) {
-        System.out.println("Left + right volts: " + leftVolts + " " + rightVolts);
-        leftFrontMotorController.setVoltage(leftVolts);
-        rightFrontMotorController.setVoltage(rightVolts);
     }
 
     /**

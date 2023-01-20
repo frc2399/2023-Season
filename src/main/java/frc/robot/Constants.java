@@ -39,9 +39,9 @@ public class Constants {
 
 
         //path planning constants
-        public static final double ksVolts = 0.22;
-        public static final double kvVoltSecondsPerMeter = 1.98;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.2;
+        public static final double ks = 0.0183;
+        public static final double kv = 0.165;
+        public static final double ka = 0.0166666667;
         public static final double kPDriveVel = 8.5;
         public static final double kTrackwidthMeters = 0.69;
         public static final DifferentialDriveKinematics kDriveKinematics =
