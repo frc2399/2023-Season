@@ -77,6 +77,9 @@ public class Climber extends SubsystemBase {
           Units.inchesToMeters(25), //maximum height in meters of climber
           VecBuilder.fill(0.01) //standard deviation of the measurements, adds noise to the simulation
         ); 
+
+        leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
+        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
     }
 
     @Override
