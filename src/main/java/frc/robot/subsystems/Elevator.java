@@ -79,6 +79,20 @@ public class Climber extends SubsystemBase {
         ); 
     }
 
+    @Override
+  public void simulationPeriodic() {
+    //sets input for climber motor in simulation
+    climberSim.setInput(leftMotorController.get() * RobotController.getInputVoltage());
+    // Next, we update it. The standard loop time is 20ms.
+    climberSim.update(0.02);
+    // Finally, we set our simulated encoder's readings
+    climberEncoderSim.setDistance(climberSim.getPositionMeters());
+    //sets our simulated encoder speeds
+    climberEncoderSim.setSpeed(climberSim.getVelocityMetersPerSecond());
+
+    
+  }
+
      public double getClimberHeight()
     {
     return (leftEncoder.getPosition() + rightEncoder.getPosition())/2;
