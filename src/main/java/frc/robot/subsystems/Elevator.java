@@ -8,7 +8,7 @@ import com.revrobotics.SparkMaxPIDController;
 
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
-import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.SimEncoder;
 import edu.wpi.first.math.VecBuilder;
@@ -26,25 +26,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 
-public class Climber extends SubsystemBase {
+public class Elevator extends SubsystemBase {
   
   private CANSparkMax leftMotorController;
   private CANSparkMax rightMotorController;
   private RelativeEncoder leftEncoder, rightEncoder;
 
-    public static final double CLIMBER_KP = 0;//1.875;
-  public static final double CLIMBER_KI = 0;//0.006;
-  public static final double CLIMBER_KD = 0;//52.5;
-  public static final double CLIMBER_KF = 0.000086; //0.15;
-  public static final double CLIMBER_KIZ = 0;
-  public static final double CLIMBER_K_MAX_OUTPUT = 1;
-  public static final double CLIMBER_K_MIN_OUTPUT = 0;
-  public static final double CLIMBER_MAX_RPM = 5700;
+    public static final double ELEVATOR_KP = 0;//1.875;
+  public static final double ELEVATOR_KI = 0;//0.006;
+  public static final double ELEVATOR_KD = 0;//52.5;
+  public static final double ELEVATOR_KF = 0.000086; //0.15;
+  public static final double ELEVATOR_KIZ = 0;
+  public static final double ELEVATOR_K_MAX_OUTPUT = 1;
+  public static final double ELEVATOR_K_MIN_OUTPUT = 0;
+  public static final double ELEVATOR_MAX_RPM = 5700;
 
-  public Climber() {
+  public Elevator() {
     //initialize motor controllers
-    leftMotorController = new CANSparkMax(ClimberConstants.LEFT_CLIMBER_MOTOR_ID, MotorType.kBrushless);
-    rightMotorController = new CANSparkMax(ClimberConstants.RIGHT_CLIMBER_MOTOR_ID, MotorType.kBrushless);
+    leftMotorController = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+    rightMotorController = new CANSparkMax(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
 
     //restore factory settings to reset to a known state
     leftMotorController.restoreFactoryDefaults();
@@ -67,12 +67,12 @@ public class Climber extends SubsystemBase {
 
     //this code is instantiating the simulator stuff for climber
     if(RobotBase.isSimulation()) {
-        climberEncoderSim = new SimEncoder("Climber");
-        climberSim = new ElevatorSim(
+        elevatorEncoderSim = new SimEncoder("Elevator");
+        elevatorSim = new ElevatorSim(
           DCMotor.getNEO(1), //1 NEO motor on the climber
           10, //10:1 gearing ratio - this was an estimate
           0.01, //carriage mass in kg
-          climberDrumRadius, //drum radius in meter
+          elevatorDrumRadius, //drum radius in meter
           0, //minimum height in meters
           Units.inchesToMeters(25), //maximum height in meters of climber
           VecBuilder.fill(0.01) //standard deviation of the measurements, adds noise to the simulation
@@ -96,7 +96,7 @@ public class Climber extends SubsystemBase {
     
   }
 
-     public double getClimberHeight()
+     public double getElevatorHeight()
     {
     return (leftEncoder.getPosition() + rightEncoder.getPosition())/2;
     }

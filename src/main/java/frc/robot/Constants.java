@@ -54,6 +54,13 @@ public class Constants {
 
     }
 
+    public static final class ElevatorConstants {
+
+        public static final int LEFT_ELEVATOR_MOTOR_ID = 1;
+        public static final int RIGHT_ELEVATOR_MOTOR_ID = 2;
+        
+    }
+
     public static final class JoystickConstants {
         // joystick ports
         public static final int JOYSTICK_PORT = 1;
