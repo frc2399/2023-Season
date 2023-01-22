@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Elevator;
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
@@ -22,6 +23,10 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     robotContainer = new RobotContainer();
+    //THIS DOESN'T WORK, ETHAN!!!! GRRRRR 😡😡😡😡😡
+    // Elevator.elevatorEncoderSim.setDistancePerPulse(Elevator.elevatorEncoderDistPerPulse);
+
+
   }
 
   @Override
@@ -29,7 +34,8 @@ public class Robot extends TimedRobot {
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
-
+    double speed = Elevator.joystick.getRawAxis(0);
+    Elevator.motorController.set(speed);
   }
 
   @Override
@@ -49,5 +55,11 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
+  }
+
+  @Override
+
+  public void disabledPeriodic() {
+    Elevator.motorController.set(0.0);
   }
 }
