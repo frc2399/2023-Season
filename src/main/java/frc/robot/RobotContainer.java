@@ -60,7 +60,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        PathPlannerTrajectory examplePath = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
+        PathPlannerTrajectory examplePath = PathPlanner.loadPath("Go Straight", new PathConstraints(4, 3));
         //PathPlannerTrajectory goStraight = PathPlanner.loadPath("goStraight", new PathConstraints(4, 3));
 
         // This will load the file "Example Path.path" and generate it with a max
