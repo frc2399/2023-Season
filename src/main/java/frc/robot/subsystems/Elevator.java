@@ -31,7 +31,9 @@ public class Elevator extends SubsystemBase {
   private CANSparkMax leftMotorController;
   private CANSparkMax rightMotorController;
   private RelativeEncoder leftEncoder, rightEncoder;
-
+  private static double elevatorDrumRadius = 0.01; //in meters
+  private SimEncoder elevatorEncoderSim;
+  private ElevatorSim elevatorSim;
     public static final double ELEVATOR_KP = 0;//1.875;
   public static final double ELEVATOR_KI = 0;//0.006;
   public static final double ELEVATOR_KD = 0;//52.5;
@@ -70,28 +72,29 @@ public class Elevator extends SubsystemBase {
         elevatorEncoderSim = new SimEncoder("Elevator");
         elevatorSim = new ElevatorSim(
           DCMotor.getNEO(1), //1 NEO motor on the climber
-          10, //10:1 gearing ratio - this was an estimate
-          0.01, //carriage mass in kg
-          elevatorDrumRadius, //drum radius in meter
-          0, //minimum height in meters
-          Units.inchesToMeters(25), //maximum height in meters of climber
-          VecBuilder.fill(0.01) //standard deviation of the measurements, adds noise to the simulation
+          10,
+          0.01, 
+          elevatorDrumRadius,
+          0,
+          Units.inchesToMeters(25),
+          false,
+          VecBuilder.fill(0.01)
         ); 
 
         leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
-        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
+        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION); }
     }
 
     @Override
   public void simulationPeriodic() {
-    //sets input for climber motor in simulation
-    climberSim.setInput(leftMotorController.get() * RobotController.getInputVoltage());
+    //sets input for elevator motor in simulation
+    elevatorSim.setInput(leftMotorController.get() * RobotController.getInputVoltage());
     // Next, we update it. The standard loop time is 20ms.
-    climberSim.update(0.02);
+    elevatorSim.update(0.02);
     // Finally, we set our simulated encoder's readings
-    climberEncoderSim.setDistance(climberSim.getPositionMeters());
+    elevatorEncoderSim.setDistance(elevatorSim.getPositionMeters());
     //sets our simulated encoder speeds
-    climberEncoderSim.setSpeed(climberSim.getVelocityMetersPerSecond());
+    elevatorEncoderSim.setSpeed(elevatorSim.getVelocityMetersPerSecond());
 
     
   }
@@ -106,7 +109,7 @@ public class Elevator extends SubsystemBase {
     if (RobotBase.isSimulation())
     {
       // simulator output is in meters, needs to be converted to inches to work with the rest of the code. encoders are already in inches
-        return Units.metersToInches(climberEncoderSim.getDistance());
+        return Units.metersToInches(elevatorEncoderSim.getDistance());
     }
     else
     {
@@ -120,7 +123,7 @@ public class Elevator extends SubsystemBase {
     if (RobotBase.isSimulation())
       // simulator output is in meters, needs to be converted to inches to work with the rest of the code. encoders are already in inches
     {
-        return Units.metersToInches(climberEncoderSim.getDistance());
+        return Units.metersToInches(elevatorEncoderSim.getDistance());
     }
     else
     {
