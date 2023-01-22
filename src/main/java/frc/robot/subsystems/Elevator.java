@@ -15,8 +15,11 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -34,10 +37,9 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 
 public class Elevator extends SubsystemBase {
   
-  private CANSparkMax leftMotorController;
-  private CANSparkMax rightMotorController;
-  private RelativeEncoder leftEncoder, rightEncoder;
-  public static SimEncoder elevatorEncoderSim;
+  private CANSparkMax elevatorMotorController;
+  private RelativeEncoder elevatorEncoder;
+  public static EncoderSim elevatorEncoderSim;
   private ElevatorSim elevatorSim;
     public static final double ELEVATOR_KP = 0;//1.875;
   public static final double ELEVATOR_KI = 0;//0.006;
@@ -51,8 +53,11 @@ public class Elevator extends SubsystemBase {
   // Encoder, motor controller, and joystick to be simulated
   private final Encoder encoder = new Encoder(0, 1);
   public final static PWMSparkMax motorController = new PWMSparkMax(0);
-  public final static Joystick joystick = new Joystick(0);
+  public final static Joystick elevatorJoystick = new Joystick(0);
 
+
+  public final DoublePublisher elevatorPosition;
+  public final DoublePublisher elevatorVelocity;
   
   // Simulated elevator constants and gearbox
   private static final double elevatorGearRatio = 50.0;
@@ -65,9 +70,9 @@ public class Elevator extends SubsystemBase {
   private final DCMotor elevatorGearbox = DCMotor.getVex775Pro(2);
 
 
-  //smart dashboard stuff
-  public static final GenericEntry elevatorPos = Shuffleboard.getTab("Meow").addPersistent("Elevator Position", 0).getEntry();
-  public static final GenericEntry elevatorVel = Shuffleboard.getTab("Meow").addPersistent("Elevator Velocity", 0).getEntry();
+
+  SlewRateLimiter filter;
+
 
 
   // The simulated encoder will return 
@@ -75,39 +80,51 @@ public class Elevator extends SubsystemBase {
       2.0 * Math.PI * elevatorDrumRadius / 4096;
 
   public Elevator() {
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+     // get the subtable called "datatable"
+     NetworkTable datatable = inst.getTable("datatable");
+
+      // publish to the topic in "datatable" called "Out"
+    elevatorPosition = datatable.getDoubleTopic("elevator Pos").publish();
+    elevatorVelocity = datatable.getDoubleTopic("elevator Vel").publish();
+
     //initialize motor controllers
-    leftMotorController = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
-    rightMotorController = new CANSparkMax(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+    elevatorMotorController = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+  
 
     //restore factory settings to reset to a known state
-    leftMotorController.restoreFactoryDefaults();
-    rightMotorController.restoreFactoryDefaults();
+    elevatorMotorController.restoreFactoryDefaults();
+
 
     //set climber motors to coast mode
-    leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    elevatorMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+  
 
     //initialize motor encoder
-    leftEncoder = leftMotorController.getEncoder();
-    rightEncoder = rightMotorController.getEncoder();
+    elevatorEncoder = elevatorMotorController.getEncoder();
+  
 
     //invert the motor controllers so climber climbs right
-    leftMotorController.setInverted(false);
-    rightMotorController.setInverted(false);
+    elevatorMotorController.setInverted(false);
     
-    leftEncoder.setPosition(0);
-    rightEncoder.setPosition(0);
 
-    // In addition, we can put useful information on the smart dashboard for graphing
-    SmartDashboard.putNumber("Elevator Position", elevatorEncoderSim.getDistance());
-    SmartDashboard.putNumber("Elevator Velocity", elevatorEncoderSim.getSpeed());
+   filter = new SlewRateLimiter(SmartDashboard.getNumber("Climber Slew Rate", ElevatorConstants.ELEVATOR_SLEW));
 
 
+    elevatorEncoder.setPosition(0);
+  
+
+
+
+  
     //this code is instantiating the simulator stuff for climber
     if(RobotBase.isSimulation()) {
-        elevatorEncoderSim = new SimEncoder("Elevator");
+      Encoder encoder = new Encoder(2,3);
+        elevatorEncoderSim = new EncoderSim(encoder);
+        // final Joystick elevatorJoystick = new Joystick(0);
         elevatorSim = new ElevatorSim(
-          DCMotor.getNEO(1), //1 NEO motor on the climber
+          elevatorGearbox,
           elevatorGearRatio,
           elevatorCarriageMass, 
           elevatorDrumRadius,
@@ -115,32 +132,40 @@ public class Elevator extends SubsystemBase {
           maxElevatorHeight,
           false,
           VecBuilder.fill(0.01)
+
         ); 
 
-        leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
-        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION); }
+        elevatorEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
+        
+    }
+      
     }
 
     @Override
   public void simulationPeriodic() {
+
+    elevatorPosition.set( elevatorEncoderSim.getDistance());
+    elevatorVelocity.set( elevatorEncoderSim.getRate());
     //sets input for elevator motor in simulation
-    elevatorSim.setInput(leftMotorController.get() * RobotController.getBatteryVoltage());
+    elevatorSim.setInput(motorController.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
     elevatorSim.update(0.02);
     // Finally, we set our simulated encoder's readings
     elevatorEncoderSim.setDistance(elevatorSim.getPositionMeters());
     // elevatorEncoderSim.setRate(elevatorSim.getVelocityMetersPerSecond());
     //sets our simulated encoder speeds
-    elevatorEncoderSim.setSpeed(elevatorSim.getVelocityMetersPerSecond());
+    elevatorEncoderSim.setRate(elevatorSim.getVelocityMetersPerSecond());
 
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
     
+
+  
   }
 
      public double getElevatorHeight()
     {
-    return (leftEncoder.getPosition() + rightEncoder.getPosition())/2;
+    return (elevatorEncoder.getPosition());
     }
 
     public double getLeftEncoderPosition()
@@ -153,24 +178,18 @@ public class Elevator extends SubsystemBase {
     else
     {
         //gets position in inches
-        return leftEncoder.getPosition();
+        return elevatorEncoder.getPosition();
     }
   }
 
-  public double getRightEncoderPosition()
-  {
-    if (RobotBase.isSimulation())
-      // simulator output is in meters, needs to be converted to inches to work with the rest of the code. encoders are already in inches
-    {
-        return Units.metersToInches(elevatorEncoderSim.getDistance());
-    }
-    else
-    {
-        //gets position in inches
-        return rightEncoder.getPosition();
-    }
-  }
   
+  
+  public void setSpeed(double speed)
+  {
+    speed = filter.calculate(speed);
+    elevatorMotorController.set(speed);
+  }
+
 
 }
 

@@ -19,12 +19,16 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   @Override
   public void robotInit() {
+
+  
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     robotContainer = new RobotContainer();
     //THIS DOESN'T WORK, ETHAN!!!! GRRRRR 😡😡😡😡😡
-    // Elevator.elevatorEncoderSim.setDistancePerPulse(Elevator.elevatorEncoderDistPerPulse);
+    Elevator.elevatorEncoderSim.setDistancePerPulse(Elevator.elevatorEncoderDistPerPulse);
+    
+
 
 
   }
@@ -34,8 +38,8 @@ public class Robot extends TimedRobot {
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
-    double speed = Elevator.joystick.getRawAxis(0);
-    Elevator.motorController.set(speed);
+    double speed = Elevator.elevatorJoystick.getRawAxis(0);
+    Elevator.motorController.set(speed); 
   }
 
   @Override

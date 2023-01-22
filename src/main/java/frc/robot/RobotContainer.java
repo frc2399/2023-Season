@@ -12,10 +12,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.ArcadeDriveCmd;
+import frc.robot.commands.ExtendElevator;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.util.DriveTurnControls;
 
 /**
@@ -31,6 +34,7 @@ import frc.robot.util.DriveTurnControls;
 
 public class RobotContainer {
 
+    public final static Elevator m_elevator = new Elevator();
     // The robot's subsystems
     public final static DriveTrain driveTrain = new DriveTrain();
 
@@ -39,11 +43,15 @@ public class RobotContainer {
     public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
+    private static Command extendElevator = new ExtendElevator(m_elevator, 0.5);
 
-    public RobotContainer() {
+    public RobotContainer(){
 
+
+    
         // Configure the button bindings
         configureButtonBindings();
+    
 
         // Configure default commands
         driveTrain.setDefaultCommand(
@@ -54,7 +62,9 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        // Drive train
+        new JoystickButton(joystick,1).whileHeld(extendElevator);
+
+
 
     }
 
