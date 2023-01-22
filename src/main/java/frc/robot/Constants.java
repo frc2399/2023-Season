@@ -13,12 +13,18 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public class Constants {
     public static final class DriveConstants {
         // motor ids
-        public static final int RIGHT_FRONT_DRIVE_CAN_ID = 3;
-        public static final int RIGHT_MIDDLE_DRIVE_CAN_ID = 4;
-        public static final int RIGHT_BACK_DRIVE_CAN_ID = 5;
-        public static final int LEFT_FRONT_DRIVE_CAN_ID = 6;
-        public static final int LEFT_MIDDLE_DRIVE_CAN_ID = 7;
-        public static final int LEFT_BACK_DRIVE_CAN_ID = 8;
+        // public static final int RIGHT_FRONT_DRIVE_CAN_ID = 3;
+        // public static final int RIGHT_MIDDLE_DRIVE_CAN_ID = 4;
+        // public static final int RIGHT_BACK_DRIVE_CAN_ID = 5;
+        // public static final int LEFT_FRONT_DRIVE_CAN_ID = 6;
+        // public static final int LEFT_MIDDLE_DRIVE_CAN_ID = 7;
+        // public static final int LEFT_BACK_DRIVE_CAN_ID = 8;
+
+        //pineapple bot
+        public static final int RIGHT_FRONT_DRIVE_CAN_ID = 1;
+        public static final int RIGHT_BACK_DRIVE_CAN_ID = 2;
+        public static final int LEFT_FRONT_DRIVE_CAN_ID = 4;
+        public static final int LEFT_BACK_DRIVE_CAN_ID = 3;
 
         //solenoids
         public static final int SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT = 2;
