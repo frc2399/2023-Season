@@ -155,12 +155,15 @@ public class DriveTrain extends SubsystemBase {
                 // l and r position: 0 m
                 VecBuilder.fill(0, 0, 0, 0, 0, 0, 0)
             );
-
+        
             field = new Field2d();
 
             SmartDashboard.putData("Field", field);
 
             field.setRobotPose(new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
+        }
+        else {
+            odometry = new DifferentialDriveOdometry(new Rotation2d (Units.degreesToRadians(ahrs.getAngle())), leftEncoder.getPosition(), rightEncoder.getPosition(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
         }
     }
 
@@ -218,7 +221,12 @@ public class DriveTrain extends SubsystemBase {
      * @return The current wheel speeds.
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(leftEncoderSim.getSpeed(), rightEncoderSim.getSpeed());
+        if (RobotBase.isSimulation()){
+            return new DifferentialDriveWheelSpeeds(leftEncoderSim.getSpeed(), rightEncoderSim.getSpeed());
+        }
+        else{
+            return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+        }
     }
     public Pose2d getPoseMeters(){
         return odometry.getPoseMeters();

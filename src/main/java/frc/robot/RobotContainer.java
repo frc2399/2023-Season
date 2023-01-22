@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -60,16 +61,42 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         PathPlannerTrajectory examplePath = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
+        //PathPlannerTrajectory goStraight = PathPlanner.loadPath("goStraight", new PathConstraints(4, 3));
 
         // This will load the file "Example Path.path" and generate it with a max
         // velocity of 4 m/s and a max acceleration of 3 m/s^2
 
         driveTrain.field.getObject("traj").setTrajectory(examplePath);
+        //driveTrain.field.getObject("goStraightTrajectory").setTrajectory(goStraight);
+
+    // return new SequentialCommandGroup(
+    //     new InstantCommand(() -> {
+    //         // Reset odometry for the first path you run during auto
+    //         driveTrain.resetOdometry(goStraight.getInitialPose());
+
+    //     }, driveTrain),
+    //     new PPRamseteCommand(
+    //         goStraight,
+    //         () -> driveTrain.getPoseMeters(), // Pose supplier
+    //         new RamseteController(),
+    //         new SimpleMotorFeedforward(Constants.DriveConstants.ks,
+    //             Constants.DriveConstants.kv,
+    //             Constants.DriveConstants.ka),
+    //         Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
+    //         () -> driveTrain.getWheelSpeeds(), // DifferentialDriveWheelSpeeds supplier
+    //         new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
+    //                 // will only use feedforwards.
+    //         new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
+    //         (left, right) -> driveTrain.setMotors(left, right), // power biconsumer
+    //         driveTrain // Requires this drive subsystem
+    //     ));
 
         return new SequentialCommandGroup(
             new InstantCommand(() -> {
                 // Reset odometry for the first path you run during auto
-                driveTrain.resetOdometry(examplePath.getInitialPose());
+                if (RobotBase.isSimulation()) {
+                    driveTrain.resetOdometry(examplePath.getInitialPose());
+                }
 
             }, driveTrain),
             new PPRamseteCommand(
