@@ -12,10 +12,13 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.SimEncoder;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -56,8 +59,8 @@ public class Elevator extends SubsystemBase {
   public final static Joystick elevatorJoystick = new Joystick(0);
 
 
-  public final DoublePublisher elevatorPosition;
-  public final DoublePublisher elevatorVelocity;
+  public final DoublePublisher elevatorPositionPublisher;
+  public final DoublePublisher elevatorVelocityPublisher;
   
   // Simulated elevator constants and gearbox
   private static final double elevatorGearRatio = 50.0;
@@ -68,6 +71,30 @@ public class Elevator extends SubsystemBase {
   private static final double maxElevatorHeight = Units.inchesToMeters(75);
 
   private final DCMotor elevatorGearbox = DCMotor.getVex775Pro(2);
+
+  private static final double elevatorHighSetpoint = Units.inchesToMeters(70);
+  public static final double elevatorLowSetpoint = Units.inchesToMeters(5);
+  public static double elevatorSetpoint;
+  public static DoublePublisher elevatorSetpointPublisher;
+  public static DoublePublisher elevatorTargetPosPublisher;
+  public static DoublePublisher elevatorTargetVelPublisher;
+
+  private static final double feedForward = 0.55;
+  private static final double kpPos = 0.0;
+  private static final double kpVel = 0.0;
+  private static double current_pos = 0;
+  private static double current_vel = 0;
+ 
+
+  private static final PIDController pidController = new PIDController(1.5, .006, 0.006);
+
+  // Trapezoidal profile constants and variables
+  private static final double max_vel = 1.0;  // m/s
+  private static final double max_accel = 1.0;  // m/s/s
+
+  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(max_vel, max_accel);
+  TrapezoidProfile.State previousProfiledReference = new TrapezoidProfile.State(0.0, 0.0);
+
 
 
 
@@ -86,8 +113,17 @@ public class Elevator extends SubsystemBase {
      NetworkTable datatable = inst.getTable("datatable");
 
       // publish to the topic in "datatable" called "Out"
-    elevatorPosition = datatable.getDoubleTopic("elevator Pos").publish();
-    elevatorVelocity = datatable.getDoubleTopic("elevator Vel").publish();
+    elevatorPositionPublisher = datatable.getDoubleTopic("elevator Pos").publish();
+    elevatorVelocityPublisher = datatable.getDoubleTopic("elevator Vel").publish();
+
+    elevatorSetpointPublisher = datatable.getDoubleTopic("elevator setpoint").publish();
+    elevatorTargetPosPublisher = datatable.getDoubleTopic("Target Pos").publish();
+    elevatorTargetVelPublisher = datatable.getDoubleTopic("Target Vel").publish();
+    
+
+   
+
+
 
     //initialize motor controllers
     elevatorMotorController = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
@@ -144,8 +180,11 @@ public class Elevator extends SubsystemBase {
     @Override
   public void simulationPeriodic() {
 
-    elevatorPosition.set( elevatorEncoderSim.getDistance());
-    elevatorVelocity.set( elevatorEncoderSim.getRate());
+    elevatorPositionPublisher.set( elevatorEncoderSim.getDistance());
+    elevatorVelocityPublisher.set( elevatorEncoderSim.getRate());
+    current_pos = elevatorEncoderSim.getDistance();
+    current_vel = elevatorEncoderSim.getRate();
+    elevatorSetpointPublisher.set(elevatorSetpoint);
     //sets input for elevator motor in simulation
     elevatorSim.setInput(motorController.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
@@ -158,7 +197,44 @@ public class Elevator extends SubsystemBase {
 
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
+
+
+    // Read joystick and control elevator
+    if (elevatorJoystick.getRawButton(1)) {
+      elevatorSetpoint = elevatorHighSetpoint;
+      System.out.println("HIGH setpoint!!!");
+
+    } else if (elevatorJoystick.getRawButton(2)) {
+      elevatorSetpoint = elevatorLowSetpoint;
+      System.out.println("LOW Setpoint!!!!!");
+
+    }
+
+
+    SmartDashboard.putNumber("Elevator Setpoint", elevatorSetpoint);
+
+    // double speed = pidController.calculate(elevatorEncoderSim.getDistance(), elevatorSetpoint);
+
+   
+
+    // Update the profile each timestep to get the current target position and velocity
+    TrapezoidProfile.State referenceSetpoint = new TrapezoidProfile.State(elevatorSetpoint, 0.0);
+    TrapezoidProfile profile = new TrapezoidProfile(constraints, referenceSetpoint, previousProfiledReference);
+    previousProfiledReference = profile.calculate(0.02); // Assumes 50Hz loop. Could measure this directly
+
+    double target_pos = previousProfiledReference.position;
+    double target_vel = previousProfiledReference.velocity;
+
+    elevatorTargetPosPublisher.set(target_pos);
+    elevatorTargetVelPublisher.set(target_vel);
+
+    double speed = feedForward * target_vel + kpPos * (target_pos - current_pos) + kpVel + (target_vel - current_vel);
+    motorController.set(speed);
     
+
+    // double speed = Elevator.elevatorJoystick.getRawAxis(0);
+     Elevator.motorController.set(speed); 
+
 
   
   }

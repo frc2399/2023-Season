@@ -62,7 +62,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(joystick,1).whileHeld(extendElevator);
+        new JoystickButton(joystick,3).whileHeld(extendElevator);
 
 
 

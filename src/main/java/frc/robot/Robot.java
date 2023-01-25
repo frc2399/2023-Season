@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -17,6 +19,8 @@ import frc.robot.subsystems.Elevator;
 public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Command m_autonomousCommand;
+
+  
   @Override
   public void robotInit() {
 
@@ -27,6 +31,9 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
     //THIS DOESN'T WORK, ETHAN!!!! GRRRRR 😡😡😡😡😡
     Elevator.elevatorEncoderSim.setDistancePerPulse(Elevator.elevatorEncoderDistPerPulse);
+
+    Elevator.elevatorSetpoint = Elevator.elevatorLowSetpoint;  // Prevent robot from trying to drive elevator into the floor on startup
+
     
 
 
@@ -38,8 +45,9 @@ public class Robot extends TimedRobot {
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
-    double speed = Elevator.elevatorJoystick.getRawAxis(0);
-    Elevator.motorController.set(speed); 
+    // double speed = Elevator.elevatorJoystick.getRawAxis(0);
+    // Elevator.motorController.set(speed); 
+
   }
 
   @Override
