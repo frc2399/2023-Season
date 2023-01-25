@@ -79,9 +79,13 @@ public class Elevator extends SubsystemBase {
   public static DoublePublisher elevatorTargetPosPublisher;
   public static DoublePublisher elevatorTargetVelPublisher;
 
-  private static final double feedForward = 0.55;
-  private static final double kpPos = 0.0;
-  private static final double kpVel = 0.0;
+  private static final double feedForward = 0.5;
+  private static final double kpPos = 1;
+  private static final double kpVel = 0.01;
+  // other potential constant values - need more tuning 
+  // private static final double feedForward = 0.5;
+  // private static final double kpPos = 0.4;
+  // private static final double kpVel = 0.2;
   private static double current_pos = 0;
   private static double current_vel = 0;
  
@@ -228,7 +232,7 @@ public class Elevator extends SubsystemBase {
     elevatorTargetPosPublisher.set(target_pos);
     elevatorTargetVelPublisher.set(target_vel);
 
-    double speed = feedForward * target_vel + kpPos * (target_pos - current_pos) + kpVel + (target_vel - current_vel);
+    double speed = feedForward * target_vel + kpPos * (target_pos - current_pos) + kpVel * (target_vel - current_vel);
     motorController.set(speed);
     
 
