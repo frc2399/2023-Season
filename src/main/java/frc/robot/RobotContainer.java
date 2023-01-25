@@ -60,7 +60,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        PathPlannerTrajectory examplePath = PathPlanner.loadPath("Go Straight", new PathConstraints(4, 3));
+        PathPlannerTrajectory examplePath = PathPlanner.loadPath("Go Straight", new PathConstraints(1, 1));
         //PathPlannerTrajectory goStraight = PathPlanner.loadPath("goStraight", new PathConstraints(4, 3));
 
         // This will load the file "Example Path.path" and generate it with a max
@@ -94,9 +94,8 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new InstantCommand(() -> {
                 // Reset odometry for the first path you run during auto
-                if (RobotBase.isSimulation()) {
-                    driveTrain.resetOdometry(examplePath.getInitialPose());
-                }
+                
+                driveTrain.resetOdometry(examplePath.getInitialPose());
 
             }, driveTrain),
             new PPRamseteCommand(
@@ -111,7 +110,7 @@ public class RobotContainer {
                 new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
                         // will only use feedforwards.
                 new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
-                (left, right) -> driveTrain.setMotors(left, right), // power biconsumer
+                (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
                 driveTrain // Requires this drive subsystem
             ));
 

@@ -81,8 +81,8 @@ public class Elevator extends SubsystemBase {
           VecBuilder.fill(0.01)
         ); 
 
-        leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
-        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION); }
+        leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
+        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS); }
     }
 
     @Override

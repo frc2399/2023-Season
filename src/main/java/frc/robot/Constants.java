@@ -33,8 +33,7 @@ public class Constants {
         public static final boolean IS_HIGH_SPEED = true;
 
         // encoder 
-       public static final double HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION = 2.317175948;
-       public static final double HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION = 1.048247093;
+        public static final double ENCODER_CALIBRATION_METERS = 0.0493;
 
         // No turning sensitivity
         public static final double MAX_TURN_SPEED = 1;

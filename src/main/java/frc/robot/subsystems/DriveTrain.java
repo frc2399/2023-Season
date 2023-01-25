@@ -109,8 +109,8 @@ public class DriveTrain extends SubsystemBase {
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
 
-        leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
-        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
+        leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
+        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
 
         ahrs = new AHRS(SPI.Port.kMXP);
         ahrs.reset();
@@ -122,14 +122,14 @@ public class DriveTrain extends SubsystemBase {
         if (DriveConstants.IS_HIGH_SPEED) {
             shifter.set(Value.kReverse);
 
-            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION);
-            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION);
+            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
+            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
         }
         else {
             shifter.set(Value.kForward);
 
-            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
-            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
+            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
+            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
         }
 
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
@@ -170,6 +170,12 @@ public class DriveTrain extends SubsystemBase {
     @Override
     public void periodic() {
 
+        odometry.update(
+            // we want CCW positive, CW negative
+            new Rotation2d(Units.degreesToRadians(ahrs.getAngle())),
+            leftEncoder.getPosition(),
+            rightEncoder.getPosition()
+        );
     }
 
     @Override
@@ -215,6 +221,22 @@ public class DriveTrain extends SubsystemBase {
         rightFrontMotorController.set(rightSpeed);
     }
 
+    public void setMotorVoltage(double leftVolt, double rightVolt) {
+        System.out.println("Call Set Motor Voltage");
+        System.out.println("left + right volt " + leftVolt + " " + rightVolt);
+
+        if (RobotBase.isSimulation()) {
+            // Ethan hack: to convert voltage to percent
+            // TODO: see if getInputVoltage is more accurate
+            leftFrontMotorController.set(leftVolt / 12); //RobotController.getInputVoltage());
+            rightFrontMotorController.set(rightVolt / 12); //RobotController.getInputVoltage());
+        }
+        else {
+            leftFrontMotorController.setVoltage(leftVolt);
+            rightFrontMotorController.setVoltage(rightVolt);
+        }
+    }
+
     /**
      * Returns the current wheel speeds of the robot.
      *
@@ -238,6 +260,8 @@ public class DriveTrain extends SubsystemBase {
      *
      * @param pose The pose to which to set the odometry.
      */
+
+     // TODO: use rightEncoderPosition method; also need that method to be in the inches
     public void resetOdometry(Pose2d pose) {
         odometry.resetPosition(
             gyroSim.getAngle(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance(), pose);
