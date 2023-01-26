@@ -79,15 +79,18 @@ public class Elevator extends SubsystemBase {
   public static DoublePublisher elevatorTargetPosPublisher;
   public static DoublePublisher elevatorTargetVelPublisher;
 
-  private static final double feedForward = 0.5;
-  private static final double kpPos = 1;
-  private static final double kpVel = 0.01;
-  // other potential constant values - need more tuning 
-  // private static final double feedForward = 0.5;
-  // private static final double kpPos = 0.4;
-  // private static final double kpVel = 0.2;
+  // private static final double feedForward = 0.55;
+  // private static final double kpPos = 1;
+  // private static final double kpVel = 0.01;
+
+  // tuned values:
+  private static final double feedForward = 0.55;
+  private static final double kpPos = 2;
+  private static final double kpVel = .2;
+
   private static double current_pos = 0;
   private static double current_vel = 0;
+  private static double gravityCompensation = .075;
  
 
   private static final PIDController pidController = new PIDController(1.5, .006, 0.006);
@@ -170,7 +173,7 @@ public class Elevator extends SubsystemBase {
           elevatorDrumRadius,
           minElevatorHeight,
           maxElevatorHeight,
-          false,
+          true,
           VecBuilder.fill(0.01)
 
         ); 
@@ -211,8 +214,9 @@ public class Elevator extends SubsystemBase {
     } else if (elevatorJoystick.getRawButton(2)) {
       elevatorSetpoint = elevatorLowSetpoint;
       System.out.println("LOW Setpoint!!!!!");
-
     }
+
+    
 
 
     SmartDashboard.putNumber("Elevator Setpoint", elevatorSetpoint);
@@ -233,8 +237,13 @@ public class Elevator extends SubsystemBase {
     elevatorTargetVelPublisher.set(target_vel);
 
     double speed = feedForward * target_vel + kpPos * (target_pos - current_pos) + kpVel * (target_vel - current_vel);
+    speed = speed + gravityCompensation;
     motorController.set(speed);
+
+
     
+
+   
 
     // double speed = Elevator.elevatorJoystick.getRawAxis(0);
      Elevator.motorController.set(speed); 
