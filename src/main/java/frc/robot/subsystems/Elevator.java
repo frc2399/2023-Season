@@ -41,9 +41,9 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 public class Elevator extends SubsystemBase {
   
   private CANSparkMax elevatorMotorController;
-  private RelativeEncoder elevatorEncoder;
+  public static RelativeEncoder elevatorEncoder;
   public static EncoderSim elevatorEncoderSim;
-  private ElevatorSim elevatorSim;
+  public static ElevatorSim elevatorSim;
     public static final double ELEVATOR_KP = 0;//1.875;
   public static final double ELEVATOR_KI = 0;//0.006;
   public static final double ELEVATOR_KD = 0;//52.5;
@@ -63,14 +63,14 @@ public class Elevator extends SubsystemBase {
   public final DoublePublisher elevatorVelocityPublisher;
   
   // Simulated elevator constants and gearbox
-  private static final double elevatorGearRatio = 50.0;
-  private static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
-  private static final double elevatorCarriageMass = 4.0; // kg
+  public static final double elevatorGearRatio = 50.0;
+  public static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
+  public static final double elevatorCarriageMass = 4.0; // kg
 
-  private static final double minElevatorHeight = Units.inchesToMeters(2);
-  private static final double maxElevatorHeight = Units.inchesToMeters(75);
+  public static final double minElevatorHeight = Units.inchesToMeters(2);
+  public static final double maxElevatorHeight = Units.inchesToMeters(75);
 
-  private final DCMotor elevatorGearbox = DCMotor.getVex775Pro(2);
+  public final static DCMotor elevatorGearbox = DCMotor.getVex775Pro(2);
 
   private static final double elevatorHighSetpoint = Units.inchesToMeters(70);
   public static final double elevatorLowSetpoint = Units.inchesToMeters(5);
