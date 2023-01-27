@@ -26,12 +26,6 @@ public class Constants {
         public static final int LEFT_FRONT_DRIVE_CAN_ID = 4;
         public static final int LEFT_BACK_DRIVE_CAN_ID = 3;
 
-        //solenoids
-        public static final int SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT = 2;
-	    public static final int SHIFT_HIGH_TORQUE_SOLENOID_PCM_PORT = 3;
-        public static final int PCM_ADDRESS = 0;
-        public static final boolean IS_HIGH_SPEED = true;
-
         // encoder 
         public static final double ENCODER_CALIBRATION_METERS = 0.0493;
 

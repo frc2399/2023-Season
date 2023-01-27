@@ -22,12 +22,9 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -41,8 +38,6 @@ public class DriveTrain extends SubsystemBase {
 
     private static CANSparkMax leftFrontMotorController;
     private static CANSparkMax rightFrontMotorController;
-    //private static CANSparkMax leftMiddleMotorController;
-    //private static CANSparkMax rightMiddleMotorController;
     private static CANSparkMax leftBackMotorController;
     private static CANSparkMax rightBackMotorController;
 
@@ -59,8 +54,6 @@ public class DriveTrain extends SubsystemBase {
 
     public static double outputSpeed;
 
-    private DoubleSolenoid shifter;
-
     // simulation
     private DifferentialDriveOdometry odometry;
 
@@ -76,31 +69,27 @@ public class DriveTrain extends SubsystemBase {
 
         leftFrontMotorController = new CANSparkMax(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
         rightFrontMotorController = new CANSparkMax(DriveConstants.RIGHT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
-        //leftMiddleMotorController = new CANSparkMax(DriveConstants.LEFT_MIDDLE_DRIVE_CAN_ID, MotorType.kBrushless);
-        //rightMiddleMotorController = new CANSparkMax(DriveConstants.RIGHT_MIDDLE_DRIVE_CAN_ID, MotorType.kBrushless);
         leftBackMotorController = new CANSparkMax(DriveConstants.LEFT_BACK_DRIVE_CAN_ID, MotorType.kBrushless);
         rightBackMotorController = new CANSparkMax(DriveConstants.RIGHT_BACK_DRIVE_CAN_ID, MotorType.kBrushless);
-
-        // Set motors to coast mode
-        teleopInit();
 
         leftFrontMotorController.restoreFactoryDefaults();
         rightFrontMotorController.restoreFactoryDefaults();
         leftBackMotorController.restoreFactoryDefaults();
         rightBackMotorController.restoreFactoryDefaults();
 
+        // Set motors to brake mode
+        leftFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        rightFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        leftBackMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        rightBackMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
         // Make wheels go in same direction
         leftFrontMotorController.setInverted(false);
         rightFrontMotorController.setInverted(true);
 
         // sets motor controllers following leaders
-        //leftMiddleMotorController.follow(leftFrontMotorController);
-        //rightMiddleMotorController.follow(rightFrontMotorController);
         leftBackMotorController.follow(leftFrontMotorController);
         rightBackMotorController.follow(rightFrontMotorController);
-
-        turnController = new PIDController(kP, kI, kD);
-        turnController.enableContinuousInput(-180.0f, 180.0f);
 
         // initialize motor encoder
         leftEncoder = leftFrontMotorController.getEncoder();
@@ -115,22 +104,8 @@ public class DriveTrain extends SubsystemBase {
         ahrs = new AHRS(SPI.Port.kMXP);
         ahrs.reset();
 
-
-		shifter = new DoubleSolenoid(DriveConstants.PCM_ADDRESS, PneumaticsModuleType.CTREPCM, DriveConstants.SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT, 
-        DriveConstants.SHIFT_HIGH_TORQUE_SOLENOID_PCM_PORT);
-
-        if (DriveConstants.IS_HIGH_SPEED) {
-            shifter.set(Value.kReverse);
-
-            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
-            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
-        }
-        else {
-            shifter.set(Value.kForward);
-
-            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
-            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
-        }
+        DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
+        DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
 
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
         if (RobotBase.isSimulation()) {
@@ -138,7 +113,6 @@ public class DriveTrain extends SubsystemBase {
             leftEncoderSim = new SimEncoder("Left Drive");
             rightEncoderSim = new SimEncoder("Right Drive");
             gyroSim = new SimGyro("NavX");
-            odometry = new DifferentialDriveOdometry(gyroSim.getAngle(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
             // Create the simulation model of our drivetrain.
             driveSim = new DifferentialDrivetrainSim(
                 DCMotor.getNEO(3),       // 3 NEO motors on each side of the drivetrain.
@@ -155,15 +129,14 @@ public class DriveTrain extends SubsystemBase {
                 // l and r position: 0 m
                 VecBuilder.fill(0, 0, 0, 0, 0, 0, 0)
             );
+
+            odometry = new DifferentialDriveOdometry(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
         
             field = new Field2d();
 
             SmartDashboard.putData("Field", field);
 
             field.setRobotPose(new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
-        }
-        else {
-            odometry = new DifferentialDriveOdometry(new Rotation2d (Units.degreesToRadians(ahrs.getAngle())), leftEncoder.getPosition(), rightEncoder.getPosition(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
         }
     }
 
@@ -172,10 +145,13 @@ public class DriveTrain extends SubsystemBase {
 
         odometry.update(
             // we want CCW positive, CW negative
-            new Rotation2d(Units.degreesToRadians(ahrs.getAngle())),
-            leftEncoder.getPosition(),
-            rightEncoder.getPosition()
+            getGyroAngle(),
+            getLeftEncoderMeters(),
+            getRightEncoderMeters()
         );
+
+        field.setRobotPose(odometry.getPoseMeters());
+
     }
 
     @Override
@@ -184,14 +160,6 @@ public class DriveTrain extends SubsystemBase {
         // Set the inputs to the system. Note that we need to convert
         // the [-1, 1] PWM signal to voltage by multiplying it by the
         // robot controller voltage.
-
-        odometry.update(
-            // we want CCW positive, CW negative
-            new Rotation2d(gyroSim.getAngle().getRadians()),
-            leftEncoderSim.getDistance(),
-            rightEncoderSim.getDistance()
-        );
-        field.setRobotPose(odometry.getPoseMeters());
 
         driveSim.setInputs(
             leftFrontMotorController.get() * RobotController.getInputVoltage(),
@@ -242,17 +210,12 @@ public class DriveTrain extends SubsystemBase {
      *
      * @return The current wheel speeds.
      */
-    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        if (RobotBase.isSimulation()){
-            return new DifferentialDriveWheelSpeeds(leftEncoderSim.getSpeed(), rightEncoderSim.getSpeed());
-        }
-        else{
-            return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
-        }
+    public DifferentialDriveWheelSpeeds getWheelSpeedsMetersPerSecond() {        
+        return new DifferentialDriveWheelSpeeds(getLeftEncoderMetersPerSecond(), getRightEncoderMetersPerSecond());
     }
+
     public Pose2d getPoseMeters(){
         return odometry.getPoseMeters();
-
     }
 
     /**
@@ -261,10 +224,8 @@ public class DriveTrain extends SubsystemBase {
      * @param pose The pose to which to set the odometry.
      */
 
-     // TODO: use rightEncoderPosition method; also need that method to be in the inches
     public void resetOdometry(Pose2d pose) {
-        odometry.resetPosition(
-            gyroSim.getAngle(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance(), pose);
+        odometry.resetPosition(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), pose);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */
@@ -278,40 +239,14 @@ public class DriveTrain extends SubsystemBase {
      *
      * @return the average of the two encoder readings
      */
-    public double getAverageEncoderDistance() {
-        return (leftEncoderSim.getDistance() + rightEncoderSim.getDistance()) / 2.0;
+    public double getAverageEncoderDistanceMeters() {
+        return (getLeftEncoderMeters() + getRightEncoderMeters()) / 2.0;
     }
 
-        /**
-     * Gets the left drive encoder.
-     *
-     * @return the left drive encoder
-     */
-    public SimEncoder getLeftEncoder() {
-        return leftEncoderSim;
-    }
-
-    /**
-     * Gets the right drive encoder.
-     *
-     * @return the right drive encoder
-     */
-    public SimEncoder getRightEncoder() {
-        return rightEncoderSim;
-    }
-
+    
      /** Zeroes the heading of the robot. */
     public void zeroHeading() {
      gyroSim.setAngle(new Rotation2d());
-    }
-
-    /**
-     * Returns the heading of the robot.
-     *
-     * @return the robot's heading in degrees, from -180 to 180
-     */
-    public double getHeading() {
-        return gyroSim.getAngle().getDegrees();
     }
 
     /**
@@ -323,49 +258,50 @@ public class DriveTrain extends SubsystemBase {
     //     return -gyroSim.get;
     // }
 
-
-
-    public double getLeftEncoderPosition() {
+    public Rotation2d getGyroAngle() {
         if (RobotBase.isSimulation()) {
-            return Units.metersToInches(leftEncoderSim.getDistance());
+            return gyroSim.getAngle();
         }
         else {
-            //gets position in inches
-            return leftEncoder.getPosition();
+            // negative sign to make CCW positive
+            return new Rotation2d(Units.degreesToRadians(-ahrs.getAngle()));
         }
     }
 
-    public double getRightEncoderPosition() {
-        // gets position in inches
+    public double getRightEncoderMeters() {
         if (RobotBase.isSimulation()) {
-            return Units.metersToInches(rightEncoderSim.getDistance());
+            return rightEncoderSim.getDistance();
         }
         else {
-            //gets position in inches
-            return rightEncoder.getPosition();
+            return Units.inchesToMeters(rightEncoder.getPosition());
         }
     }
 
-    public double getAngle() {
-        return ahrs.getAngle();
+    public double getLeftEncoderMeters() {
+        if (RobotBase.isSimulation()) {
+            return leftEncoderSim.getDistance();
+        }
+        else {
+            return Units.inchesToMeters(leftEncoder.getPosition());
+        }
     }
 
-    public static void teleopInit() {
-        leftFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        rightFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        //leftMiddleMotorController.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        //rightMiddleMotorController.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        leftBackMotorController.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        rightBackMotorController.setIdleMode(CANSparkMax.IdleMode.kCoast);
+    public double getRightEncoderMetersPerSecond() {
+        if (RobotBase.isSimulation()) {
+            return rightEncoderSim.getSpeed();
+        }
+        else {
+            return Units.inchesToMeters(rightEncoder.getVelocity());
+        }
     }
 
-    public static void autonomousInit() {
-        leftFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        rightFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        //leftMiddleMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        //rightMiddleMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        leftBackMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        rightBackMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    public double getLeftEncoderMetersPerSecond() {
+        if (RobotBase.isSimulation()) {
+            return leftEncoderSim.getSpeed();
+        }
+        else {
+            return leftEncoder.getVelocity();
+        }
     }
 
 }

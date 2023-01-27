@@ -106,7 +106,7 @@ public class RobotContainer {
                     Constants.DriveConstants.kv,
                     Constants.DriveConstants.ka),
                 Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
-                () -> driveTrain.getWheelSpeeds(), // DifferentialDriveWheelSpeeds supplier
+                () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
                 new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
                         // will only use feedforwards.
                 new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)

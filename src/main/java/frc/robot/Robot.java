@@ -41,7 +41,6 @@ public class Robot extends TimedRobot {
   @Override
 
   public void autonomousInit(){
-    DriveTrain.autonomousInit();
         m_autonomousCommand = robotContainer.getAutonomousCommand();
         System.out.println("We are in auton init!" + m_autonomousCommand);
 

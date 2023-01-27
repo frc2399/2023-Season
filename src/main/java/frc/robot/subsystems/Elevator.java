@@ -16,11 +16,9 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
@@ -52,7 +50,7 @@ public class Elevator extends SubsystemBase {
     leftMotorController.restoreFactoryDefaults();
     rightMotorController.restoreFactoryDefaults();
 
-    //set climber motors to coast mode
+    //set elevator motors to brake mode
     leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
