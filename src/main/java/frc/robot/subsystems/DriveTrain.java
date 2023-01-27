@@ -129,8 +129,6 @@ public class DriveTrain extends SubsystemBase {
                 // l and r position: 0 m
                 VecBuilder.fill(0, 0, 0, 0, 0, 0, 0)
             );
-
-            odometry = new DifferentialDriveOdometry(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
         
             field = new Field2d();
 
@@ -138,6 +136,7 @@ public class DriveTrain extends SubsystemBase {
 
             field.setRobotPose(new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
         }
+        odometry = new DifferentialDriveOdometry(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
     }
 
     @Override
@@ -151,6 +150,18 @@ public class DriveTrain extends SubsystemBase {
         );
 
         field.setRobotPose(odometry.getPoseMeters());
+
+        SmartDashboard.putNumber("gyro angle", getGyroAngle().getDegrees());
+        SmartDashboard.putNumber("left encoder postion", getLeftEncoderMeters());
+        SmartDashboard.putNumber("right encoder postion", getRightEncoderMeters());
+        SmartDashboard.putNumber("left encoder velocity", getLeftEncoderMetersPerSecond());
+        SmartDashboard.putNumber("right encoder veloicty", getRightEncoderMetersPerSecond());
+        SmartDashboard.putNumber("odometry x", getPoseMeters().getX());
+        SmartDashboard.putNumber("odometry y", getPoseMeters().getY());
+        SmartDashboard.putNumber("odometry angle", getPoseMeters().getRotation().getDegrees());
+
+
+
 
     }
 
