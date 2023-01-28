@@ -3,9 +3,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.util.SimEncoder;
 
@@ -35,8 +35,6 @@ public class Elevator extends SubsystemBase {
   public static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
   public static final double elevatorCarriageMass = 4.0; // kg
 
-  public static final double minElevatorHeight = Units.inchesToMeters(2);
-  public static final double maxElevatorHeight = Units.inchesToMeters(75);
 
   public final static DCMotor elevatorGearbox = DCMotor.getNEO(1);
 
@@ -76,14 +74,13 @@ public class Elevator extends SubsystemBase {
     // this code is instantiating the simulator stuff for climber
     if (RobotBase.isSimulation()) {
       elevatorSimEncoder = new SimEncoder("elevator");
-      // final Joystick elevatorJoystick = new Joystick(0);
       elevatorSim = new ElevatorSim(
           elevatorGearbox,
           elevatorGearRatio,
           elevatorCarriageMass,
           elevatorDrumRadius,
-          minElevatorHeight,
-          maxElevatorHeight,
+          Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT,
+          Constants.ElevatorConstants.MAX_ELEVATOR_HEIGHT,
           true,
           VecBuilder.fill(0.01)
       );
@@ -104,7 +101,6 @@ public class Elevator extends SubsystemBase {
     elevatorSim.update(0.02);
     // Finally, we set our simulated encoder's readings
     elevatorSimEncoder.setDistance(elevatorSim.getPositionMeters());
-    // elevatorEncoderSim.setRate(elevatorSim.getVelocityMetersPerSecond());
     // sets our simulated encoder speeds
     elevatorSimEncoder.setSpeed(elevatorSim.getVelocityMetersPerSecond());
 
@@ -112,10 +108,6 @@ public class Elevator extends SubsystemBase {
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
 
   }
-
-  // public double getElevatorHeight() {
-  // return (elevatorEncoder.getPosition());
-  // }
 
   //returns height the elevator is at
   public double getEncoderPosition() {
@@ -143,18 +135,8 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-
-
-  // else {
-  // // gets position in inches
-  // // return elevatorEncoder.getPosition();
-  // }
-  // }
-
   public void setSpeed(double speed) {
     elevatorMotorController.set(speed);
   }
   
-
-
 }

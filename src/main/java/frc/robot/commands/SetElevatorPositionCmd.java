@@ -19,16 +19,9 @@ public class SetElevatorPositionCmd extends CommandBase {
     // get the subtable called "datatable"
     NetworkTable datatable = inst.getTable("datatable");
 
-   //private static EncoderSim elevatorEncoderSim;
-   //private static ElevatorSim elevatorSim;
-
    private static final double HEIGHT_TOLERANCE = 0.01;
 
     // tuned values:
-    // private static final double feedForward = 0.55;
-    // private static final double kpPos = 2;
-    // private static final double kpVel = .2;
-
     private static final double feedForward = 1.666666666666667;
     private static final double kpPos = 6;
     private static final double kpVel = 0;

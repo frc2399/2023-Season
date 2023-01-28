@@ -44,6 +44,8 @@ public class RobotContainer {
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
     private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
+    private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
+    private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
 
     public RobotContainer(){
 
@@ -63,6 +65,8 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         new JoystickButton(joystick,3).whenPressed(extendElevator);
+        new JoystickButton(joystick,4).whenPressed(retractElevator);
+        new JoystickButton(joystick,5).whenPressed(middleElevator);
 
     }
 
