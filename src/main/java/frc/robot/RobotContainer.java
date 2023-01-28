@@ -34,7 +34,7 @@ import frc.robot.util.DriveTurnControls;
 
 public class RobotContainer {
 
-    public final static Elevator m_elevator = new Elevator();
+    public final Elevator elevator = new Elevator();
     // The robot's subsystems
     public final static DriveTrain driveTrain = new DriveTrain();
 
@@ -43,7 +43,7 @@ public class RobotContainer {
     public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
-    private static Command extendElevator = new SetElevatorPositionCmd(m_elevator, 0.5);
+    private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
 
     public RobotContainer(){
 
@@ -63,8 +63,6 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         new JoystickButton(joystick,3).whenPressed(extendElevator);
-
-
 
     }
 
