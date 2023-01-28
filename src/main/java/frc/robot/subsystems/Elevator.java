@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -12,10 +12,8 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
@@ -26,22 +24,10 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
 
-  private CANSparkMax elevatorMotorController;
+  public static CANSparkMax elevatorMotorController;
   public static RelativeEncoder elevatorEncoder;
   public static EncoderSim elevatorEncoderSim;
   public static ElevatorSim elevatorSim;
-  public static final double ELEVATOR_KP = 0;// 1.875;
-  public static final double ELEVATOR_KI = 0;// 0.006;
-  public static final double ELEVATOR_KD = 0;// 52.5;
-  public static final double ELEVATOR_KF = 0.000086; // 0.15;
-  public static final double ELEVATOR_KIZ = 0;
-  public static final double ELEVATOR_K_MAX_OUTPUT = 1;
-  public static final double ELEVATOR_K_MIN_OUTPUT = 0;
-  public static final double ELEVATOR_MAX_RPM = 5700;
-
-  // Encoder, motor controller, and joystick to be simulated
-  public final static PWMSparkMax motorController = new PWMSparkMax(0);
-  public final static Joystick elevatorJoystick = new Joystick(0);
 
   public final DoublePublisher elevatorPositionPublisher;
   public final DoublePublisher elevatorVelocityPublisher;
@@ -54,10 +40,8 @@ public class Elevator extends SubsystemBase {
   public static final double minElevatorHeight = Units.inchesToMeters(2);
   public static final double maxElevatorHeight = Units.inchesToMeters(75);
 
-  public final static DCMotor elevatorGearbox = DCMotor.getVex775Pro(2);
+  public final static DCMotor elevatorGearbox = DCMotor.getNEO(1);
 
-  private static final double elevatorHighSetpoint = Units.inchesToMeters(70);
-  public static final double elevatorLowSetpoint = Units.inchesToMeters(5);
   public static double elevatorSetpoint;
   public static DoublePublisher elevatorSetpointPublisher;
   public static DoublePublisher elevatorTargetPosPublisher;
@@ -68,7 +52,7 @@ public class Elevator extends SubsystemBase {
   // private static final double kpVel = 0.01;
 
   // tuned values:
-  private static final double feedForward = 0.55;
+  private static final double kpFeedForward = 0.55;
   private static final double kpPos = 2;
   private static final double kpVel = .2;
 
@@ -133,11 +117,7 @@ public class Elevator extends SubsystemBase {
           VecBuilder.fill(0.01)
 
       );
-
-      // elevatorEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
-
     }
-
   }
 
   @Override
@@ -149,7 +129,7 @@ public class Elevator extends SubsystemBase {
     current_vel = elevatorEncoderSim.getRate();
     elevatorSetpointPublisher.set(elevatorSetpoint);
     // sets input for elevator motor in simulation
-    elevatorSim.setInput(motorController.get() * RobotController.getBatteryVoltage());
+    elevatorSim.setInput(elevatorMotorController.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
     elevatorSim.update(0.02);
     // Finally, we set our simulated encoder's readings
@@ -161,10 +141,8 @@ public class Elevator extends SubsystemBase {
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
 
-
     SmartDashboard.putNumber("Elevator Setpoint", elevatorSetpoint);
 
-    // double speed = pidController.calculate(elevatorEncoderSim.getDistance(),
     // elevatorSetpoint);
 
     // Update the profile each timestep to get the current target position and
@@ -179,32 +157,56 @@ public class Elevator extends SubsystemBase {
     elevatorTargetPosPublisher.set(target_pos);
     elevatorTargetVelPublisher.set(target_vel);
 
-    double speed = feedForward * target_vel + kpPos * (target_pos - current_pos) + kpVel * (target_vel - current_vel);
+    double speed = kpFeedForward * target_vel + kpPos * (target_pos - current_pos) + kpVel * (target_vel - current_vel);
     speed = speed + gravityCompensation;
-    motorController.set(speed);
-
+    elevatorMotorController.set(speed);
   }
 
   // public double getElevatorHeight() {
-  //   return (elevatorEncoder.getPosition());
+  // return (elevatorEncoder.getPosition());
   // }
 
+  //returns height the elevator is at
   public double getEncoderPosition() {
     if (RobotBase.isSimulation()) {
       // simulator output is in meters, needs to be converted to inches to work with
       // the rest of the code. encoders are already in inches
       return Units.metersToInches(elevatorEncoderSim.getDistance());
     }
-    return 0;
-  } 
-  //else {
-  //     // gets position in inches
-  //     // return elevatorEncoder.getPosition();
-  //   }
+    else
+    {
+      return elevatorEncoder.getPosition();
+    }
+  }
+
+  //returns speed of elevator
+  public double getEncoderRate() {
+    if (RobotBase.isSimulation()) {
+      // simulator output is in meters, needs to be converted to inches to work with
+      // the rest of the code. encoders are already in inches
+      return Units.metersToInches(elevatorEncoderSim.getRate());
+    }
+    else
+    {
+      return elevatorEncoder.getVelocity();
+    }
+  }
+
+
+
+  // else {
+  // // gets position in inches
+  // // return elevatorEncoder.getPosition();
+  // }
   // }
 
   public void setSpeed(double speed) {
     elevatorMotorController.set(speed);
+
+    //elevatorEncoderSim.setInput(Elevator.elevatorMotorController.get() * RobotController.getBatteryVoltage());
   }
+  
+  
+
 
 }

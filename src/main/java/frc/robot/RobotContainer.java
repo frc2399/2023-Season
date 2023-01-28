@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.ArcadeDriveCmd;
-import frc.robot.commands.SetElevatorPosition;
+import frc.robot.commands.SetElevatorPositionCmd;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.util.DriveTurnControls;
@@ -43,7 +43,7 @@ public class RobotContainer {
     public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
-    private static Command extendElevator = new SetElevatorPosition(m_elevator, 0.5);
+    private static Command extendElevator = new SetElevatorPositionCmd(m_elevator, 0.5);
 
     public RobotContainer(){
 

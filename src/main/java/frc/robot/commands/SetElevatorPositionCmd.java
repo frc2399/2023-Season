@@ -1,11 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
@@ -16,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
 
-public class SetElevatorPosition extends CommandBase {
+public class SetElevatorPositionCmd extends CommandBase {
     private final Elevator elevator;
     private final double height;
     private static DoublePublisher elevatorSetpointPublisher;
@@ -32,8 +30,8 @@ public class SetElevatorPosition extends CommandBase {
    DoublePublisher elevatorVelocityPublisher = datatable.getDoubleTopic("elevator Vel").publish();
    
 
-   private static EncoderSim elevatorEncoderSim;
-   private static ElevatorSim elevatorSim;
+   //private static EncoderSim elevatorEncoderSim;
+   //private static ElevatorSim elevatorSim;
 
    private static final double HEIGHT_TOLERANCE = 0.2;
 
@@ -53,7 +51,7 @@ public class SetElevatorPosition extends CommandBase {
     TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(max_vel, max_accel);
     TrapezoidProfile.State previousProfiledReference = new TrapezoidProfile.State(0.0, 0.0);
 
-    public SetElevatorPosition (Elevator elevator, double height) {
+    public SetElevatorPositionCmd (Elevator elevator, double height) {
         elevatorSetpointPublisher = datatable.getDoubleTopic("elevator setpoint").publish();
         elevatorTargetPosPublisher = datatable.getDoubleTopic("Target Pos").publish();
         elevatorTargetVelPublisher = datatable.getDoubleTopic("Target Vel").publish();
@@ -73,14 +71,15 @@ public class SetElevatorPosition extends CommandBase {
 
     @Override
     public void execute() {
-    EncoderSim elevatorEncoderSim = Elevator.elevatorEncoderSim;
-    ElevatorSim elevatorSim = Elevator.elevatorSim;
-    elevatorPositionPublisher.set( elevatorEncoderSim.getDistance());
-    elevatorVelocityPublisher.set( elevatorEncoderSim.getRate());
-    current_pos = elevatorEncoderSim.getDistance();
-    current_vel = elevatorEncoderSim.getRate();
+    //EncoderSim elevatorEncoderSim = Elevator.elevatorEncoderSim;
+    //ElevatorSim elevatorSim = Elevator.elevatorSim;
+    current_pos = elevator.getEncoderPosition();
+    current_vel = elevator.getEncoderRate();
+    elevatorPositionPublisher.set(current_pos);
+    elevatorVelocityPublisher.set(current_vel);
+    
     //sets input for elevator motor in simulation
-    elevatorSim.setInput(Elevator.motorController.get() * RobotController.getBatteryVoltage());
+    elevatorSim.setInput(Elevator.elevatorMotorController.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
     elevatorSim.update(0.02);
     // Finally, we set our simulated encoder's readings
@@ -117,7 +116,7 @@ public class SetElevatorPosition extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        current_pos = Elevator.elevatorEncoderSim.getDistance();
+        current_pos = Elevator.elevator.getEncoderPosition();
         if (Math.abs(height-current_pos) < HEIGHT_TOLERANCE) {
             return true;
         }
