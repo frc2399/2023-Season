@@ -6,8 +6,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -78,6 +76,9 @@ public class SetElevatorPositionCmd extends CommandBase {
     elevatorPositionPublisher.set(current_pos);
     elevatorVelocityPublisher.set(current_vel);
     
+
+//TODO: REPLACE WITH FUNCTIONS FROM ELEVATOR
+
     //sets input for elevator motor in simulation
     elevatorSim.setInput(Elevator.elevatorMotorController.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
