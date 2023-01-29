@@ -59,8 +59,6 @@ public class DriveTrain extends SubsystemBase {
 
     public static double outputSpeed;
 
-    private DoubleSolenoid shifter;
-
     // simulation
     private DifferentialDriveOdometry odometry;
 
@@ -110,18 +108,14 @@ public class DriveTrain extends SubsystemBase {
         ahrs = new AHRS(SPI.Port.kMXP);
         ahrs.reset();
 
-
-		shifter = new DoubleSolenoid(DriveConstants.PCM_ADDRESS, PneumaticsModuleType.CTREPCM, DriveConstants.SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT, 
-        DriveConstants.SHIFT_HIGH_TORQUE_SOLENOID_PCM_PORT);
-
+        //bruh which one
+        //herb stop making fun of my spelling errors :(
         if (DriveConstants.IS_HIGH_SPEED) {
-            shifter.set(Value.kReverse);
 
             DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION);
             DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION);
         }
         else {
-            shifter.set(Value.kForward);
 
             DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
             DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);

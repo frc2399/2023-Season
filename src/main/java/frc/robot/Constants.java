@@ -24,7 +24,6 @@ public class Constants {
         //solenoids
         public static final int SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT = 2;
 	    public static final int SHIFT_HIGH_TORQUE_SOLENOID_PCM_PORT = 3;
-        public static final int PCM_ADDRESS = 0;
         public static final boolean IS_HIGH_SPEED = true;
 
         // encoder 
@@ -63,6 +62,16 @@ public class Constants {
         public static final double MIN_ELEVATOR_HEIGHT = Units.inchesToMeters(2);
         public static final double MAX_ELEVATOR_HEIGHT = Units.inchesToMeters(75);
         
+    }
+
+    public static final class IntakeConstants {
+
+        public static final int LEFT_INTAKE_MOTOR_ID = 9;
+        public static final int RIGHT_INTAKE_MOTOR_ID = 10;
+        public static final int PH_ADDRESS = 1;
+        public static final int EXTEND_INTAKE_ARM_LEFT = 1;
+        public static final int EXTEND_INTAKE_ARM_RIGHT = 2;
+
     }
 
 

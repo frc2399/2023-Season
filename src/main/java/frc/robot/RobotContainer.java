@@ -19,6 +19,7 @@ import frc.robot.commands.ArcadeDriveCmd;
 import frc.robot.commands.SetElevatorPositionCmd;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 import frc.robot.util.DriveTurnControls;
 
 /**
@@ -37,6 +38,7 @@ public class RobotContainer {
     public final Elevator elevator = new Elevator();
     // The robot's subsystems
     public final static DriveTrain driveTrain = new DriveTrain();
+    public final static Intake intake = new Intake();
 
     // Joysticks
     public static Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
@@ -46,6 +48,10 @@ public class RobotContainer {
     private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
     private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
+    private Command dropCone = new InstantCommand(() -> {intake.drop();}, intake);
+    private Command bigIntake = new InstantCommand(() -> {intake.intakeBothArms();}, intake);
+    private Command leftOnly = new InstantCommand(() -> {intake.intakeLeft();}, intake);
+    private Command rightOnly = new InstantCommand(() -> {intake.intakeRight();}, intake);
 
     public RobotContainer(){
 
@@ -67,6 +73,11 @@ public class RobotContainer {
         new JoystickButton(joystick,3).whenPressed(extendElevator);
         new JoystickButton(joystick,4).whenPressed(retractElevator);
         new JoystickButton(joystick,5).whenPressed(middleElevator);
+        new JoystickButton(joystick,6).whenPressed(dropCone);
+        new JoystickButton(joystick,7).whenPressed(bigIntake);
+        new JoystickButton(joystick,8).whenPressed(leftOnly);
+        new JoystickButton(joystick,9).whenPressed(rightOnly);
+
 
     }
 
