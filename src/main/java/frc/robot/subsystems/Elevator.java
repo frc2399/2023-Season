@@ -1,133 +1,142 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 
-import frc.robot.RobotContainer;
-import frc.robot.Constants;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.util.SimEncoder;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.util.SimEncoder;
 
 public class Elevator extends SubsystemBase {
-  
-  private CANSparkMax leftMotorController;
-  private CANSparkMax rightMotorController;
-  private RelativeEncoder leftEncoder, rightEncoder;
-  private static double elevatorDrumRadius = 0.01; //in meters
-  private SimEncoder elevatorEncoderSim;
-  private ElevatorSim elevatorSim;
-    public static final double ELEVATOR_KP = 0;//1.875;
-  public static final double ELEVATOR_KI = 0;//0.006;
-  public static final double ELEVATOR_KD = 0;//52.5;
-  public static final double ELEVATOR_KF = 0.000086; //0.15;
-  public static final double ELEVATOR_KIZ = 0;
-  public static final double ELEVATOR_K_MAX_OUTPUT = 1;
-  public static final double ELEVATOR_K_MIN_OUTPUT = 0;
-  public static final double ELEVATOR_MAX_RPM = 5700;
+
+  public static CANSparkMax elevatorMotorController;
+  public static RelativeEncoder elevatorEncoder;
+  public static SimEncoder elevatorSimEncoder;
+  public static ElevatorSim elevatorSim;
+
+  public final DoublePublisher elevatorPositionPublisher;
+  public final DoublePublisher elevatorVelocityPublisher;
+
+  // Simulated elevator constants and gearbox
+  public static final double elevatorGearRatio = 50.0;
+  public static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
+  public static final double elevatorCarriageMass = 4.0; // kg
+
+
+  public final static DCMotor elevatorGearbox = DCMotor.getNEO(1);
+
+  private static double current_pos = 0;
+  private static double current_vel = 0;
+
+  // The simulated encoder will return
+  public static final double elevatorEncoderDistPerPulse = 2.0 * Math.PI * elevatorDrumRadius / 4096;
 
   public Elevator() {
-    //initialize motor controllers
-    leftMotorController = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
-    rightMotorController = new CANSparkMax(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
 
-    //restore factory settings to reset to a known state
-    leftMotorController.restoreFactoryDefaults();
-    rightMotorController.restoreFactoryDefaults();
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    // get the subtable called "datatable"
+    NetworkTable datatable = inst.getTable("datatable");
 
-    //set elevator motors to brake mode
-    leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    // publish to the topic in "datatable" called "Out"
+    elevatorPositionPublisher = datatable.getDoubleTopic("elevator Pos").publish();
+    elevatorVelocityPublisher = datatable.getDoubleTopic("elevator Vel").publish();
 
-    //initialize motor encoder
-    leftEncoder = leftMotorController.getEncoder();
-    rightEncoder = rightMotorController.getEncoder();
+    // initialize motor controllers
+    elevatorMotorController = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
 
-    //invert the motor controllers so climber climbs right
-    leftMotorController.setInverted(false);
-    rightMotorController.setInverted(false);
-    
-    leftEncoder.setPosition(0);
-    rightEncoder.setPosition(0);
+    // restore factory settings to reset to a known state
+    elevatorMotorController.restoreFactoryDefaults();
 
-    //this code is instantiating the simulator stuff for climber
-    if(RobotBase.isSimulation()) {
-        elevatorEncoderSim = new SimEncoder("Elevator");
-        elevatorSim = new ElevatorSim(
-          DCMotor.getNEO(1), //1 NEO motor on the climber
-          10,
-          0.01, 
+    // set climber motors to coast mode
+    elevatorMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+    // initialize motor encoder
+    elevatorEncoder = elevatorMotorController.getEncoder();
+
+    // invert the motor controllers so climber climbs right
+    elevatorMotorController.setInverted(false);
+
+    elevatorEncoder.setPosition(0); //do we need this??? owo
+
+    // this code is instantiating the simulator stuff for climber
+    if (RobotBase.isSimulation()) {
+      elevatorSimEncoder = new SimEncoder("elevator");
+      elevatorSim = new ElevatorSim(
+          elevatorGearbox,
+          elevatorGearRatio,
+          elevatorCarriageMass,
           elevatorDrumRadius,
-          0,
-          Units.inchesToMeters(25),
-          false,
+          Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT,
+          Constants.ElevatorConstants.MAX_ELEVATOR_HEIGHT,
+          true,
           VecBuilder.fill(0.01)
-        ); 
-
-        leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
-        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS); }
+      );
     }
+  }
 
-    @Override
+  @Override
   public void simulationPeriodic() {
-    //sets input for elevator motor in simulation
-    elevatorSim.setInput(leftMotorController.get() * RobotController.getInputVoltage());
+
+    current_pos = elevatorSimEncoder.getDistance();
+    current_vel = elevatorSimEncoder.getSpeed();
+    elevatorPositionPublisher.set(current_pos);
+    elevatorVelocityPublisher.set(current_vel);
+
+    // sets input for elevator motor in simulation
+    elevatorSim.setInput(elevatorMotorController.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
     elevatorSim.update(0.02);
     // Finally, we set our simulated encoder's readings
-    elevatorEncoderSim.setDistance(elevatorSim.getPositionMeters());
-    //sets our simulated encoder speeds
-    elevatorEncoderSim.setSpeed(elevatorSim.getVelocityMetersPerSecond());
+    elevatorSimEncoder.setDistance(elevatorSim.getPositionMeters());
+    // sets our simulated encoder speeds
+    elevatorSimEncoder.setSpeed(elevatorSim.getVelocityMetersPerSecond());
 
-    
+    // SimBattery estimates loaded battery voltages
+    RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
+
   }
 
-     public double getElevatorHeight()
-    {
-    return (leftEncoder.getPosition() + rightEncoder.getPosition())/2;
-    }
-
-    public double getLeftEncoderPosition()
-  {
-    if (RobotBase.isSimulation())
-    {
-      // simulator output is in meters, needs to be converted to inches to work with the rest of the code. encoders are already in inches
-        return Units.metersToInches(elevatorEncoderSim.getDistance());
+  //returns height the elevator is at
+  public double getEncoderPosition() {
+    if (RobotBase.isSimulation()) {
+      // simulator output is in meters, needs to be converted to inches to work with
+      // the rest of the code. encoders are already in inches
+      return elevatorSimEncoder.getDistance();
     }
     else
     {
-        //gets position in inches
-        return leftEncoder.getPosition();
+      return elevatorEncoder.getPosition();
     }
   }
 
-  public double getRightEncoderPosition()
-  {
-    if (RobotBase.isSimulation())
-      // simulator output is in meters, needs to be converted to inches to work with the rest of the code. encoders are already in inches
-    {
-        return Units.metersToInches(elevatorEncoderSim.getDistance());
+  //returns speed of elevator
+  public double getEncoderSpeed() {
+    if (RobotBase.isSimulation()) {
+      // simulator output is in meters, needs to be converted to inches to work with
+      // the rest of the code. encoders are already in inches
+      return elevatorSimEncoder.getSpeed();
     }
     else
     {
-        //gets position in inches
-        return rightEncoder.getPosition();
+      return elevatorEncoder.getVelocity();
     }
   }
+
+  public void setSpeed(double speed) {
+    elevatorMotorController.set(speed);
+  }
+  
 }
-

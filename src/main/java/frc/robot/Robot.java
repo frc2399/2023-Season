@@ -25,11 +25,11 @@ import frc.robot.Constants.DriveConstants;
 public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Command m_autonomousCommand;
-  private double leftTargetVelocity, rightTargetVelocity;
-
 
   @Override
   public void robotInit() {
+
+  
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
@@ -49,8 +49,8 @@ public class Robot extends TimedRobot {
           DriveConstants.kDriveKinematics.toWheelSpeeds(setpointSpeeds);
           // ChassisSpeeds chassisSpeeds = 
           // DriveConstants.kDriveKinematics.toChassisSpeeds(targetWheelSpeeds);
-          leftTargetVelocity = targetWheelSpeeds.leftMetersPerSecond;
-          rightTargetVelocity = targetWheelSpeeds.rightMetersPerSecond;
+          double leftTargetVelocity = targetWheelSpeeds.leftMetersPerSecond;
+          double rightTargetVelocity = targetWheelSpeeds.rightMetersPerSecond;
 
           SmartDashboard.putNumber("Left Target Velocity", leftTargetVelocity);
           SmartDashboard.putNumber("Right Target Velocity", rightTargetVelocity);
@@ -67,6 +67,8 @@ public class Robot extends TimedRobot {
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
+    // double speed = Elevator.elevatorJoystick.getRawAxis(0);
+    // Elevator.motorController.set(speed); 
 
   }
 
@@ -86,5 +88,12 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
+  }
+
+  @Override
+
+  public void disabledPeriodic() {
+    //Elevator.motorController.set(0.0);
+    robotContainer.elevator.setSpeed(0);
   }
 }
