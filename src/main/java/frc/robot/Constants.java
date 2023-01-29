@@ -60,6 +60,15 @@ public class Constants {
         public static final int RIGHT_ELEVATOR_MOTOR_ID = 2;
         
     }
+    public static final class ArmConstants {
+        //Arm angle in radians
+        public static final double MAX_ARM_ANGLE = Math.PI/4;
+        //arm Mass in kg
+        public static final double ARM_MASS = 0;
+        //arm length in meters
+        public static final double ARM_LENGTH = 0;
+        public static final int ARM_MOTOR_ID = 9;
+    }
 
     public static final class JoystickConstants {
         // joystick ports
