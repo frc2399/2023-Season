@@ -71,6 +71,7 @@ public class Constants {
         public static final int PH_ADDRESS = 1;
         public static final int EXTEND_INTAKE_ARM_LEFT = 1;
         public static final int EXTEND_INTAKE_ARM_RIGHT = 2;
+        public static final double INTAKE_SLEW_RATE = 10;
 
     }
 

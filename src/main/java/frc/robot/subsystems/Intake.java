@@ -17,11 +17,14 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.DriveConstants;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
+  private static double intakeSpeed;
+  // SlewRateLimiter filter;
   private static CANSparkMax leftMotorController;
   private static CANSparkMax rightMotorController;
   private Solenoid leftIntakeSolenoid;
@@ -40,6 +43,10 @@ public class Intake extends SubsystemBase {
     rightMotorController = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     leftIntakeSolenoid = new Solenoid(IntakeConstants.PH_ADDRESS, PneumaticsModuleType.REVPH, IntakeConstants.EXTEND_INTAKE_ARM_LEFT);
     rightIntakeSolenoid = new Solenoid(IntakeConstants.PH_ADDRESS, PneumaticsModuleType.REVPH, IntakeConstants.EXTEND_INTAKE_ARM_RIGHT);
+    leftMotorController.setInverted(false);
+    rightMotorController.setInverted(false);
+    leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     if (RobotBase.isSimulation()) {
       simPH = new REVPHSim();
@@ -49,8 +56,8 @@ public class Intake extends SubsystemBase {
       rightMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
       
     }
-
-  }
+   //filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
+    }
 
   //Pneumatic methods
   public void closeLeft() {
@@ -98,28 +105,30 @@ public class Intake extends SubsystemBase {
   }
 
   //Intake spinny spin methods
-  public void spinnySpinIn() {
+  public void spinIn(double speed) {
+    //speed = filter.calculate(speed);
+    SmartDashboard.putNumber ("intakeSpeed",speed);
 
     if (RobotBase.isSimulation()) {
-      leftMotorSim.setInput(1.0);
-      rightMotorSim.setInput(1.0);
+      leftMotorSim.setInput (speed);
+      rightMotorSim.setInput(speed);
     }
     else {
-      leftMotorController.set(1);
-      rightMotorController.set(1);
+      leftMotorController.set(speed);
+      rightMotorController.set(speed);
     }
 
   }
 
-  public void spinnySpinOut() {
+  public void spitOut(double speed) {
 
     if (RobotBase.isSimulation()) {
-      leftMotorSim.setInput(-1.0);
-      rightMotorSim.setInput(-1.0);
+      leftMotorSim.setInput(-speed);
+      rightMotorSim.setInput(-speed);
     }
     else {
-      leftMotorController.set(-1);
-      rightMotorController.set(-1);
+      leftMotorController.set(-speed);
+      rightMotorController.set(-speed);
     }
 
   }
@@ -129,7 +138,7 @@ public class Intake extends SubsystemBase {
 
     closeLeft();
     closeRight();
-    spinnySpinIn();
+    spinIn(intakeSpeed);
 
   }
 
@@ -137,7 +146,7 @@ public class Intake extends SubsystemBase {
 
     openLeft();
     closeRight();
-    spinnySpinIn();
+    spinIn(intakeSpeed);
 
   }
 
@@ -145,14 +154,14 @@ public class Intake extends SubsystemBase {
 
     openRight();
     closeLeft();
-    spinnySpinIn();
+    spinIn(intakeSpeed);
 
   }
 
   public void outtake() {
     closeLeft();
     closeRight();
-    spinnySpinOut();
+    spitOut(intakeSpeed);
   }
 
   public void drop() {
@@ -185,6 +194,5 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Left Intake Open? ", isLeftOpen());
     SmartDashboard.putBoolean("Right Intake Open? ", isRightOpen());
-
   }
 }
