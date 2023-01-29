@@ -17,6 +17,7 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.ArcadeDriveCmd;
 import frc.robot.commands.SetElevatorPositionCmd;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.util.DriveTurnControls;
@@ -37,6 +38,7 @@ public class RobotContainer {
     public final Elevator elevator = new Elevator();
     // The robot's subsystems
     public final static DriveTrain driveTrain = new DriveTrain();
+    public final static Arm arm = new Arm();
 
     // Joysticks
     public static Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
@@ -46,14 +48,12 @@ public class RobotContainer {
     private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
     private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
+    private Command moveArm = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
 
-    public RobotContainer(){
+    public RobotContainer() {
 
-
-    
         // Configure the button bindings
         configureButtonBindings();
-    
 
         // Configure default commands
         driveTrain.setDefaultCommand(
