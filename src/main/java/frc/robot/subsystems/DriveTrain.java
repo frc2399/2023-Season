@@ -1,11 +1,10 @@
-//Clare was here!!!!
-//Herb was here !!!!
-//Alison was here :)
-//Maisie was here :))))))))))))))
-//Rachel was here!!!! :DDDDDDD
-//Alice was hwew :33333333333333
-//Ethan was here (O-O)
-//elle was hre
+// Maisie was HERE HAHAHHAHAHAHHAHA :D
+// Shrividya was here :))
+// Alice was here ;3
+// Ethan was here
+// John was here (\/)(;;)(\/)
+// Clare was here!!!!!!!!!!!!!!
+// Anna (the better one) was here :)
 
 package frc.robot.subsystems;
 
@@ -26,7 +25,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.SimEncoder;
 import frc.robot.util.SimGyro;
