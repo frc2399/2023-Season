@@ -98,14 +98,15 @@ public class DriveTrain extends SubsystemBase {
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
 
-        leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
-        rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
+        leftEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CALIBRATION_METERS);
+        rightEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CALIBRATION_METERS);
+
+        // dividng by 60 to convert meters per miniute to meters per seconds
+        leftEncoder.setVelocityConversionFactor(DriveConstants.ENCODER_CALIBRATION_METERS / 60);
+        rightEncoder.setVelocityConversionFactor(DriveConstants.ENCODER_CALIBRATION_METERS / 60);
 
         ahrs = new AHRS(SPI.Port.kMXP);
         ahrs.reset();
-
-        DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
-        DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_CALIBRATION_METERS);
 
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
         if (RobotBase.isSimulation()) {
@@ -129,14 +130,15 @@ public class DriveTrain extends SubsystemBase {
                 // l and r position: 0 m
                 VecBuilder.fill(0, 0, 0, 0, 0, 0, 0)
             );
-        
-            field = new Field2d();
-
-            SmartDashboard.putData("Field", field);
-
-            field.setRobotPose(new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
         }
         odometry = new DifferentialDriveOdometry(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
+
+        field = new Field2d();
+
+        SmartDashboard.putData("Field", field);
+
+        field.setRobotPose(new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
+
     }
 
     @Override
@@ -284,7 +286,7 @@ public class DriveTrain extends SubsystemBase {
             return rightEncoderSim.getDistance();
         }
         else {
-            return Units.inchesToMeters(rightEncoder.getPosition());
+            return (rightEncoder.getPosition());
         }
     }
 
@@ -293,7 +295,7 @@ public class DriveTrain extends SubsystemBase {
             return leftEncoderSim.getDistance();
         }
         else {
-            return Units.inchesToMeters(leftEncoder.getPosition());
+            return (leftEncoder.getPosition());
         }
     }
 
@@ -302,7 +304,7 @@ public class DriveTrain extends SubsystemBase {
             return rightEncoderSim.getSpeed();
         }
         else {
-            return Units.inchesToMeters(rightEncoder.getVelocity());
+            return (rightEncoder.getVelocity());
         }
     }
 
