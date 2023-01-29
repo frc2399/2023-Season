@@ -5,14 +5,13 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveTrain;
 import java.util.function.Supplier;
 
-public class ArcadeDriveCmd extends CommandBase {
+public class CurvatureDriveCmd extends CommandBase {
 
     private final DriveTrain driveSubsystem;
     private final Supplier<Double> speedFunction, turnFunction;
-    public static boolean isSlow = false;
 
     /* This command does this (fill in)... */
-    public ArcadeDriveCmd(DriveTrain driveSubsystem, //
+    public CurvatureDriveCmd(DriveTrain driveSubsystem, //
             Supplier<Double> speedFunction, Supplier<Double> turnFunction) {
         this.speedFunction = speedFunction;
         this.turnFunction = turnFunction;
@@ -22,8 +21,7 @@ public class ArcadeDriveCmd extends CommandBase {
 
     @Override
     public void initialize() {
-        System.out.println("ArcadeDriveCmd started!");
-        isSlow = true;
+        System.out.println("CurvatureDriveCmd started!");
     }
 
     @Override
@@ -34,22 +32,16 @@ public class ArcadeDriveCmd extends CommandBase {
         realTimeSpeed = speedFunction.get();
         realTimeTurn = turnFunction.get();
 
-        double left = realTimeSpeed + realTimeTurn;
-        double right = realTimeSpeed - realTimeTurn;
-        if (isSlow)
-        {        
-            this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
-        }
-        else
-        {
-            this.driveSubsystem.setMotors(left, right);
-        }
+        //Multiplied by realTimeSpeed to make turn speed proportional to straight speed
+        //Speed and turn proportional so arc remains the same when the speed changes
+        double left = realTimeSpeed - realTimeTurn * realTimeSpeed;
+        double right = realTimeSpeed + realTimeTurn * realTimeSpeed;
+        this.driveSubsystem.setMotors(left, right);    
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("ArcadeDriveCmd ended!");
-        isSlow = false;
+        System.out.println("CurvatureDriveCmd ended!");
     }
 
     @Override

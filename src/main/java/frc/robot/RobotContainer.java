@@ -71,16 +71,20 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        PathPlannerTrajectory examplePath = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
-
+        PathPlannerTrajectory examplePath = PathPlanner.loadPath("Go Straight", new PathConstraints(1, 1));
         // This will load the file "Example Path.path" and generate it with a max
         // velocity of 4 m/s and a max acceleration of 3 m/s^2
 
         driveTrain.field.getObject("traj").setTrajectory(examplePath);
+        //driveTrain.field.getObject("goStraightTrajectory").setTrajectory(goStraight);
+
+        //mirror if on red alliance
+        boolean useAllianceColor = true;
 
         return new SequentialCommandGroup(
             new InstantCommand(() -> {
                 // Reset odometry for the first path you run during auto
+                
                 driveTrain.resetOdometry(examplePath.getInitialPose());
 
             }, driveTrain),
@@ -92,11 +96,12 @@ public class RobotContainer {
                     Constants.DriveConstants.kv,
                     Constants.DriveConstants.ka),
                 Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
-                () -> driveTrain.getWheelSpeeds(), // DifferentialDriveWheelSpeeds supplier
+                () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
                 new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
                         // will only use feedforwards.
                 new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
-                (left, right) -> driveTrain.setMotors(left, right), // power biconsumer
+                (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
+                useAllianceColor, 
                 driveTrain // Requires this drive subsystem
             ));
 

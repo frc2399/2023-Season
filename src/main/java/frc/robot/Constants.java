@@ -14,22 +14,21 @@ import edu.wpi.first.math.util.Units;
 public class Constants {
     public static final class DriveConstants {
         // motor ids
-        public static final int RIGHT_FRONT_DRIVE_CAN_ID = 3;
-        public static final int RIGHT_MIDDLE_DRIVE_CAN_ID = 4;
-        public static final int RIGHT_BACK_DRIVE_CAN_ID = 5;
-        public static final int LEFT_FRONT_DRIVE_CAN_ID = 6;
-        public static final int LEFT_MIDDLE_DRIVE_CAN_ID = 7;
-        public static final int LEFT_BACK_DRIVE_CAN_ID = 8;
+        // public static final int RIGHT_FRONT_DRIVE_CAN_ID = 3;
+        // public static final int RIGHT_MIDDLE_DRIVE_CAN_ID = 4;
+        // public static final int RIGHT_BACK_DRIVE_CAN_ID = 5;
+        // public static final int LEFT_FRONT_DRIVE_CAN_ID = 6;
+        // public static final int LEFT_MIDDLE_DRIVE_CAN_ID = 7;
+        // public static final int LEFT_BACK_DRIVE_CAN_ID = 8;
 
-        //solenoids
-        public static final int SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT = 2;
-	    public static final int SHIFT_HIGH_TORQUE_SOLENOID_PCM_PORT = 3;
-        public static final int PCM_ADDRESS = 0;
-        public static final boolean IS_HIGH_SPEED = true;
+        //pineapple bot
+        public static final int RIGHT_FRONT_DRIVE_CAN_ID = 1;
+        public static final int RIGHT_BACK_DRIVE_CAN_ID = 2;
+        public static final int LEFT_FRONT_DRIVE_CAN_ID = 4;
+        public static final int LEFT_BACK_DRIVE_CAN_ID = 3;
 
         // encoder 
-       public static final double HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION = 2.317175948;
-       public static final double HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION = 1.048247093;
+        public static final double ENCODER_CALIBRATION_METERS = 0.0493;
 
         // No turning sensitivity
         public static final double MAX_TURN_SPEED = 1;
@@ -40,10 +39,10 @@ public class Constants {
 
 
         //path planning constants
-        public static final double ks = 0.0183;
-        public static final double kv = 0.165;
-        public static final double ka = 0.0166666667;
-        public static final double kPDriveVel = 8.5;
+        public static final double ks = 0.12704;
+        public static final double kv = 2.4165;
+        public static final double ka = 0.46642;
+        public static final double kPDriveVel = 0.16761;
         public static final double kTrackwidthMeters = 0.69;
         public static final DifferentialDriveKinematics kDriveKinematics =
           new DifferentialDriveKinematics(kTrackwidthMeters);
