@@ -16,12 +16,19 @@ import frc.robot.subsystems.DriveTrain;
 public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Command m_autonomousCommand;
+
+  
   @Override
   public void robotInit() {
+
+  
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     robotContainer = new RobotContainer();
+    //THIS DOESN'T WORK, ETHAN!!!! GRRRRR 😡😡😡😡😡 
+      //now it does :D
+
   }
 
   @Override
@@ -29,6 +36,8 @@ public class Robot extends TimedRobot {
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
+    // double speed = Elevator.elevatorJoystick.getRawAxis(0);
+    // Elevator.motorController.set(speed); 
 
   }
 
@@ -49,5 +58,12 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
+  }
+
+  @Override
+
+  public void disabledPeriodic() {
+    //Elevator.motorController.set(0.0);
+    robotContainer.elevator.setSpeed(0);
   }
 }
