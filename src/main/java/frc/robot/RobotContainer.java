@@ -49,6 +49,7 @@ public class RobotContainer {
     private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
     private Command moveArm = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
+    private Command dropCone = new InstantCommand(() -> {arm.setSpeed(xbox.getRawAxis(0));}, arm);
 
     public RobotContainer() {
 
