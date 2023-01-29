@@ -201,8 +201,6 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void setMotorVoltage(double leftVolt, double rightVolt) {
-        System.out.println("Call Set Motor Voltage");
-        System.out.println("left + right volt " + leftVolt + " " + rightVolt);
 
         if (RobotBase.isSimulation()) {
             // Ethan hack: to convert voltage to percent

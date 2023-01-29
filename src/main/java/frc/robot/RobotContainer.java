@@ -1,8 +1,11 @@
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPRamseteCommand;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -11,6 +14,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
@@ -71,39 +75,78 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        PathPlannerTrajectory examplePath = PathPlanner.loadPath("Go Straight", new PathConstraints(1, 1));
+        //PathPlannerTrajectory examplePath = PathPlanner.loadPath("Go Straight", new PathConstraints(1, 1));
         // This will load the file "Example Path.path" and generate it with a max
         // velocity of 4 m/s and a max acceleration of 3 m/s^2
 
-        driveTrain.field.getObject("traj").setTrajectory(examplePath);
+        
         //driveTrain.field.getObject("goStraightTrajectory").setTrajectory(goStraight);
 
         //mirror if on red alliance
         boolean useAllianceColor = true;
 
-        return new SequentialCommandGroup(
+        PathPlannerTrajectory twoPiecePath = PathPlanner.loadPath("Two Piece Path", new PathConstraints(1, 1));
+        driveTrain.field.getObject("traj").setTrajectory(twoPiecePath);
+
+        HashMap<String, Command> eventMap = new HashMap<>();
+        eventMap.put("leave community", new PrintCommand("Left community"));
+        eventMap.put("intake", new PrintCommand("Intake"));
+        
+        Command eventTesting = 
+        new SequentialCommandGroup(
             new InstantCommand(() -> {
                 // Reset odometry for the first path you run during auto
                 
-                driveTrain.resetOdometry(examplePath.getInitialPose());
+                driveTrain.resetOdometry(twoPiecePath.getInitialPose());
 
             }, driveTrain),
-            new PPRamseteCommand(
-                examplePath,
-                () -> driveTrain.getPoseMeters(), // Pose supplier
-                new RamseteController(),
-                new SimpleMotorFeedforward(Constants.DriveConstants.ks,
-                    Constants.DriveConstants.kv,
-                    Constants.DriveConstants.ka),
-                Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
-                () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
-                new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
-                        // will only use feedforwards.
-                new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
-                (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
-                useAllianceColor, 
-                driveTrain // Requires this drive subsystem
-            ));
+        new PPRamseteCommand(
+            twoPiecePath,
+            () -> driveTrain.getPoseMeters(), // Pose supplier
+            new RamseteController(),
+            new SimpleMotorFeedforward(Constants.DriveConstants.ks,
+                Constants.DriveConstants.kv,
+                Constants.DriveConstants.ka),
+            Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
+            () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
+            new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
+                    // will only use feedforwards.
+            new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
+            (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
+            driveTrain // Requires this drive subsystem
+        ));
+
+        FollowPathWithEvents command = new FollowPathWithEvents(
+            eventTesting,
+            twoPiecePath.getMarkers(),
+            eventMap
+        );
+
+        return command;
+    
+        // return new SequentialCommandGroup(
+        //     new InstantCommand(() -> {
+        //         // Reset odometry for the first path you run during auto
+                
+        //         driveTrain.resetOdometry(examplePath.getInitialPose());
+
+        //     }, driveTrain),
+        //     new PPRamseteCommand(
+        //         examplePath,
+        //         () -> driveTrain.getPoseMeters(), // Pose supplier
+        //         new RamseteController(),
+        //         new SimpleMotorFeedforward(Constants.DriveConstants.ks,
+        //             Constants.DriveConstants.kv,
+        //             Constants.DriveConstants.ka),
+        //         Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
+        //         () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
+        //         new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
+        //                 // will only use feedforwards.
+        //         new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
+        //         (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
+        //         useAllianceColor, 
+        //         driveTrain // Requires this drive subsystem
+        //     ));
 
     }
 
