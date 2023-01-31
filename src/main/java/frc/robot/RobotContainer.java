@@ -55,6 +55,7 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+        arm.setDefaultCommand(dropCone);
 
         // Configure default commands
         driveTrain.setDefaultCommand(
