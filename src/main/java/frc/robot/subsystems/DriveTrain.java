@@ -106,6 +106,22 @@ public class DriveTrain extends SubsystemBase {
         ahrs = new AHRS(SPI.Port.kMXP);
         ahrs.reset();
 
+<<<<<<< HEAD
+        //bruh which one
+        //herb stop making fun of my spelling errors :(
+        if (DriveConstants.IS_HIGH_SPEED) {
+
+            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION);
+            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_SPEED_REVOLUTION_TO_INCH_CONVERSION);
+        }
+        else {
+
+            DriveTrain.leftEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
+            DriveTrain.rightEncoder.setPositionConversionFactor(Constants.DriveConstants.HIGH_TORQUE_REVOLUTION_TO_INCH_CONVERSION);
+        }
+
+=======
+>>>>>>> main
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
         if (RobotBase.isSimulation()) {
 
