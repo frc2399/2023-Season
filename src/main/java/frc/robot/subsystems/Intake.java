@@ -7,11 +7,13 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.REVPHSim;
 import edu.wpi.first.wpilibj.simulation.SolenoidSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
@@ -27,8 +29,8 @@ public class Intake extends SubsystemBase {
   // SlewRateLimiter filter;
   private static CANSparkMax leftMotorController;
   private static CANSparkMax rightMotorController;
-  private Solenoid leftIntakeSolenoid;
-  private Solenoid rightIntakeSolenoid;
+  private DoubleSolenoid leftIntakeSolenoid;
+  private DoubleSolenoid rightIntakeSolenoid;
 
   private REVPHSim simPH;
   private SolenoidSim leftSolenoidSim;
@@ -41,8 +43,7 @@ public class Intake extends SubsystemBase {
 
     leftMotorController = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     rightMotorController = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR_ID, MotorType.kBrushless);
-    leftIntakeSolenoid = new Solenoid(IntakeConstants.PH_ADDRESS, PneumaticsModuleType.REVPH, IntakeConstants.EXTEND_INTAKE_ARM_LEFT);
-    rightIntakeSolenoid = new Solenoid(IntakeConstants.PH_ADDRESS, PneumaticsModuleType.REVPH, IntakeConstants.EXTEND_INTAKE_ARM_RIGHT);
+    rightIntakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.SOLENOID_ID, 3);
     leftMotorController.setInverted(false);
     rightMotorController.setInverted(false);
     leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -60,16 +61,16 @@ public class Intake extends SubsystemBase {
     }
 
   //Pneumatic methods
-  public void closeLeft() {
+  // public void closeLeft() {
 
-    if (RobotBase.isSimulation()) {
-      leftSolenoidSim.setOutput(true);
-    }
-    else {
-      leftIntakeSolenoid.set(true);
-    }  
+  //   if (RobotBase.isSimulation()) {
+  //     leftSolenoidSim.setOutput(true);
+  //   }
+  //   else {
+  //     leftIntakeSolenoid.set(Value.kForward);
+  //   }  
 
-  }
+  // }
 
   public void closeRight() {
 
@@ -77,21 +78,21 @@ public class Intake extends SubsystemBase {
       rightSolenoidSim.setOutput(true);
     }
     else {
-      rightIntakeSolenoid.set(true);
+      rightIntakeSolenoid.set(Value.kForward);
     }
 
   }
 
-  public void openLeft() {
+  // public void openLeft() {
 
-    if (RobotBase.isSimulation()) {
-      leftSolenoidSim.setOutput(false);
-    }
-    else {
-      leftIntakeSolenoid.set(false);
-    }
+  //   if (RobotBase.isSimulation()) {
+  //     leftSolenoidSim.setOutput(false);
+  //   }
+  //   else {
+  //     leftIntakeSolenoid.set(Value.kOff);
+  //   }
 
-  }
+  // }
 
   public void openRight() {
 
@@ -99,7 +100,7 @@ public class Intake extends SubsystemBase {
       rightSolenoidSim.setOutput(false);
     }
     else {
-    rightIntakeSolenoid.set(false);
+    rightIntakeSolenoid.set(Value.kOff);
     }
 
   }
@@ -136,7 +137,7 @@ public class Intake extends SubsystemBase {
   //Intake methods (different combos of spinny spin and pneumatics)
   public void intakeBothArms() {
 
-    closeLeft();
+    //closeLeft();
     closeRight();
     spinIn(intakeSpeed);
 
@@ -144,7 +145,7 @@ public class Intake extends SubsystemBase {
 
   public void intakeRight() {
 
-    openLeft();
+    // openLeft();
     closeRight();
     spinIn(intakeSpeed);
 
@@ -153,46 +154,47 @@ public class Intake extends SubsystemBase {
   public void intakeLeft() {
 
     openRight();
-    closeLeft();
+    // closeLeft();
     spinIn(intakeSpeed);
 
   }
 
   public void outtake() {
-    closeLeft();
+    // closeLeft();
     closeRight();
     spitOut(intakeSpeed);
   }
 
   public void drop() {
 
-    openLeft();
+    // openLeft();
     openRight();
 
   }
 
-  public boolean isLeftOpen() {
-    if (RobotBase.isSimulation()) {
-      return leftSolenoidSim.getOutput();
-    }
-    else {
-      return leftIntakeSolenoid.get();
-    }
-  }
+  // public boolean isLeftOpen() {
+  //   if (RobotBase.isSimulation()) {
+  //     return leftSolenoidSim.getOutput();
+  //   }
+  //   else {
+  //     return (leftIntakeSolenoid.get()== Value.kForward);
+
+  //   }
+  // }
 
   public boolean isRightOpen() {
     if (RobotBase.isSimulation()) {
       return rightSolenoidSim.getOutput();
     }
     else {
-      return rightIntakeSolenoid.get();
+      return (rightIntakeSolenoid.get()== Value.kForward);
     }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Left Intake Open? ", isLeftOpen());
+    // SmartDashboard.putBoolean("Left Intake Open? ", isLeftOpen());
     SmartDashboard.putBoolean("Right Intake Open? ", isRightOpen());
   }
 }

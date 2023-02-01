@@ -27,7 +27,7 @@ public class CollectPieceCmd extends CommandBase {
   public void initialize() {
     filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
     intake.closeRight();
-    intake.closeLeft();
+    // intake.closeLeft();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,7 +41,7 @@ public class CollectPieceCmd extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intake.openRight();
-    intake.openLeft();
+    // intake.openLeft();
     intake.spinIn(0);
     System.out.println("speed set to 0");
   }
