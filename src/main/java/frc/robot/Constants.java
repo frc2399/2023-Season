@@ -21,18 +21,11 @@ public class Constants {
         // public static final int LEFT_MIDDLE_DRIVE_CAN_ID = 7;
         // public static final int LEFT_BACK_DRIVE_CAN_ID = 8;
 
-<<<<<<< HEAD
-        //solenoids
-        public static final int SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT = 2;
-	    public static final int SHIFT_HIGH_TORQUE_SOLENOID_PCM_PORT = 3;
-        public static final boolean IS_HIGH_SPEED = true;
-=======
         //pineapple bot
         public static final int RIGHT_FRONT_DRIVE_CAN_ID = 1;
         public static final int RIGHT_BACK_DRIVE_CAN_ID = 2;
         public static final int LEFT_FRONT_DRIVE_CAN_ID = 4;
         public static final int LEFT_BACK_DRIVE_CAN_ID = 3;
->>>>>>> main
 
         // encoder 
         public static final double ENCODER_CALIBRATION_METERS = 0.0493;
@@ -63,8 +56,8 @@ public class Constants {
 
     public static final class ElevatorConstants {
 
-        public static final int LEFT_ELEVATOR_MOTOR_ID = 1;
-        public static final int RIGHT_ELEVATOR_MOTOR_ID = 2;
+        public static final int LEFT_ELEVATOR_MOTOR_ID = 7;
+        public static final int RIGHT_ELEVATOR_MOTOR_ID = 8;
         public static final int ELEVATOR_SLEW = 5;
         public static final double MIN_ELEVATOR_HEIGHT = Units.inchesToMeters(2);
         public static final double MAX_ELEVATOR_HEIGHT = Units.inchesToMeters(75);

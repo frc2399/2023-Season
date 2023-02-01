@@ -8,11 +8,13 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.REVPHSim;
 import edu.wpi.first.wpilibj.simulation.SolenoidSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -48,6 +50,7 @@ public class Intake extends SubsystemBase {
     rightMotorController.setInverted(false);
     leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    
 
     if (RobotBase.isSimulation()) {
       simPH = new REVPHSim();
@@ -108,7 +111,7 @@ public class Intake extends SubsystemBase {
   //Intake spinny spin methods
   public void spinIn(double speed) {
     //speed = filter.calculate(speed);
-    SmartDashboard.putNumber ("intakeSpeed",speed);
+    SmartDashboard.putNumber("intakeSpeed",speed);
 
     if (RobotBase.isSimulation()) {
       leftMotorSim.setInput (speed);
@@ -133,6 +136,11 @@ public class Intake extends SubsystemBase {
     }
 
   }
+
+  public void setMotor(double intakeSpeed) {
+    leftMotorController.set(intakeSpeed);
+    rightMotorController.set(intakeSpeed);
+}
 
   //Intake methods (different combos of spinny spin and pneumatics)
   public void intakeBothArms() {
