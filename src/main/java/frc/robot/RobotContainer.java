@@ -69,7 +69,7 @@ public class RobotContainer {
         new JoystickButton(joystick,3).whenPressed(extendElevator);
         new JoystickButton(joystick,4).whenPressed(retractElevator);
         new JoystickButton(joystick,5).whenPressed(middleElevator);
-
+        new JoystickButton(joystick,6).whileTrue(moveArm);
     }
 
     public Command getAutonomousCommand() {
