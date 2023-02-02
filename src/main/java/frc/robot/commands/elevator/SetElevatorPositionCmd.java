@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.elevator;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.DoublePublisher;

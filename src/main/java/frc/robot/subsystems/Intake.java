@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
 
   private static double intakeSpeed;
-  // SlewRateLimiter filter;
+  SlewRateLimiter filter;
   private static CANSparkMax leftMotorController;
   private static CANSparkMax rightMotorController;
   private DoubleSolenoid leftIntakeSolenoid;
@@ -43,9 +43,10 @@ public class Intake extends SubsystemBase {
 
     leftMotorController = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     rightMotorController = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR_ID, MotorType.kBrushless);
-    rightIntakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.SOLENOID_ID, 3);
+    rightIntakeSolenoid = new DoubleSolenoid(IntakeConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, 
+    IntakeConstants.FORWARD_CHANNEL_SOLENOID_ID, IntakeConstants.REVERSE_CHANNEL_SOLENOID_ID);
     leftMotorController.setInverted(false);
-    rightMotorController.setInverted(false);
+    rightMotorController.setInverted(true);
     leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
@@ -57,7 +58,7 @@ public class Intake extends SubsystemBase {
       rightMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
       
     }
-   //filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
+   filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
     }
 
   //Pneumatic methods
@@ -107,7 +108,7 @@ public class Intake extends SubsystemBase {
 
   //Intake spinny spin methods
   public void spinIn(double speed) {
-    //speed = filter.calculate(speed);
+    speed = filter.calculate(1.0);
     SmartDashboard.putNumber ("intakeSpeed",speed);
 
     if (RobotBase.isSimulation()) {
@@ -121,8 +122,24 @@ public class Intake extends SubsystemBase {
 
   }
 
-  public void spitOut(double speed) {
+  public void setSpeed(double speed) {
+    double slew_speed = filter.calculate(speed);
+    //double slew_speed = speed;
+    SmartDashboard.putNumber ("intakeSpeed",slew_speed);
 
+    if (RobotBase.isSimulation()) {
+      leftMotorSim.setInput (slew_speed);
+      rightMotorSim.setInput(slew_speed);
+    }
+    else {
+      leftMotorController.set(slew_speed);
+      rightMotorController.set(slew_speed);
+    }
+
+  }
+
+  public void spitOut(double speed) {
+    speed = filter.calculate(1.0);
     if (RobotBase.isSimulation()) {
       leftMotorSim.setInput(-speed);
       rightMotorSim.setInput(-speed);
