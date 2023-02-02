@@ -21,6 +21,10 @@ public class Constants {
         // public static final int LEFT_MIDDLE_DRIVE_CAN_ID = 7;
         // public static final int LEFT_BACK_DRIVE_CAN_ID = 8;
 
+        //solenoids
+        public static final int SHIFT_HIGH_SPEED_SOLENOID_PCM_PORT = 2;
+	    public static final int SHIFT_HIGH_TORQUE_SOLENOID_PCM_PORT = 3;
+        public static final boolean IS_HIGH_SPEED = true;
         //pineapple bot
         public static final int RIGHT_FRONT_DRIVE_CAN_ID = 1;
         public static final int RIGHT_BACK_DRIVE_CAN_ID = 2;
@@ -62,6 +66,17 @@ public class Constants {
         public static final double MIN_ELEVATOR_HEIGHT = Units.inchesToMeters(2);
         public static final double MAX_ELEVATOR_HEIGHT = Units.inchesToMeters(75);
         
+    }
+
+    public static final class IntakeConstants {
+
+        public static final int LEFT_INTAKE_MOTOR_ID = 9;
+        public static final int RIGHT_INTAKE_MOTOR_ID = 10;
+        public static final int PH_ADDRESS = 1;
+        public static final int SOLENOID_ID = 2;
+        public static final int EXTEND_INTAKE_ARM_RIGHT = 2;
+        public static final double INTAKE_SLEW_RATE = 10;
+
     }
 
 

@@ -15,6 +15,10 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
@@ -26,6 +30,7 @@ public class Elevator extends SubsystemBase {
   public static RelativeEncoder elevatorEncoder;
   public static SimEncoder elevatorSimEncoder;
   public static ElevatorSim elevatorSim;
+  private MechanismLigament2d elevatorMechanism;
 
   public final DoublePublisher elevatorPositionPublisher;
   public final DoublePublisher elevatorVelocityPublisher;
@@ -84,6 +89,10 @@ public class Elevator extends SubsystemBase {
           true,
           VecBuilder.fill(0.01)
       );
+      Mechanism2d mech = new Mechanism2d(3, 2);
+      MechanismRoot2d root = mech.getRoot("root", 2, 0);
+      elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
+      SmartDashboard.putData("Mech2d", mech);
     }
   }
 
@@ -106,6 +115,7 @@ public class Elevator extends SubsystemBase {
 
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
+    elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + current_pos);
 
   }
 

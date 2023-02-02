@@ -8,6 +8,7 @@ import com.pathplanner.lib.commands.PPRamseteCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -16,9 +17,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.ArcadeDriveCmd;
+import frc.robot.commands.CollectPieceCmd;
 import frc.robot.commands.SetElevatorPositionCmd;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 import frc.robot.util.DriveTurnControls;
 
 /**
@@ -37,6 +40,7 @@ public class RobotContainer {
     public final Elevator elevator = new Elevator();
     // The robot's subsystems
     public final static DriveTrain driveTrain = new DriveTrain();
+    public final static Intake intake = new Intake();
 
     // Joysticks
     public static Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
@@ -46,10 +50,16 @@ public class RobotContainer {
     private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
     private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
+    private Command collectPiece = new CollectPieceCmd(intake);
+    private Command dropCone = new InstantCommand(() -> {intake.drop();}, intake);
+    private Command bigIntake = new InstantCommand(() -> {intake.intakeBothArms();}, intake);
+    private Command leftOnly = new InstantCommand(() -> {intake.intakeLeft();}, intake);
+    private Command rightOnly = new InstantCommand(() -> {intake.intakeRight();}, intake);
+    private Command noSpin = new InstantCommand(() -> {intake.spinIn(0);}, intake);
 
     public RobotContainer(){
 
-
+        DriverStation.silenceJoystickConnectionWarning(true);
     
         // Configure the button bindings
         configureButtonBindings();
@@ -60,14 +70,16 @@ public class RobotContainer {
             new ArcadeDriveCmd(driveTrain,
                 () -> -driveTurnControls.getDrive(),
                 () -> driveTurnControls.getTurn()));
+        intake.setDefaultCommand(noSpin);
 
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(joystick,3).whenPressed(extendElevator);
-        new JoystickButton(joystick,4).whenPressed(retractElevator);
-        new JoystickButton(joystick,5).whenPressed(middleElevator);
-
+        new JoystickButton(joystick,3).whileTrue(extendElevator);
+        new JoystickButton(joystick,4).whileTrue(retractElevator);
+        new JoystickButton(joystick,5).whileTrue(middleElevator);
+        new JoystickButton(joystick,6).whileTrue(dropCone);
+        new JoystickButton(joystick,7).whileTrue(collectPiece);
     }
 
     public Command getAutonomousCommand() {
