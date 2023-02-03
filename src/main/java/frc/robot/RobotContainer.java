@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
@@ -51,13 +52,13 @@ public class RobotContainer {
     //private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     //private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
     private Command collectPiece = new CollectPieceCmd(intake);
-    private Command dropCone = new InstantCommand(() -> {intake.drop();}, intake);
-    private Command bigIntake = new InstantCommand(() -> {intake.intakeBothArms();}, intake);
-    private Command leftOnly = new InstantCommand(() -> {intake.intakeLeft();}, intake);
-    private Command rightOnly = new InstantCommand(() -> {intake.intakeRight();}, intake);
-    private Command noSpin = new InstantCommand(() -> {intake.setSpeed(0);}, intake);
-    private Command spinIn = new InstantCommand(() -> {intake.setSpeed(0.4);}, intake);
-    private Command spitOut = new InstantCommand(() -> {intake.setSpeed(-0.4);}, intake);
+    private Command dropCone = new InstantCommand(() -> intake.drop(), intake);
+    private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
+    private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
+    private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
+    private Command noSpin = new RunCommand(() -> intake.setSpeed(0), intake);
+    private Command spinIn = new RunCommand(() -> intake.setSpeed(0.4), intake);
+    private Command spitOut = new RunCommand(() -> intake.setSpeed(-0.4), intake);
 
     public RobotContainer(){
 
@@ -72,7 +73,7 @@ public class RobotContainer {
             new ArcadeDriveCmd(driveTrain,
                 () -> -driveTurnControls.getDrive(),
                 () -> driveTurnControls.getTurn()));
-        //intake.setDefaultCommand(noSpin);
+        intake.setDefaultCommand(noSpin);
 
     }
 
@@ -80,11 +81,12 @@ public class RobotContainer {
         // new JoystickButton(joystick,3).whenHeld(extendElevator);
         // new JoystickButton(joystick,4).whenHeld(retractElevator);
         // new JoystickButton(joystick,5).whenHeld(middleElevator);
-        new JoystickButton(joystick,6).whenHeld(dropCone);
-        new JoystickButton(joystick,7).whenHeld(collectPiece);
-        new JoystickButton(joystick,8).whenHeld(spinIn);
-        new JoystickButton(joystick,9).whenHeld(spitOut);
-        new JoystickButton(joystick,10).whenHeld(noSpin);
+        new JoystickButton(joystick,6).whileTrue(dropCone);
+        new JoystickButton(joystick,7).whileTrue(collectPiece);
+        new JoystickButton(joystick,8).whileTrue(spinIn);
+        new JoystickButton(joystick,9).whileTrue(spitOut);
+        new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
+        new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
     }
 
     public Command getAutonomousCommand() {

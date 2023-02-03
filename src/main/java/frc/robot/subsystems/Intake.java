@@ -54,8 +54,6 @@ public class Intake extends SubsystemBase {
       simPH = new REVPHSim();
       leftSolenoidSim = new SolenoidSim(simPH, 1);
       rightSolenoidSim = new SolenoidSim(simPH, 2);
-      leftMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
-      rightMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
       
     }
    filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
@@ -101,7 +99,7 @@ public class Intake extends SubsystemBase {
       rightSolenoidSim.setOutput(false);
     }
     else {
-    rightIntakeSolenoid.set(Value.kOff);
+    rightIntakeSolenoid.set(Value.kReverse);
     }
 
   }
