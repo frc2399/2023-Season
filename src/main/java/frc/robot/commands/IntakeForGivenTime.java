@@ -40,6 +40,7 @@ public class IntakeForGivenTime extends CommandBase {
     public void end(boolean interrupted) {
         System.out.println("Intake time ended!");
         this.intakeSubsystem.setMotor(0.0);
+        SmartDashboard.putNumber("intakeSpeed", 0);
     }
 
     @Override
