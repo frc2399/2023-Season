@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
 
   private static double intakeSpeed;
-  // SlewRateLimiter filter;
+ SlewRateLimiter filter;
   private static CANSparkMax leftMotorController;
   private static CANSparkMax rightMotorController;
   private DoubleSolenoid leftIntakeSolenoid;
@@ -60,7 +60,7 @@ public class Intake extends SubsystemBase {
       rightMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
       
     }
-   //filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
+  filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
     }
 
   //Pneumatic methods
@@ -108,38 +108,16 @@ public class Intake extends SubsystemBase {
 
   }
 
-  //Intake spinny spin methods
-  public void spinIn(double speed) {
-    //speed = filter.calculate(speed);
-    SmartDashboard.putNumber("intakeSpeed",speed);
-
-    if (RobotBase.isSimulation()) {
-      leftMotorSim.setInput (speed);
-      rightMotorSim.setInput(speed);
-    }
-    else {
-      leftMotorController.set(speed);
-      rightMotorController.set(speed);
-    }
-
-  }
-
-  public void spitOut(double speed) {
-
-    if (RobotBase.isSimulation()) {
-      leftMotorSim.setInput(-speed);
-      rightMotorSim.setInput(-speed);
-    }
-    else {
-      leftMotorController.set(-speed);
-      rightMotorController.set(-speed);
-    }
-
-  }
-
   public void setMotor(double intakeSpeed) {
-    leftMotorController.set(intakeSpeed);
-    rightMotorController.set(intakeSpeed);
+    double slewSpeed = filter.calculate(intakeSpeed);
+    if (RobotBase.isSimulation()) {
+      leftMotorSim.setInput(slewSpeed);
+      rightMotorSim.setInput(slewSpeed);
+    }
+    else {
+      leftMotorController.set(slewSpeed);
+      rightMotorController.set(slewSpeed);
+    }
 }
 
   //Intake methods (different combos of spinny spin and pneumatics)
@@ -147,7 +125,7 @@ public class Intake extends SubsystemBase {
 
     //closeLeft();
     closeRight();
-    spinIn(intakeSpeed);
+    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
 
   }
 
@@ -155,7 +133,7 @@ public class Intake extends SubsystemBase {
 
     // openLeft();
     closeRight();
-    spinIn(intakeSpeed);
+    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
 
   }
 
@@ -163,14 +141,14 @@ public class Intake extends SubsystemBase {
 
     openRight();
     // closeLeft();
-    spinIn(intakeSpeed);
+    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
 
   }
 
   public void outtake() {
     // closeLeft();
     closeRight();
-    spitOut(intakeSpeed);
+    setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED);
   }
 
   public void drop() {

@@ -18,10 +18,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.ArcadeDriveCmd;
 import frc.robot.commands.CollectPieceCmd;
+import frc.robot.commands.IntakeForGivenTime;
 import frc.robot.commands.SetElevatorPositionCmd;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
@@ -51,7 +53,7 @@ public class RobotContainer {
     public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
-    private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
+    private Command extendElevator = new SetElevatorPositionCmd(elevator, 1.0);
     private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
     private Command collectPiece = new CollectPieceCmd(intake);
@@ -59,7 +61,7 @@ public class RobotContainer {
     private Command bigIntake = new InstantCommand(() -> {intake.intakeBothArms();}, intake);
     private Command leftOnly = new InstantCommand(() -> {intake.intakeLeft();}, intake);
     private Command rightOnly = new InstantCommand(() -> {intake.intakeRight();}, intake);
-    private Command noSpin = new InstantCommand(() -> {intake.spinIn(0);}, intake);
+    private Command noSpin = new InstantCommand(() -> {intake.setMotor(0);}, intake);
 
     public RobotContainer(){
 
@@ -101,8 +103,8 @@ public class RobotContainer {
         driveTrain.field.getObject("traj").setTrajectory(twoPiecePath);
 
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("leave community", new PrintCommand("Left community"));
-        eventMap.put("intake", new PrintCommand("Intake"));
+        eventMap.put("leftCommunity", new PrintCommand("Left community"));
+        eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.INTAKE_IN_SPEED, 2));
         
         Command eventTesting = 
         new SequentialCommandGroup(
@@ -128,13 +130,21 @@ public class RobotContainer {
             driveTrain // Requires this drive subsystem
         ));
 
-        FollowPathWithEvents command = new FollowPathWithEvents(
+        FollowPathWithEvents twoPieceAuton = new FollowPathWithEvents(
             eventTesting,
             twoPiecePath.getMarkers(),
             eventMap
         );
 
-        return command;
+        return new SequentialCommandGroup(
+            new SetElevatorPositionCmd(elevator, 1.0), 
+            new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
+            new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT),
+            twoPieceAuton,
+            new SetElevatorPositionCmd(elevator, 1.0),
+            new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
+            new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT)
+        );
     
         // return new SequentialCommandGroup(
         //     new InstantCommand(() -> {

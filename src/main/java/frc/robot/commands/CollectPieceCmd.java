@@ -34,7 +34,7 @@ public class CollectPieceCmd extends CommandBase {
   @Override
   public void execute() {
     speed = filter.calculate(targetSpeed);
-    intake.spinIn(speed);
+    intake.setMotor(IntakeConstants.INTAKE_IN_SPEED);
   }
 
   // Called once the command ends or is interrupted.
@@ -42,7 +42,7 @@ public class CollectPieceCmd extends CommandBase {
   public void end(boolean interrupted) {
     intake.openRight();
     // intake.openLeft();
-    intake.spinIn(0);
+    intake.setMotor(0);
     System.out.println("speed set to 0");
   }
 
