@@ -94,6 +94,6 @@ public class Robot extends TimedRobot {
 
   public void disabledPeriodic() {
     //Elevator.motorController.set(0.0);
-    robotContainer.elevator.setSpeed(0);
+    // robotContainer.elevator.setSpeed(0);
   }
 }

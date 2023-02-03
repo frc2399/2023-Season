@@ -12,13 +12,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.commands.ArcadeDriveCmd;
-import frc.robot.commands.CollectPieceCmd;
-import frc.robot.commands.SetElevatorPositionCmd;
+import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.elevator.SetElevatorPositionCmd;
+import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
@@ -37,7 +38,7 @@ import frc.robot.util.DriveTurnControls;
 
 public class RobotContainer {
 
-    public final Elevator elevator = new Elevator();
+    //public final Elevator elevator = new Elevator();
     // The robot's subsystems
     public final static DriveTrain driveTrain = new DriveTrain();
     public final static Intake intake = new Intake();
@@ -47,15 +48,17 @@ public class RobotContainer {
     public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
-    private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
-    private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
-    private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
+    //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
+    //private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
+    //private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
     private Command collectPiece = new CollectPieceCmd(intake);
-    private Command dropCone = new InstantCommand(() -> {intake.drop();}, intake);
-    private Command bigIntake = new InstantCommand(() -> {intake.intakeBothArms();}, intake);
-    private Command leftOnly = new InstantCommand(() -> {intake.intakeLeft();}, intake);
-    private Command rightOnly = new InstantCommand(() -> {intake.intakeRight();}, intake);
-    private Command noSpin = new InstantCommand(() -> {intake.spinIn(0);}, intake);
+    private Command dropCone = new InstantCommand(() -> intake.drop(), intake);
+    private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
+    private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
+    private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
+    private Command noSpin = new RunCommand(() -> intake.setSpeed(0), intake);
+    private Command spinIn = new RunCommand(() -> intake.setSpeed(0.4), intake);
+    private Command spitOut = new RunCommand(() -> intake.setSpeed(-0.4), intake);
 
     public RobotContainer(){
 
@@ -75,11 +78,15 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(joystick,3).whileTrue(extendElevator);
-        new JoystickButton(joystick,4).whileTrue(retractElevator);
-        new JoystickButton(joystick,5).whileTrue(middleElevator);
+        // new JoystickButton(joystick,3).whenHeld(extendElevator);
+        // new JoystickButton(joystick,4).whenHeld(retractElevator);
+        // new JoystickButton(joystick,5).whenHeld(middleElevator);
         new JoystickButton(joystick,6).whileTrue(dropCone);
         new JoystickButton(joystick,7).whileTrue(collectPiece);
+        new JoystickButton(joystick,8).whileTrue(spinIn);
+        new JoystickButton(joystick,9).whileTrue(spitOut);
+        new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
+        new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
     }
 
     public Command getAutonomousCommand() {
