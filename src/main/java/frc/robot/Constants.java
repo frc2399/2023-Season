@@ -56,12 +56,25 @@ public class Constants {
 
     public static final class ElevatorConstants {
 
-        public static final int LEFT_ELEVATOR_MOTOR_ID = 5;
-        public static final int RIGHT_ELEVATOR_MOTOR_ID = 6;
+        public static final int LEFT_ELEVATOR_MOTOR_ID = 7;
+        public static final int RIGHT_ELEVATOR_MOTOR_ID = 8;
         public static final int ELEVATOR_SLEW = 5;
         public static final double MIN_ELEVATOR_HEIGHT = Units.inchesToMeters(2);
         public static final double MAX_ELEVATOR_HEIGHT = Units.inchesToMeters(75);
         
+    }
+
+    public static final class IntakeConstants {
+
+        public static final int LEFT_INTAKE_MOTOR_ID = 9;
+        public static final int RIGHT_INTAKE_MOTOR_ID = 10;
+        public static final int PH_ADDRESS = 1;
+        public static final int SOLENOID_ID = 2;
+        public static final int EXTEND_INTAKE_ARM_RIGHT = 2;
+        public static final double INTAKE_SLEW_RATE = 10;
+        public static final double INTAKE_IN_SPEED = 1.0;
+        public static final double INTAKE_OUT_SPEED = -1.0;
+
     }
 
 
