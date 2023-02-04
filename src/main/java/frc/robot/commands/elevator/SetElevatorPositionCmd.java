@@ -27,7 +27,7 @@ public class SetElevatorPositionCmd extends CommandBase {
     private static final double kpVel = 0;
   
     //private static double gravityCompensation = .075;
-    private static double gravityCompensation = 0;
+    private static double gravityCompensation = 0.075;
   
     // Trapezoidal profile constants and variables
     private static final double max_vel = 1.0;  // m/s

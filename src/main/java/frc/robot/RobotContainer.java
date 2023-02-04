@@ -38,19 +38,22 @@ import frc.robot.util.DriveTurnControls;
 
 public class RobotContainer {
 
-    //public final Elevator elevator = new Elevator();
     // The robot's subsystems
     public final static DriveTrain driveTrain = new DriveTrain();
     public final static Intake intake = new Intake();
+    public final static Elevator elevator = new Elevator();
 
     // Joysticks
     public static Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
     public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
-    //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
+    //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1); owo
     //private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     //private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
+    private Command setElevatorSpeedUp = new RunCommand(() -> elevator.setSpeed(0.2), elevator);
+    private Command setElevatorSpeedDown = new RunCommand(() -> elevator.setSpeed(-0.2), elevator);
+    private Command stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
     private Command collectPiece = new CollectPieceCmd(intake);
     private Command dropCone = new InstantCommand(() -> intake.drop(), intake);
     private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
@@ -74,13 +77,13 @@ public class RobotContainer {
                 () -> -driveTurnControls.getDrive(),
                 () -> driveTurnControls.getTurn()));
         intake.setDefaultCommand(noSpin);
+        elevator.setDefaultCommand(stopElevator);
 
     }
 
     private void configureButtonBindings() {
-        // new JoystickButton(joystick,3).whenHeld(extendElevator);
-        // new JoystickButton(joystick,4).whenHeld(retractElevator);
-        // new JoystickButton(joystick,5).whenHeld(middleElevator);
+        new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
+        new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
         new JoystickButton(joystick,6).whileTrue(dropCone);
         new JoystickButton(joystick,7).whileTrue(collectPiece);
         new JoystickButton(joystick,8).whileTrue(spinIn);
