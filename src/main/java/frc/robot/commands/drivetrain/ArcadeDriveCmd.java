@@ -36,12 +36,10 @@ public class ArcadeDriveCmd extends CommandBase {
 
         double left = realTimeSpeed + realTimeTurn;
         double right = realTimeSpeed - realTimeTurn;
-        if (isSlow)
-        {        
+        if (isSlow) {        
             this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
         }
-        else
-        {
+        else {
             this.driveSubsystem.setMotors(left, right);
         }
     }

@@ -83,22 +83,23 @@ public class Intake extends SubsystemBase {
   }
 
   //Intake spinny spin methods
-  public void spinIn(double speed) {
-    speed = filter.calculate(1.0);
-    SmartDashboard.putNumber ("intakeSpeed",speed);
 
-      leftMotorController.set(speed);
-      rightMotorController.set(speed);
+  //TODO get rid of parameters??
+  public void spinIn(double spood) {
+    spood = filter.calculate(1.0);
+    SmartDashboard.putNumber ("intakeSpeed",spood);
+
+      leftMotorController.set(spood);
+      rightMotorController.set(spood);
 
   }
 
   public void setSpeed(double speed) {
-    double slew_speed = filter.calculate(speed);
-    //double slew_speed = speed;
-    SmartDashboard.putNumber ("intakeSpeed",slew_speed);
+    double slewSpeed = filter.calculate(speed);
+    SmartDashboard.putNumber ("intakeSpeed",slewSpeed);
 
-      leftMotorController.set(slew_speed);
-      rightMotorController.set(slew_speed);
+      leftMotorController.set(slewSpeed);
+      rightMotorController.set(slewSpeed);
 
   }
 
@@ -157,12 +158,7 @@ public class Intake extends SubsystemBase {
   // }
 
   public boolean isRightOpen() {
-    // if (RobotBase.isSimulation()) {
-    //   return rightSolenoidSim.getOutput();
-    // }
-    // else {
       return (rightIntakeSolenoid.get()== Value.kForward);
-    // }
   }
 
   @Override

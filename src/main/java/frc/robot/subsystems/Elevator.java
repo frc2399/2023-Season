@@ -43,8 +43,8 @@ public class Elevator extends SubsystemBase {
 
   public final static DCMotor elevatorGearbox = DCMotor.getNEO(1);
 
-  private static double current_pos = 0;
-  private static double current_vel = 0;
+  private static double currentPos = 0;
+  private static double currentVel = 0;
 
   // The simulated encoder will return
   public static final double elevatorEncoderDistPerPulse = 2.0 * Math.PI * elevatorDrumRadius / 4096;
@@ -99,10 +99,10 @@ public class Elevator extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
 
-    current_pos = elevatorSimEncoder.getDistance();
-    current_vel = elevatorSimEncoder.getSpeed();
-    elevatorPositionPublisher.set(current_pos);
-    elevatorVelocityPublisher.set(current_vel);
+    currentPos = elevatorSimEncoder.getDistance();
+    currentVel = elevatorSimEncoder.getSpeed();
+    elevatorPositionPublisher.set(currentPos);
+    elevatorVelocityPublisher.set(currentVel);
 
     // sets input for elevator motor in simulation
     elevatorSim.setInput(elevatorMotorController.get() * RobotController.getBatteryVoltage());
@@ -115,7 +115,7 @@ public class Elevator extends SubsystemBase {
 
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + current_pos);
+    elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
 
   }
 
@@ -126,8 +126,7 @@ public class Elevator extends SubsystemBase {
       // the rest of the code. encoders are already in inches
       return elevatorSimEncoder.getDistance();
     }
-    else
-    {
+    else {
       return elevatorEncoder.getPosition();
     }
   }
@@ -139,8 +138,7 @@ public class Elevator extends SubsystemBase {
       // the rest of the code. encoders are already in inches
       return elevatorSimEncoder.getSpeed();
     }
-    else
-    {
+    else {
       return elevatorEncoder.getVelocity();
     }
   }

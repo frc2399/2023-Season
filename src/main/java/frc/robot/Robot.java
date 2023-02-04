@@ -58,6 +58,7 @@ public class Robot extends TimedRobot {
       },
       (Translation2d translationError, Rotation2d rotationError) -> {
           // Log path following error
+          //TODO what is this?
       }
 );
   }
