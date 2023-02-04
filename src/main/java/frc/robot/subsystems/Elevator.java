@@ -23,8 +23,10 @@ import frc.robot.util.SimEncoder;
 
 public class Elevator extends SubsystemBase {
 
-  public static CANSparkMax elevatorMotorController;
-  public static RelativeEncoder elevatorEncoder;
+  public static CANSparkMax elevatorMotorControllerRight;
+  public static CANSparkMax elevatorMotorControllerLeft;
+  public static RelativeEncoder elevatorEncoderRight;
+  public static RelativeEncoder elevatorEncoderLeft;
   public static SimEncoder elevatorSimEncoder;
   public static ElevatorSim elevatorSim;
   private MechanismLigament2d elevatorMechanism;
@@ -46,21 +48,30 @@ public class Elevator extends SubsystemBase {
   public Elevator() {
 
     // initialize motor controllers
-    elevatorMotorController = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+    elevatorMotorControllerRight = new CANSparkMax(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+    elevatorMotorControllerLeft = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+
 
     // restore factory settings to reset to a known state
-    elevatorMotorController.restoreFactoryDefaults();
+    elevatorMotorControllerRight.restoreFactoryDefaults();
+    elevatorMotorControllerLeft.restoreFactoryDefaults();
 
     // set climber motors to coast mode
-    elevatorMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    elevatorMotorControllerRight.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    elevatorMotorControllerLeft.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // initialize motor encoder
-    elevatorEncoder = elevatorMotorController.getEncoder();
+    elevatorEncoderRight = elevatorMotorControllerRight.getEncoder();
+    elevatorEncoderLeft = elevatorMotorControllerLeft.getEncoder();
 
     // invert the motor controllers so climber climbs right
-    elevatorMotorController.setInverted(false);
+    elevatorMotorControllerRight.setInverted(false);
+    elevatorMotorControllerLeft.setInverted(true);
 
-    elevatorEncoder.setPosition(0); //do we need this??? owo
+    elevatorEncoderRight.setPosition(0); 
+    elevatorEncoderLeft.setPosition(0); 
+
+    elevatorMotorControllerLeft.follow(elevatorMotorControllerRight);
 
     // this code is instantiating the simulator stuff for climber
     if (RobotBase.isSimulation()) {
@@ -91,7 +102,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("elevator velocity", currentVel); 
 
     // sets input for elevator motor in simulation
-    elevatorSim.setInput(elevatorMotorController.get() * RobotController.getBatteryVoltage());
+    elevatorSim.setInput(elevatorMotorControllerRight.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
     elevatorSim.update(0.02);
     // Finally, we set our simulated encoder's readings
@@ -113,7 +124,7 @@ public class Elevator extends SubsystemBase {
       return elevatorSimEncoder.getDistance();
     }
     else {
-      return elevatorEncoder.getPosition();
+      return elevatorEncoderRight.getPosition();
     }
   }
 
@@ -125,12 +136,12 @@ public class Elevator extends SubsystemBase {
       return elevatorSimEncoder.getSpeed();
     }
     else {
-      return elevatorEncoder.getVelocity();
+      return elevatorEncoderRight.getVelocity();
     }
   }
 
   public void setSpeed(double speed) {
-    elevatorMotorController.set(speed);
+    elevatorMotorControllerRight.set(speed);
   }
   
 }
