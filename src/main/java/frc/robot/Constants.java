@@ -67,7 +67,7 @@ public class Constants {
     public static final class ArmConstants {
         //Arm angle in radians
         public static final double MAX_ARM_ANGLE = Math.PI/4;
-        public static final double MIN_ARM_ANGLE = -Math.PI/4;
+        public static final double MIN_ARM_ANGLE = -Math.PI/4 * 3;
         //arm Mass in kg
         public static final double ARM_MASS = 1;
         //arm length in meters
