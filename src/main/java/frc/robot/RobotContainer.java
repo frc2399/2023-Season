@@ -59,8 +59,8 @@ public class RobotContainer {
     // private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
     // private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
     private Command noSpin = new RunCommand(() -> intake.setSpeed(0), intake);
-    private Command spinIn = new RunCommand(() -> intake.setSpeed(0.4), intake);
-    private Command spitOut = new RunCommand(() -> intake.setSpeed(-0.4), intake);
+    private Command spinIn = new RunCommand(() -> intake.setSpeed(Constants.IntakeConstants.INTAKE_SPEED), intake);
+    private Command spitOut = new RunCommand(() -> intake.setSpeed(Constants.IntakeConstants.OUTTAKE_SPEED), intake);
 
     public RobotContainer(){
 

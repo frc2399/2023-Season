@@ -76,7 +76,9 @@ public class Constants {
         public static final int FORWARD_CHANNEL_SOLENOID_ID = 2;
         public static final int REVERSE_CHANNEL_SOLENOID_ID = 3;
         public static final int EXTEND_INTAKE_ARM_RIGHT = 2;
-        public static final double INTAKE_SLEW_RATE = 10;
+        public static final double INTAKE_SLEW_RATE = 5;
+        public static final double INTAKE_SPEED = 0.4;
+        public static final double OUTTAKE_SPEED = -0.4;
 
     }
 

@@ -11,22 +11,19 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.simulation.REVPHSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
 
-  private static double intakeSpeed;
   SlewRateLimiter filter;
   private static CANSparkMax leftMotorController;
   private static CANSparkMax rightMotorController;
   //private DoubleSolenoid leftIntakeSolenoid;
   private DoubleSolenoid rightIntakeSolenoid;
 
-  private REVPHSim simPH;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -40,10 +37,6 @@ public class Intake extends SubsystemBase {
     leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    if (RobotBase.isSimulation()) {
-      simPH = new REVPHSim();
-      
-    }
    filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
     }
 
@@ -84,15 +77,6 @@ public class Intake extends SubsystemBase {
 
   //Intake spinny spin methods
 
-  //TODO get rid of parameters??
-  public void spinIn(double spood) {
-    spood = filter.calculate(1.0);
-    SmartDashboard.putNumber ("intakeSpeed",spood);
-
-      leftMotorController.set(spood);
-      rightMotorController.set(spood);
-
-  }
 
   public void setSpeed(double speed) {
     double slewSpeed = filter.calculate(speed);
@@ -103,18 +87,12 @@ public class Intake extends SubsystemBase {
 
   }
 
-  public void spitOut(double speed) {
-    speed = filter.calculate(1.0);
-      leftMotorController.set(-speed);
-      rightMotorController.set(-speed);
-  }
-
   //Intake methods (different combos of spinny spin and pneumatics)
   public void intakeBothArms() {
 
     //closeLeft();
     closeRight();
-    spinIn(intakeSpeed);
+    setSpeed(Constants.IntakeConstants.INTAKE_SPEED);
 
   }
 
@@ -122,7 +100,7 @@ public class Intake extends SubsystemBase {
 
     // openLeft();
     closeRight();
-    spinIn(intakeSpeed);
+    setSpeed(Constants.IntakeConstants.INTAKE_SPEED);
 
   }
 
@@ -130,14 +108,14 @@ public class Intake extends SubsystemBase {
 
     openRight();
     // closeLeft();
-    spinIn(intakeSpeed);
+    setSpeed(Constants.IntakeConstants.INTAKE_SPEED);
 
   }
 
   public void outtake() {
     // closeLeft();
     closeRight();
-    spitOut(intakeSpeed);
+    setSpeed(Constants.IntakeConstants.OUTTAKE_SPEED);
   }
 
   public void drop() {
