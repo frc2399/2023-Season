@@ -48,14 +48,17 @@ public class RobotContainer {
     private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
     private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
-    private Command moveArm = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
-    private Command dropCone = new InstantCommand(() -> {arm.setSpeed(xbox.getRawAxis(0));}, arm);
+   // private Command moveArm = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
+    private Command moveArmUp = new InstantCommand(() -> {arm.setSpeed(1);}, arm);
+    private Command moveArmDown = new InstantCommand(() -> {arm.setSpeed(-1);}, arm);
+    private Command armDefaultCmd = new InstantCommand(() -> {arm.setSpeed(0);}, arm);
+
 
     public RobotContainer() {
 
         // Configure the button bindings
         configureButtonBindings();
-        arm.setDefaultCommand(dropCone);
+        arm.setDefaultCommand(armDefaultCmd);
 
         // Configure default commands
         driveTrain.setDefaultCommand(
@@ -69,7 +72,9 @@ public class RobotContainer {
         new JoystickButton(joystick,3).whenPressed(extendElevator);
         new JoystickButton(joystick,4).whenPressed(retractElevator);
         new JoystickButton(joystick,5).whenPressed(middleElevator);
-        new JoystickButton(joystick,6).whileTrue(moveArm);
+        new JoystickButton(joystick,6).whileTrue(moveArmUp);
+        new JoystickButton(joystick, 7).whileTrue(moveArmDown);
+
     }
 
     public Command getAutonomousCommand() {

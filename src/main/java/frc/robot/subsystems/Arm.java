@@ -52,12 +52,6 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-
-    current_pos = armEncoder.getPosition();
-    current_vel = armEncoder.getVelocity();
-    SmartDashboard.putNumber("Arm Velocity", current_vel); 
-    SmartDashboard.putNumber("Arm Postion", current_pos); 
-  
     // sets input for elevator motor in simulation
     armSim.setInput(armMotorController.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
@@ -75,10 +69,18 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    current_pos = armEncoder.getPosition();
+    current_vel = armEncoder.getVelocity();
+    System.out.println("Current pos: " + current_pos);
+    System.out.println("Current vel: " + current_vel);
+    SmartDashboard.putNumber("Arm Velocity", current_vel); 
+    SmartDashboard.putNumber("Arm Postion", current_pos); 
+  
   }
   
   public void setSpeed(double speed) {
     armMotorController.set(speed);
+    System.out.println("Speed: " + speed);
     // SmartDashboard.putNumber("ArmSpeed", speed);
   }
 }
