@@ -26,7 +26,6 @@ public class SetElevatorPositionCmd extends CommandBase {
     private static final double kpPos = 6;
     private static final double kpVel = 0;
   
-    //private static double gravityCompensation = .075;
     private static double gravityCompensation = 0.075;
   
     // Trapezoidal profile constants and variables
@@ -54,21 +53,21 @@ public class SetElevatorPositionCmd extends CommandBase {
 
     @Override
     public void execute() {
-        double current_pos = elevator.getEncoderPosition(); 
-        double current_vel = elevator.getEncoderSpeed();
+        double currentPos = elevator.getEncoderPosition(); 
+        double currentVel = elevator.getEncoderSpeed();
 
         // Update the profile each timestep to get the current target position and velocity
         TrapezoidProfile.State goal = new TrapezoidProfile.State(height, 0.0);
         TrapezoidProfile profile = new TrapezoidProfile(constraints, goal, currentSetpoint);
         currentSetpoint = profile.calculate(0.02); // Assumes 50Hz loop. Could measure this directly
 
-        double target_pos = currentSetpoint.position;
-        double target_vel = currentSetpoint.velocity;
+        double targetPos = currentSetpoint.position;
+        double targetVel = currentSetpoint.velocity;
 
-        elevatorTargetPosPublisher.set(target_pos);
-        elevatorTargetVelPublisher.set(target_vel);
+        elevatorTargetPosPublisher.set(targetPos);
+        elevatorTargetVelPublisher.set(targetVel);
 
-        double speed = feedForward * target_vel + kpPos * (target_pos - current_pos) + kpVel * (target_vel - current_vel);
+        double speed = feedForward * targetVel + kpPos * (targetPos - currentPos) + kpVel * (targetVel - currentVel);
         speed = speed + gravityCompensation;   
     
         this.elevator.setSpeed(speed);
@@ -81,8 +80,8 @@ public class SetElevatorPositionCmd extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        double current_pos = elevator.getEncoderPosition(); 
-        if (Math.abs(height-current_pos) < HEIGHT_TOLERANCE) {
+        double currentPos = elevator.getEncoderPosition(); 
+        if (Math.abs(height-currentPos) < HEIGHT_TOLERANCE) {
             return true;
         }
        return false;

@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
-import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
@@ -39,13 +38,13 @@ import frc.robot.util.DriveTurnControls;
 public class RobotContainer {
 
     // The robot's subsystems
-    public final static DriveTrain driveTrain = new DriveTrain();
-    public final static Intake intake = new Intake();
-    public final static Elevator elevator = new Elevator();
+    public static final DriveTrain driveTrain = new DriveTrain();
+    public static final Intake intake = new Intake();
+    public static final Elevator elevator = new Elevator();
 
     // Joysticks
-    public static Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
-    public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
+    public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
+    public static final Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
     //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1); owo
@@ -56,9 +55,9 @@ public class RobotContainer {
     private Command stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
     private Command collectPiece = new CollectPieceCmd(intake);
     private Command dropCone = new InstantCommand(() -> intake.drop(), intake);
-    private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
-    private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
-    private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
+    // private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
+    // private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
+    // private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
     private Command noSpin = new RunCommand(() -> intake.setSpeed(0), intake);
     private Command spinIn = new RunCommand(() -> intake.setSpeed(0.4), intake);
     private Command spitOut = new RunCommand(() -> intake.setSpeed(-0.4), intake);

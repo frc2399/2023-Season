@@ -4,15 +4,12 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 
 public class CollectPieceCmd extends CommandBase {
   private Intake intake;
   private double speed;
-  private static double targetSpeed = 1.0;
   /** Creates a new CollectPieceCmd. */
   public CollectPieceCmd(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -40,7 +37,6 @@ public class CollectPieceCmd extends CommandBase {
     intake.openRight();
     // intake.openLeft();
     intake.spinIn(0);
-    System.out.println("speed set to 0");
   }
 
   // Returns true when the command should end.
