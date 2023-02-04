@@ -61,6 +61,9 @@ public class Arm extends SubsystemBase {
     // sets our simulated encoder speeds
     armEncoderSim.setSpeed(armSim.getVelocityRadPerSec());
 
+    // for reference: leftEncoderSim.setSpeed(driveSim.getLeftVelocityMetersPerSecond());
+
+
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
 
@@ -69,10 +72,8 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    current_pos = armEncoder.getPosition();
-    current_vel = armEncoder.getVelocity();
-    System.out.println("Current pos: " + current_pos);
-    System.out.println("Current vel: " + current_vel);
+    current_pos = armEncoderSim.getDistance();
+    current_vel = armEncoderSim.getSpeed();
     SmartDashboard.putNumber("Arm Velocity", current_vel); 
     SmartDashboard.putNumber("Arm Postion", current_pos); 
   
@@ -80,7 +81,6 @@ public class Arm extends SubsystemBase {
   
   public void setSpeed(double speed) {
     armMotorController.set(speed);
-    System.out.println("Speed: " + speed);
-    // SmartDashboard.putNumber("ArmSpeed", speed);
+    SmartDashboard.putNumber("ArmSpeed", speed);
   }
 }

@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
@@ -49,8 +50,8 @@ public class RobotContainer {
     private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
    // private Command moveArm = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
-    private Command moveArmUp = new InstantCommand(() -> {arm.setSpeed(1);}, arm);
-    private Command moveArmDown = new InstantCommand(() -> {arm.setSpeed(-1);}, arm);
+    private Command moveArmUp = new RunCommand(() -> {arm.setSpeed(1);}, arm);
+    private Command moveArmDown = new RunCommand(() -> {arm.setSpeed(-1);}, arm);
     private Command armDefaultCmd = new InstantCommand(() -> {arm.setSpeed(0);}, arm);
 
 
