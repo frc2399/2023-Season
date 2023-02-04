@@ -6,22 +6,16 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj.simulation.REVPHSim;
-import edu.wpi.first.wpilibj.simulation.SolenoidSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.system.plant.DCMotor;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.Constants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-
+import edu.wpi.first.wpilibj.simulation.REVPHSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
 
@@ -29,14 +23,10 @@ public class Intake extends SubsystemBase {
   SlewRateLimiter filter;
   private static CANSparkMax leftMotorController;
   private static CANSparkMax rightMotorController;
-  private DoubleSolenoid leftIntakeSolenoid;
+  //private DoubleSolenoid leftIntakeSolenoid;
   private DoubleSolenoid rightIntakeSolenoid;
 
   private REVPHSim simPH;
-  private SolenoidSim leftSolenoidSim;
-  private SolenoidSim rightSolenoidSim;
-  private DCMotorSim leftMotorSim;
-  private DCMotorSim rightMotorSim;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -52,8 +42,6 @@ public class Intake extends SubsystemBase {
 
     if (RobotBase.isSimulation()) {
       simPH = new REVPHSim();
-      leftSolenoidSim = new SolenoidSim(simPH, 1);
-      rightSolenoidSim = new SolenoidSim(simPH, 2);
       
     }
    filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
@@ -73,12 +61,7 @@ public class Intake extends SubsystemBase {
 
   public void closeRight() {
 
-    if (RobotBase.isSimulation()) {
-      rightSolenoidSim.setOutput(true);
-    }
-    else {
       rightIntakeSolenoid.set(Value.kForward);
-    }
 
   }
 
@@ -95,12 +78,7 @@ public class Intake extends SubsystemBase {
 
   public void openRight() {
 
-    if (RobotBase.isSimulation()) {
-      rightSolenoidSim.setOutput(false);
-    }
-    else {
     rightIntakeSolenoid.set(Value.kReverse);
-    }
 
   }
 
@@ -109,14 +87,8 @@ public class Intake extends SubsystemBase {
     speed = filter.calculate(1.0);
     SmartDashboard.putNumber ("intakeSpeed",speed);
 
-    if (RobotBase.isSimulation()) {
-      leftMotorSim.setInput (speed);
-      rightMotorSim.setInput(speed);
-    }
-    else {
       leftMotorController.set(speed);
       rightMotorController.set(speed);
-    }
 
   }
 
@@ -125,28 +97,15 @@ public class Intake extends SubsystemBase {
     //double slew_speed = speed;
     SmartDashboard.putNumber ("intakeSpeed",slew_speed);
 
-    if (RobotBase.isSimulation()) {
-      leftMotorSim.setInput (slew_speed);
-      rightMotorSim.setInput(slew_speed);
-    }
-    else {
       leftMotorController.set(slew_speed);
       rightMotorController.set(slew_speed);
-    }
 
   }
 
   public void spitOut(double speed) {
     speed = filter.calculate(1.0);
-    if (RobotBase.isSimulation()) {
-      leftMotorSim.setInput(-speed);
-      rightMotorSim.setInput(-speed);
-    }
-    else {
       leftMotorController.set(-speed);
       rightMotorController.set(-speed);
-    }
-
   }
 
   //Intake methods (different combos of spinny spin and pneumatics)
@@ -198,12 +157,12 @@ public class Intake extends SubsystemBase {
   // }
 
   public boolean isRightOpen() {
-    if (RobotBase.isSimulation()) {
-      return rightSolenoidSim.getOutput();
-    }
-    else {
+    // if (RobotBase.isSimulation()) {
+    //   return rightSolenoidSim.getOutput();
+    // }
+    // else {
       return (rightIntakeSolenoid.get()== Value.kForward);
-    }
+    // }
   }
 
   @Override
