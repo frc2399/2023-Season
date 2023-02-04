@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -15,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.util.SimEncoder;
 
@@ -32,7 +35,7 @@ public class Arm extends SubsystemBase {
     armMotorController.restoreFactoryDefaults();
     armEncoder = armMotorController.getEncoder();
     armMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    armMotorController.setInverted(false);
+    armMotorController.setInverted(true);
     armEncoder.setPosition(0);
     
     if(RobotBase.isSimulation()) {
@@ -42,7 +45,7 @@ public class Arm extends SubsystemBase {
         10,
         SingleJointedArmSim.estimateMOI(ArmConstants.ARM_LENGTH, ArmConstants.ARM_MASS), 
         ArmConstants.ARM_LENGTH,
-        0,
+        ArmConstants.MIN_ARM_ANGLE,
         ArmConstants.MAX_ARM_ANGLE,
         ArmConstants.ARM_MASS,
         true
@@ -66,6 +69,7 @@ public class Arm extends SubsystemBase {
 
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
 
   }
 

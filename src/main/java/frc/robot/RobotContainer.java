@@ -9,6 +9,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -37,6 +41,9 @@ import frc.robot.util.DriveTurnControls;
 public class RobotContainer {
 
     public final Elevator elevator = new Elevator();
+    public static MechanismLigament2d elevatorMechanism;
+    public static MechanismLigament2d armMechanism;
+
     // The robot's subsystems
     public final static DriveTrain driveTrain = new DriveTrain();
     public final static Arm arm = new Arm();
@@ -66,6 +73,12 @@ public class RobotContainer {
             new ArcadeDriveCmd(driveTrain,
                 () -> -driveTurnControls.getDrive(),
                 () -> driveTurnControls.getTurn()));
+        
+        Mechanism2d mech = new Mechanism2d(3, 2);
+        MechanismRoot2d root = mech.getRoot("root", 2, 0);
+        elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
+        armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 90));
+        SmartDashboard.putData("Mech2d", mech);
 
     }
 
