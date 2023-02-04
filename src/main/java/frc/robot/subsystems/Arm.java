@@ -5,9 +5,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -29,21 +26,15 @@ public class Arm extends SubsystemBase {
   private SingleJointedArmSim armSim;
   private static double current_pos = 0;
   private static double current_vel = 0;
-  public final DoublePublisher armPositionPublisher;
-  public final DoublePublisher armVelocityPublisher;
-
+  
   public Arm() {
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    // get the subtable called "datatable"
-    NetworkTable datatable = inst.getTable("datatable");
     armMotorController = new CANSparkMax(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless);
     armMotorController.restoreFactoryDefaults();
     armEncoder = armMotorController.getEncoder();
     armMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     armMotorController.setInverted(false);
     armEncoder.setPosition(0);
-    armPositionPublisher = datatable.getDoubleTopic("elevator Pos").publish();
-    armVelocityPublisher = datatable.getDoubleTopic("elevator Vel").publish();
+    
     if(RobotBase.isSimulation()) {
       armEncoderSim = new SimEncoder("Elevator");
       armSim = new SingleJointedArmSim(
@@ -64,9 +55,9 @@ public class Arm extends SubsystemBase {
 
     current_pos = armEncoder.getPosition();
     current_vel = armEncoder.getVelocity();
-    armPositionPublisher.set(current_pos);
-    armVelocityPublisher.set(current_vel);
-
+    SmartDashboard.putNumber("Arm Velocity", current_vel); 
+    SmartDashboard.putNumber("Arm Postion", current_pos); 
+  
     // sets input for elevator motor in simulation
     armSim.setInput(armMotorController.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
@@ -88,6 +79,6 @@ public class Arm extends SubsystemBase {
   
   public void setSpeed(double speed) {
     armMotorController.set(speed);
-    SmartDashboard.putNumber("ArmSpeed", speed);
+    // SmartDashboard.putNumber("ArmSpeed", speed);
   }
 }
