@@ -7,9 +7,6 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -32,9 +29,6 @@ public class Elevator extends SubsystemBase {
   public static ElevatorSim elevatorSim;
   private MechanismLigament2d elevatorMechanism;
 
-  public final DoublePublisher elevatorPositionPublisher;
-  public final DoublePublisher elevatorVelocityPublisher;
-
   // Simulated elevator constants and gearbox
   public static final double elevatorGearRatio = 50.0;
   public static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
@@ -50,14 +44,6 @@ public class Elevator extends SubsystemBase {
   public static final double elevatorEncoderDistPerPulse = 2.0 * Math.PI * elevatorDrumRadius / 4096;
 
   public Elevator() {
-
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    // get the subtable called "datatable"
-    NetworkTable datatable = inst.getTable("datatable");
-
-    // publish to the topic in "datatable" called "Out"
-    elevatorPositionPublisher = datatable.getDoubleTopic("elevator Pos").publish();
-    elevatorVelocityPublisher = datatable.getDoubleTopic("elevator Vel").publish();
 
     // initialize motor controllers
     elevatorMotorController = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
@@ -101,8 +87,8 @@ public class Elevator extends SubsystemBase {
 
     currentPos = elevatorSimEncoder.getDistance();
     currentVel = elevatorSimEncoder.getSpeed();
-    elevatorPositionPublisher.set(currentPos);
-    elevatorVelocityPublisher.set(currentVel);
+    SmartDashboard.putNumber("elevator position", currentPos); 
+    SmartDashboard.putNumber("elevator velocity", currentVel); 
 
     // sets input for elevator motor in simulation
     elevatorSim.setInput(elevatorMotorController.get() * RobotController.getBatteryVoltage());
