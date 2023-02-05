@@ -4,10 +4,19 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPRamseteCommand;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.Constants.DriveConstants;
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
@@ -17,7 +26,6 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Command m_autonomousCommand;
 
-  
   @Override
   public void robotInit() {
 
@@ -26,9 +34,33 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     robotContainer = new RobotContainer();
-    //THIS DOESN'T WORK, ETHAN!!!! GRRRRR 😡😡😡😡😡 
-      //now it does :D
 
+    PPRamseteCommand.setLoggingCallbacks(
+      (PathPlannerTrajectory activeTrajectory) -> {
+          // Log current trajectory
+      },
+      (Pose2d targetPose) -> {
+          // Log target pose
+      },
+      (ChassisSpeeds setpointSpeeds) -> {
+          // Log setpoint ChassisSpeeds
+          // System.out.println("log setpoint ChassisSpeeds " + setpointSpeeds);
+          DifferentialDriveWheelSpeeds targetWheelSpeeds =
+          DriveConstants.kDriveKinematics.toWheelSpeeds(setpointSpeeds);
+          // ChassisSpeeds chassisSpeeds = 
+          // DriveConstants.kDriveKinematics.toChassisSpeeds(targetWheelSpeeds);
+          double leftTargetVelocity = targetWheelSpeeds.leftMetersPerSecond;
+          double rightTargetVelocity = targetWheelSpeeds.rightMetersPerSecond;
+
+          SmartDashboard.putNumber("Left Target Velocity", leftTargetVelocity);
+          SmartDashboard.putNumber("Right Target Velocity", rightTargetVelocity);
+
+      },
+      (Translation2d translationError, Rotation2d rotationError) -> {
+          // Log path following error
+          //TODO what is this?
+      }
+);
   }
 
   @Override
@@ -50,7 +82,6 @@ public class Robot extends TimedRobot {
   @Override
 
   public void autonomousInit(){
-    DriveTrain.autonomousInit();
         m_autonomousCommand = robotContainer.getAutonomousCommand();
         System.out.println("We are in auton init!" + m_autonomousCommand);
 
@@ -64,6 +95,6 @@ public class Robot extends TimedRobot {
 
   public void disabledPeriodic() {
     //Elevator.motorController.set(0.0);
-    robotContainer.elevator.setSpeed(0);
+    // robotContainer.elevator.setSpeed(0);
   }
 }

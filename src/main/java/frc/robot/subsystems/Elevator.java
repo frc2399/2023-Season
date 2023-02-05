@@ -7,14 +7,15 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -23,13 +24,13 @@ import frc.robot.util.SimEncoder;
 
 public class Elevator extends SubsystemBase {
 
-  public static CANSparkMax elevatorMotorController;
-  public static RelativeEncoder elevatorEncoder;
+  public static CANSparkMax elevatorMotorControllerRight;
+  public static CANSparkMax elevatorMotorControllerLeft;
+  public static RelativeEncoder elevatorEncoderRight;
+  public static RelativeEncoder elevatorEncoderLeft;
   public static SimEncoder elevatorSimEncoder;
   public static ElevatorSim elevatorSim;
-
-  public final DoublePublisher elevatorPositionPublisher;
-  public final DoublePublisher elevatorVelocityPublisher;
+  private MechanismLigament2d elevatorMechanism;
 
   // Simulated elevator constants and gearbox
   public static final double elevatorGearRatio = 50.0;
@@ -39,38 +40,39 @@ public class Elevator extends SubsystemBase {
 
   public final static DCMotor elevatorGearbox = DCMotor.getNEO(1);
 
-  private static double current_pos = 0;
-  private static double current_vel = 0;
+  private static double currentPos = 0;
+  private static double currentVel = 0;
 
   // The simulated encoder will return
   public static final double elevatorEncoderDistPerPulse = 2.0 * Math.PI * elevatorDrumRadius / 4096;
 
   public Elevator() {
 
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    // get the subtable called "datatable"
-    NetworkTable datatable = inst.getTable("datatable");
-
-    // publish to the topic in "datatable" called "Out"
-    elevatorPositionPublisher = datatable.getDoubleTopic("elevator Pos").publish();
-    elevatorVelocityPublisher = datatable.getDoubleTopic("elevator Vel").publish();
-
     // initialize motor controllers
-    elevatorMotorController = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+    elevatorMotorControllerRight = new CANSparkMax(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+    elevatorMotorControllerLeft = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+
 
     // restore factory settings to reset to a known state
-    elevatorMotorController.restoreFactoryDefaults();
+    elevatorMotorControllerRight.restoreFactoryDefaults();
+    elevatorMotorControllerLeft.restoreFactoryDefaults();
 
     // set climber motors to coast mode
-    elevatorMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    elevatorMotorControllerRight.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    elevatorMotorControllerLeft.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // initialize motor encoder
-    elevatorEncoder = elevatorMotorController.getEncoder();
+    elevatorEncoderRight = elevatorMotorControllerRight.getEncoder();
+    elevatorEncoderLeft = elevatorMotorControllerLeft.getEncoder();
 
     // invert the motor controllers so climber climbs right
-    elevatorMotorController.setInverted(false);
+    elevatorMotorControllerRight.setInverted(false);
+    elevatorMotorControllerLeft.setInverted(true);
 
-    elevatorEncoder.setPosition(0); //do we need this??? owo
+    elevatorEncoderRight.setPosition(0); 
+    elevatorEncoderLeft.setPosition(0); 
+
+    elevatorMotorControllerLeft.follow(elevatorMotorControllerRight);
 
     // this code is instantiating the simulator stuff for climber
     if (RobotBase.isSimulation()) {
@@ -85,19 +87,23 @@ public class Elevator extends SubsystemBase {
           true,
           VecBuilder.fill(0.001)
       );
+      Mechanism2d mech = new Mechanism2d(3, 2);
+      MechanismRoot2d root = mech.getRoot("root", 2, 0);
+      elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
+      SmartDashboard.putData("Mech2d", mech);
     }
   }
 
   @Override
   public void simulationPeriodic() {
 
-    current_pos = elevatorSimEncoder.getDistance();
-    current_vel = elevatorSimEncoder.getSpeed();
-    elevatorPositionPublisher.set(current_pos);
-    elevatorVelocityPublisher.set(current_vel);
+    currentPos = elevatorSimEncoder.getDistance();
+    currentVel = elevatorSimEncoder.getSpeed();
+    SmartDashboard.putNumber("elevator position", currentPos); 
+    SmartDashboard.putNumber("elevator velocity", currentVel); 
 
     // sets input for elevator motor in simulation
-    elevatorSim.setInput(elevatorMotorController.get() * RobotController.getBatteryVoltage());
+    elevatorSim.setInput(elevatorMotorControllerRight.get() * RobotController.getBatteryVoltage());
     // Next, we update it. The standard loop time is 20ms.
     elevatorSim.update(0.02);
     // Finally, we set our simulated encoder's readings
@@ -118,9 +124,8 @@ public class Elevator extends SubsystemBase {
       // the rest of the code. encoders are already in inches
       return elevatorSimEncoder.getDistance();
     }
-    else
-    {
-      return elevatorEncoder.getPosition();
+    else {
+      return elevatorEncoderRight.getPosition();
     }
   }
 
@@ -131,14 +136,13 @@ public class Elevator extends SubsystemBase {
       // the rest of the code. encoders are already in inches
       return elevatorSimEncoder.getSpeed();
     }
-    else
-    {
-      return elevatorEncoder.getVelocity();
+    else {
+      return elevatorEncoderRight.getVelocity();
     }
   }
 
   public void setSpeed(double speed) {
-    elevatorMotorController.set(speed);
+    elevatorMotorControllerRight.set(speed);
   }
   
 }
