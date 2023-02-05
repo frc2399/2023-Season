@@ -7,7 +7,7 @@
 // Anna (the better one) was here :)
 // Anna (the even better one) was here :)
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.drivetrain;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
@@ -34,6 +34,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain extends SubsystemBase {
+
+    private DriveIO driveIO;
 
     private static CANSparkMax leftFrontMotorController;
     private static CANSparkMax rightFrontMotorController;
@@ -64,7 +66,12 @@ public class DriveTrain extends SubsystemBase {
 
     public DriveTrain() {
 
-    
+        if (RobotBase.isSimulation()) {
+            driveIO = new SimDrive();
+        } else {
+            driveIO = new RealDrive();
+        }
+ 
 
         leftFrontMotorController = new CANSparkMax(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
         rightFrontMotorController = new CANSparkMax(DriveConstants.RIGHT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
@@ -142,6 +149,9 @@ public class DriveTrain extends SubsystemBase {
     @Override
     public void periodic() {
 
+        // runs sim periodic code in simDrive
+        driveIO.updateForSim();
+
         odometry.update(
             // we want CCW positive, CW negative
             getGyroAngle(),
@@ -160,58 +170,17 @@ public class DriveTrain extends SubsystemBase {
         SmartDashboard.putNumber("odometry y", getPoseMeters().getY());
         SmartDashboard.putNumber("odometry angle", getPoseMeters().getRotation().getDegrees());
 
-
-
-
-    }
-
-    @Override
-    public void simulationPeriodic() {
-         // This method will be called once per scheduler run when in simulation
-        // Set the inputs to the system. Note that we need to convert
-        // the [-1, 1] PWM signal to voltage by multiplying it by the
-        // robot controller voltage.
-
-        driveSim.setInputs(
-            leftFrontMotorController.get() * RobotController.getInputVoltage(),
-            rightFrontMotorController.get() * RobotController.getInputVoltage()
-        );
-    
-        // Advance the model by 20 ms. Note that if you are running this
-        // subsystem in a separate thread or have changed the nominal timestep
-        // of TimedRobot, this value needs to match it.
-        driveSim.update(0.02);
-
-        // Update all of our sensors.
-        leftEncoderSim.setDistance(driveSim.getLeftPositionMeters());
-        leftEncoderSim.setSpeed(driveSim.getLeftVelocityMetersPerSecond());
-        rightEncoderSim.setDistance(driveSim.getRightPositionMeters());
-        rightEncoderSim.setSpeed(driveSim.getRightVelocityMetersPerSecond());
-
-        // we want CCW positive, CW negative
-        gyroSim.setAngle(new Rotation2d(driveSim.getHeading().getRadians()));
     }
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
     public void setMotors(double leftSpeed, double rightSpeed) {
-        leftFrontMotorController.set(leftSpeed);
-        rightFrontMotorController.set(rightSpeed);
+        driveIO.setMotors(leftSpeed, rightSpeed);
     }
 
     public void setMotorVoltage(double leftVolt, double rightVolt) {
-
-        if (RobotBase.isSimulation()) {
-            // Ethan hack: to convert voltage to percent
-            // TODO: see if getInputVoltage is more accurate
-            leftFrontMotorController.set(leftVolt / 12); //RobotController.getInputVoltage());
-            rightFrontMotorController.set(rightVolt / 12); //RobotController.getInputVoltage());
-        }
-        else {
-            leftFrontMotorController.setVoltage(leftVolt);
-            rightFrontMotorController.setVoltage(rightVolt);
-        }
+        driveIO.setMotorVoltage(leftVolt, rightVolt);
     }
 
     /**
@@ -268,49 +237,24 @@ public class DriveTrain extends SubsystemBase {
     // }
 
     public Rotation2d getGyroAngle() {
-        if (RobotBase.isSimulation()) {
-            return gyroSim.getAngle();
-        }
-        else {
-            // negative sign to make CCW positive
-            return new Rotation2d(Units.degreesToRadians(-ahrs.getAngle()));
-        }
+        return driveIO.getGyroAngle(); 
     }
 
     public double getRightEncoderMeters() {
-        if (RobotBase.isSimulation()) {
-            return rightEncoderSim.getDistance();
-        }
-        else {
-            return (rightEncoder.getPosition());
-        }
+        return driveIO.getRightEncoderMeters();
     }
 
     public double getLeftEncoderMeters() {
-        if (RobotBase.isSimulation()) {
-            return leftEncoderSim.getDistance();
+            return driveIO.getLeftEncoderMeters();
         }
-        else {
-            return (leftEncoder.getPosition());
-        }
-    }
+
 
     public double getRightEncoderMetersPerSecond() {
-        if (RobotBase.isSimulation()) {
-            return rightEncoderSim.getSpeed();
+            return driveIO.getRightEncoderMetersPerSecond();
         }
-        else {
-            return (rightEncoder.getVelocity());
-        }
-    }
 
     public double getLeftEncoderMetersPerSecond() {
-        if (RobotBase.isSimulation()) {
-            return leftEncoderSim.getSpeed();
+            return driveIO.getLeftEncoderMetersPerSecond();
         }
-        else {
-            return leftEncoder.getVelocity();
-        }
-    }
 
 }
