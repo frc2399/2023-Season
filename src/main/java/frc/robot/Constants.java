@@ -13,15 +13,8 @@ import edu.wpi.first.math.util.Units;
  */
 public class Constants {
     public static final class DriveConstants {
-        // motor ids
-        // public static final int RIGHT_FRONT_DRIVE_CAN_ID = 3;
-        // public static final int RIGHT_MIDDLE_DRIVE_CAN_ID = 4;
-        // public static final int RIGHT_BACK_DRIVE_CAN_ID = 5;
-        // public static final int LEFT_FRONT_DRIVE_CAN_ID = 6;
-        // public static final int LEFT_MIDDLE_DRIVE_CAN_ID = 7;
-        // public static final int LEFT_BACK_DRIVE_CAN_ID = 8;
 
-        //pineapple bot
+        //motor ids
         public static final int RIGHT_FRONT_DRIVE_CAN_ID = 1;
         public static final int RIGHT_BACK_DRIVE_CAN_ID = 2;
         public static final int LEFT_FRONT_DRIVE_CAN_ID = 4;
@@ -71,7 +64,7 @@ public class Constants {
         public static final double ARM_MASS = 1;
         //arm length in meters
         public static final double ARM_LENGTH = 0.3;
-        public static final int ARM_MOTOR_ID = 9;
+        public static final int ARM_MOTOR_ID = 5;
         public static final double RADIANS_PER_REVOLUTION = 2 * Math.PI;
     }
 
