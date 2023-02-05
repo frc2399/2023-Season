@@ -89,7 +89,7 @@ public class Constants {
         public static final int XBOX_PORT = 0;
 
         public static final int FORWARD_JOYSTICK_INVERT = 1;
-        public static final int TURN_JOYSTICK_INVERT = 1;
+        public static final int TURN_JOYSTICK_INVERT = -1;
 
         public static final double FORWARD_DEADBAND = 0.05;
         public static final double TURN_DEADBAND = 0.1;
