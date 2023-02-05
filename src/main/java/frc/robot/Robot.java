@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
       },
       (ChassisSpeeds setpointSpeeds) -> {
           // Log setpoint ChassisSpeeds
-          System.out.println("log setpoint ChassisSpeeds " + setpointSpeeds);
+          // System.out.println("log setpoint ChassisSpeeds " + setpointSpeeds);
           DifferentialDriveWheelSpeeds targetWheelSpeeds =
           DriveConstants.kDriveKinematics.toWheelSpeeds(setpointSpeeds);
           // ChassisSpeeds chassisSpeeds = 

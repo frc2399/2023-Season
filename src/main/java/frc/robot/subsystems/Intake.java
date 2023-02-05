@@ -6,11 +6,20 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.simulation.REVPHSim;
+import edu.wpi.first.wpilibj.simulation.SolenoidSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,11 +27,16 @@ import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
 
+  private static double intakeSpeed;
   SlewRateLimiter filter;
   private static CANSparkMax leftMotorController;
   private static CANSparkMax rightMotorController;
   //private DoubleSolenoid leftIntakeSolenoid;
   private DoubleSolenoid rightIntakeSolenoid;
+  private SolenoidSim leftSolenoidSim;
+  private SolenoidSim rightSolenoidSim;
+  private DCMotorSim leftMotorSim;
+  private DCMotorSim rightMotorSim;
 
 
   /** Creates a new Intake. */
@@ -36,8 +50,17 @@ public class Intake extends SubsystemBase {
     rightMotorController.setInverted(true);
     leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    
 
-   filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
+    if (RobotBase.isSimulation()) {
+      REVPHSim simPH = new REVPHSim();
+      leftSolenoidSim = new SolenoidSim(simPH, 1);
+      rightSolenoidSim = new SolenoidSim(simPH, 2);
+      leftMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
+      rightMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
+      
+    }
+  filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
     }
 
   //Pneumatic methods
@@ -75,24 +98,24 @@ public class Intake extends SubsystemBase {
 
   }
 
-  //Intake spinny spin methods
-
-
-  public void setSpeed(double speed) {
-    double slewSpeed = filter.calculate(speed);
-    SmartDashboard.putNumber ("intakeSpeed",slewSpeed);
-
+  public void setMotor(double intakeSpeed) {
+    double slewSpeed = filter.calculate(intakeSpeed);
+    if (RobotBase.isSimulation()) {
+      leftMotorSim.setInput(slewSpeed);
+      rightMotorSim.setInput(slewSpeed);
+    }
+    else {
       leftMotorController.set(slewSpeed);
       rightMotorController.set(slewSpeed);
-
-  }
+    }
+}
 
   //Intake methods (different combos of spinny spin and pneumatics)
   public void intakeBothArms() {
 
     //closeLeft();
     closeRight();
-    setSpeed(Constants.IntakeConstants.INTAKE_SPEED);
+    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
 
   }
 
@@ -100,7 +123,7 @@ public class Intake extends SubsystemBase {
 
     // openLeft();
     closeRight();
-    setSpeed(Constants.IntakeConstants.INTAKE_SPEED);
+    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
 
   }
 
@@ -108,14 +131,14 @@ public class Intake extends SubsystemBase {
 
     openRight();
     // closeLeft();
-    setSpeed(Constants.IntakeConstants.INTAKE_SPEED);
+    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
 
   }
 
   public void outtake() {
     // closeLeft();
     closeRight();
-    setSpeed(Constants.IntakeConstants.OUTTAKE_SPEED);
+    setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED);
   }
 
   public void drop() {
