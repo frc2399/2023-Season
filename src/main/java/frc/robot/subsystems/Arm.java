@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.util.SimEncoder;
@@ -37,9 +38,12 @@ public class Arm extends SubsystemBase {
     armMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     armMotorController.setInverted(true);
     armEncoder.setPosition(0);
+
+    armEncoder.setPositionConversionFactor(Constants.ArmConstants.DEGREES_PER_TICK);
     
     if(RobotBase.isSimulation()) {
       armEncoderSim = new SimEncoder("Elevator");
+      armEncoderSim.setDistance(-Math.PI *3 /4);
       armSim = new SingleJointedArmSim(
         DCMotor.getNEO(1), //1 NEO motor on the climber
         10,
@@ -83,6 +87,31 @@ public class Arm extends SubsystemBase {
   
   }
   
+  public double getEncoderPosition() {
+    if (RobotBase.isSimulation()) {
+      // simulator output is in meters, needs to be converted to inches to work with
+      // the rest of the code. encoders are already in inches
+      return armEncoderSim.getDistance();
+    }
+    else
+    {
+      return armEncoder.getPosition();
+    }
+  }
+
+  //returns speed of elevator
+  public double getEncoderSpeed() {
+    if (RobotBase.isSimulation()) {
+      // simulator output is in meters, needs to be converted to inches to work with
+      // the rest of the code. encoders are already in inches
+      return armEncoderSim.getSpeed();
+    }
+    else
+    {
+      return armEncoder.getVelocity();
+    }
+  }
+
   public void setSpeed(double speed) {
     armMotorController.set(speed);
     SmartDashboard.putNumber("ArmSpeed", speed);

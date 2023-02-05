@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.ArcadeDriveCmd;
+import frc.robot.commands.SetArmAngleCmd;
 import frc.robot.commands.SetElevatorPositionCmd;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
@@ -61,6 +62,7 @@ public class RobotContainer {
     private Command moveArmUp = new RunCommand(() -> {arm.setSpeed(1);}, arm);
     private Command moveArmDown = new RunCommand(() -> {arm.setSpeed(-1);}, arm);
     private Command armDefaultCmd = new InstantCommand(() -> {arm.setSpeed(0);}, arm);
+    private Command moveArmHalfway = new SetArmAngleCmd(arm, -Math.PI / 4);
 
 
     public RobotContainer() {
@@ -80,7 +82,7 @@ public class RobotContainer {
         elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
         elevatorMechanism.setColor(new Color8Bit(0, 204, 255));
         elevatorMechanism.setLineWeight(20);
-        armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 90));
+        armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 140));
         armMechanism.setColor(new Color8Bit(255, 0, 216));
         SmartDashboard.putData("Mech2d", mech);
 
@@ -92,6 +94,7 @@ public class RobotContainer {
         new JoystickButton(joystick,5).whenPressed(middleElevator);
         new JoystickButton(joystick,6).whileTrue(moveArmUp);
         new JoystickButton(joystick, 7).whileTrue(moveArmDown);
+        new JoystickButton(joystick, 8).whileTrue(moveArmHalfway);
 
     }
 
