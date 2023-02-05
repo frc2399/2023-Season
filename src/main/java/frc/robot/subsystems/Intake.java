@@ -13,47 +13,47 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.REVPHSim;
 import edu.wpi.first.wpilibj.simulation.SolenoidSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
   private static double intakeSpeed;
- SlewRateLimiter filter;
+  SlewRateLimiter filter;
   private static CANSparkMax leftMotorController;
   private static CANSparkMax rightMotorController;
-  private DoubleSolenoid leftIntakeSolenoid;
+  //private DoubleSolenoid leftIntakeSolenoid;
   private DoubleSolenoid rightIntakeSolenoid;
-
-  private REVPHSim simPH;
   private SolenoidSim leftSolenoidSim;
   private SolenoidSim rightSolenoidSim;
   private DCMotorSim leftMotorSim;
   private DCMotorSim rightMotorSim;
+
 
   /** Creates a new Intake. */
   public Intake() {
 
     leftMotorController = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     rightMotorController = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR_ID, MotorType.kBrushless);
-    rightIntakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.SOLENOID_ID, 3);
+    rightIntakeSolenoid = new DoubleSolenoid(IntakeConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, 
+    IntakeConstants.FORWARD_CHANNEL_SOLENOID_ID, IntakeConstants.REVERSE_CHANNEL_SOLENOID_ID);
     leftMotorController.setInverted(false);
-    rightMotorController.setInverted(false);
+    rightMotorController.setInverted(true);
     leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     
 
     if (RobotBase.isSimulation()) {
-      simPH = new REVPHSim();
+      REVPHSim simPH = new REVPHSim();
       leftSolenoidSim = new SolenoidSim(simPH, 1);
       rightSolenoidSim = new SolenoidSim(simPH, 2);
       leftMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
@@ -77,12 +77,7 @@ public class Intake extends SubsystemBase {
 
   public void closeRight() {
 
-    if (RobotBase.isSimulation()) {
-      rightSolenoidSim.setOutput(true);
-    }
-    else {
       rightIntakeSolenoid.set(Value.kForward);
-    }
 
   }
 
@@ -99,12 +94,7 @@ public class Intake extends SubsystemBase {
 
   public void openRight() {
 
-    if (RobotBase.isSimulation()) {
-      rightSolenoidSim.setOutput(false);
-    }
-    else {
-    rightIntakeSolenoid.set(Value.kOff);
-    }
+    rightIntakeSolenoid.set(Value.kReverse);
 
   }
 
@@ -169,12 +159,7 @@ public class Intake extends SubsystemBase {
   // }
 
   public boolean isRightOpen() {
-    if (RobotBase.isSimulation()) {
-      return rightSolenoidSim.getOutput();
-    }
-    else {
       return (rightIntakeSolenoid.get()== Value.kForward);
-    }
   }
 
   @Override

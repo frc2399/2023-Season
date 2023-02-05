@@ -1,9 +1,9 @@
-package frc.robot.commands;
+package frc.robot.commands.drivetrain;
+
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveTrain;
-import java.util.function.Supplier;
 
 public class CurvatureDriveCmd extends CommandBase {
 

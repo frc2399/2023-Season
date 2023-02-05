@@ -16,15 +16,16 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.commands.ArcadeDriveCmd;
-import frc.robot.commands.CollectPieceCmd;
-import frc.robot.commands.IntakeForGivenTime;
-import frc.robot.commands.SetElevatorPositionCmd;
+import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.intake.CollectPieceCmd;
+import frc.robot.commands.intake.IntakeForGivenTime;
+import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
@@ -43,25 +44,30 @@ import frc.robot.util.DriveTurnControls;
 
 public class RobotContainer {
 
-    public final Elevator elevator = new Elevator();
     // The robot's subsystems
-    public final static DriveTrain driveTrain = new DriveTrain();
-    public final static Intake intake = new Intake();
+    public static final DriveTrain driveTrain = new DriveTrain();
+    public static final Intake intake = new Intake();
+    public static final Elevator elevator = new Elevator();
 
     // Joysticks
-    public static Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
-    public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
+    public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
+    public static final Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
-    private Command extendElevator = new SetElevatorPositionCmd(elevator, 1.0);
-    private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
-    private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
+    //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
+    //private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
+    //private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
+    private Command setElevatorSpeedUp = new RunCommand(() -> elevator.setSpeed(0.2), elevator);
+    private Command setElevatorSpeedDown = new RunCommand(() -> elevator.setSpeed(-0.2), elevator);
+    private Command stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
     private Command collectPiece = new CollectPieceCmd(intake);
-    private Command dropCone = new InstantCommand(() -> {intake.drop();}, intake);
-    private Command bigIntake = new InstantCommand(() -> {intake.intakeBothArms();}, intake);
-    private Command leftOnly = new InstantCommand(() -> {intake.intakeLeft();}, intake);
-    private Command rightOnly = new InstantCommand(() -> {intake.intakeRight();}, intake);
-    private Command noSpin = new InstantCommand(() -> {intake.setMotor(0);}, intake);
+    private Command dropCone = new InstantCommand(() -> intake.drop(), intake);
+    // private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
+    // private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
+    // private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
+    private Command noSpin = new RunCommand(() -> intake.setMotor(0), intake);
+    private Command spinIn = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake);
+    private Command spitOut = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake);
 
     public RobotContainer(){
 
@@ -77,15 +83,19 @@ public class RobotContainer {
                 () -> -driveTurnControls.getDrive(),
                 () -> driveTurnControls.getTurn()));
         intake.setDefaultCommand(noSpin);
+        elevator.setDefaultCommand(stopElevator);
 
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(joystick,3).whileTrue(extendElevator);
-        new JoystickButton(joystick,4).whileTrue(retractElevator);
-        new JoystickButton(joystick,5).whileTrue(middleElevator);
+        new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
+        new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
         new JoystickButton(joystick,6).whileTrue(dropCone);
         new JoystickButton(joystick,7).whileTrue(collectPiece);
+        new JoystickButton(joystick,8).whileTrue(spinIn);
+        new JoystickButton(joystick,9).whileTrue(spitOut);
+        new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
+        new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
     }
 
     public Command getAutonomousCommand() {
@@ -137,7 +147,7 @@ public class RobotContainer {
         );
 
         return new SequentialCommandGroup(
-            new SetElevatorPositionCmd(elevator, 1.0), 
+            new SetElevatorPositionCmd(elevator, 1),
             new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
             new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT),
             twoPieceAuton,

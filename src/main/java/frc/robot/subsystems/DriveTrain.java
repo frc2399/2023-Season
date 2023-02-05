@@ -5,6 +5,7 @@
 // John was here (\/)(;;)(\/)
 // Clare was here!!!!!!!!!!!!!!
 // Anna (the better one) was here :)
+// Anna (the even better one) was here :)
 
 package frc.robot.subsystems;
 
@@ -42,10 +43,10 @@ public class DriveTrain extends SubsystemBase {
     public static RelativeEncoder leftEncoder;
     public static RelativeEncoder rightEncoder;
 
-    public static AHRS ahrs;
+    public AHRS ahrs;
     public static PIDController turnController;
 
-    public final double kP = 0;
+    public static final double kP = 0;
     static final double kI = 0;
     static final double kD = 0;
     static final double kF = 0;
@@ -108,7 +109,6 @@ public class DriveTrain extends SubsystemBase {
 
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
         if (RobotBase.isSimulation()) {
-
             leftEncoderSim = new SimEncoder("Left Drive");
             rightEncoderSim = new SimEncoder("Right Drive");
             gyroSim = new SimGyro("NavX");

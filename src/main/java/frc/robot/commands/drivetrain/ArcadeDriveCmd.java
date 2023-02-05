@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
@@ -36,12 +36,10 @@ public class ArcadeDriveCmd extends CommandBase {
 
         double left = realTimeSpeed + realTimeTurn;
         double right = realTimeSpeed - realTimeTurn;
-        if (isSlow)
-        {        
+        if (isSlow) {        
             this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
         }
-        else
-        {
+        else {
             this.driveSubsystem.setMotors(left, right);
         }
     }

@@ -68,8 +68,9 @@ public class Constants {
 
         public static final int LEFT_INTAKE_MOTOR_ID = 9;
         public static final int RIGHT_INTAKE_MOTOR_ID = 10;
-        public static final int PH_ADDRESS = 1;
-        public static final int SOLENOID_ID = 2;
+        public static final int PCM_CAN_ID = 3;
+        public static final int FORWARD_CHANNEL_SOLENOID_ID = 2;
+        public static final int REVERSE_CHANNEL_SOLENOID_ID = 3;
         public static final int EXTEND_INTAKE_ARM_RIGHT = 2;
         public static final double INTAKE_SLEW_RATE = 10;
         public static final double INTAKE_IN_SPEED = 1.0;
