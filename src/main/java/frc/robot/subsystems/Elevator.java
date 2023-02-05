@@ -83,7 +83,7 @@ public class Elevator extends SubsystemBase {
           Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT,
           Constants.ElevatorConstants.MAX_ELEVATOR_HEIGHT,
           true,
-          VecBuilder.fill(0.01)
+          VecBuilder.fill(0.001)
       );
     }
   }

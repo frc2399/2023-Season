@@ -8,6 +8,7 @@ import com.pathplanner.lib.commands.PPRamseteCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -55,18 +56,17 @@ public class RobotContainer {
     public static Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
+    
     private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
     private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
-   // private Command moveArm = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
-    private Command moveArmUp = new RunCommand(() -> {arm.setSpeed(1);}, arm);
-    private Command moveArmDown = new RunCommand(() -> {arm.setSpeed(-1);}, arm);
-    private Command armDefaultCmd = new InstantCommand(() -> {arm.setSpeed(0);}, arm);
-    private Command moveArmHalfway = new SetArmAngleCmd(arm, -Math.PI / 4);
-
+    
+    private Command moveArmUp = new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);});
+    private Command moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
+    private Command armDefaultCmd = new SetArmAngleCmd(arm);
+    private Command moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
 
     public RobotContainer() {
-
         // Configure the button bindings
         configureButtonBindings();
         arm.setDefaultCommand(armDefaultCmd);
@@ -77,8 +77,10 @@ public class RobotContainer {
                 () -> -driveTurnControls.getDrive(),
                 () -> driveTurnControls.getTurn()));
         
-        Mechanism2d mech = new Mechanism2d(3, 2);
-        MechanismRoot2d root = mech.getRoot("root", 2, 0);
+        //Makes a mechanism (lines to show elevator and arm) in simulator
+        //Team colors!
+        Mechanism2d mech = new Mechanism2d(1, 1);
+        MechanismRoot2d root = mech.getRoot("root", 0.3, 0);
         elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
         elevatorMechanism.setColor(new Color8Bit(0, 204, 255));
         elevatorMechanism.setLineWeight(20);
@@ -94,7 +96,7 @@ public class RobotContainer {
         new JoystickButton(joystick,5).whenPressed(middleElevator);
         new JoystickButton(joystick,6).whileTrue(moveArmUp);
         new JoystickButton(joystick, 7).whileTrue(moveArmDown);
-        new JoystickButton(joystick, 8).whileTrue(moveArmHalfway);
+        new JoystickButton(joystick, 8).onTrue(moveArmHalfway);
 
     }
 

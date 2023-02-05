@@ -30,6 +30,7 @@ public class Arm extends SubsystemBase {
   private SingleJointedArmSim armSim;
   private static double current_pos = 0;
   private static double current_vel = 0;
+  private double targetAngle = - Math.PI/2; 
   
   public Arm() {
     armMotorController = new CANSparkMax(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless);
@@ -39,14 +40,13 @@ public class Arm extends SubsystemBase {
     armMotorController.setInverted(true);
     armEncoder.setPosition(0);
 
-    armEncoder.setPositionConversionFactor(Constants.ArmConstants.DEGREES_PER_TICK);
+    armEncoder.setPositionConversionFactor(Constants.ArmConstants.RADIANS_PER_REVOLUTION);
     
     if(RobotBase.isSimulation()) {
       armEncoderSim = new SimEncoder("Elevator");
-      armEncoderSim.setDistance(-Math.PI *3 /4);
       armSim = new SingleJointedArmSim(
         DCMotor.getNEO(1), //1 NEO motor on the climber
-        10,
+        10, //TODO find out gearing
         SingleJointedArmSim.estimateMOI(ArmConstants.ARM_LENGTH, ArmConstants.ARM_MASS), 
         ArmConstants.ARM_LENGTH,
         ArmConstants.MIN_ARM_ANGLE,
@@ -68,18 +68,16 @@ public class Arm extends SubsystemBase {
     // sets our simulated encoder speeds
     armEncoderSim.setSpeed(armSim.getVelocityRadPerSec());
 
-    // for reference: leftEncoderSim.setSpeed(driveSim.getLeftVelocityMetersPerSecond());
-
+    SmartDashboard.putNumber("arm angle", armSim.getAngleRads());
 
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
-    RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
+    RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(armSim.getAngleRads()) - 50);
 
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     current_pos = armEncoderSim.getDistance();
     current_vel = armEncoderSim.getSpeed();
     SmartDashboard.putNumber("Arm Velocity", current_vel); 
@@ -89,8 +87,6 @@ public class Arm extends SubsystemBase {
   
   public double getEncoderPosition() {
     if (RobotBase.isSimulation()) {
-      // simulator output is in meters, needs to be converted to inches to work with
-      // the rest of the code. encoders are already in inches
       return armEncoderSim.getDistance();
     }
     else
@@ -99,11 +95,8 @@ public class Arm extends SubsystemBase {
     }
   }
 
-  //returns speed of elevator
   public double getEncoderSpeed() {
     if (RobotBase.isSimulation()) {
-      // simulator output is in meters, needs to be converted to inches to work with
-      // the rest of the code. encoders are already in inches
       return armEncoderSim.getSpeed();
     }
     else
@@ -115,5 +108,14 @@ public class Arm extends SubsystemBase {
   public void setSpeed(double speed) {
     armMotorController.set(speed);
     SmartDashboard.putNumber("ArmSpeed", speed);
+  }
+
+  public double getTargetAngle() {
+    return targetAngle; 
+  }
+
+  public void setTargetAngle(double angle) {
+    System.out.println("Set target to " + angle);
+    targetAngle = angle; 
   }
 }

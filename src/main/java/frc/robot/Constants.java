@@ -73,7 +73,7 @@ public class Constants {
         //arm length in meters
         public static final double ARM_LENGTH = 0.3;
         public static final int ARM_MOTOR_ID = 9;
-        public static final double DEGREES_PER_TICK = 360/42;
+        public static final double RADIANS_PER_REVOLUTION = 2 * Math.PI;
     }
 
 
