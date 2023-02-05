@@ -13,6 +13,11 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -22,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
+import frc.robot.commands.SetArmAngleCmd;
+import frc.robot.subsystems.Arm;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
@@ -45,9 +52,13 @@ import frc.robot.util.DriveTurnControls;
 public class RobotContainer {
 
     // The robot's subsystems
+    public final static Arm arm = new Arm();
     public static final DriveTrain driveTrain = new DriveTrain();
     public static final Intake intake = new Intake();
-    public static final Elevator elevator = new Elevator();
+    public final Elevator elevator = new Elevator();
+    
+    public static MechanismLigament2d elevatorMechanism;
+    public static MechanismLigament2d armMechanism;
 
     // Joysticks
     public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
@@ -67,27 +78,45 @@ public class RobotContainer {
     // private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
     private Command noSpin = new RunCommand(() -> intake.setMotor(0), intake);
     private Command spinIn = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake);
-    private Command spitOut = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake);
-
-    public RobotContainer(){
-
-        DriverStation.silenceJoystickConnectionWarning(true);
+    private Command spitOut = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake);    
     
+    private Command moveArmUp = new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);});
+    private Command moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
+    private Command armDefaultCmd = new SetArmAngleCmd(arm);
+    private Command moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
+
+    public RobotContainer() {
+        DriverStation.silenceJoystickConnectionWarning(true);
         // Configure the button bindings
         configureButtonBindings();
-    
 
         // Configure default commands
         driveTrain.setDefaultCommand(
             new ArcadeDriveCmd(driveTrain,
                 () -> -driveTurnControls.getDrive(),
-                () -> driveTurnControls.getTurn()));
+                () -> driveTurnControls.getTurn()));        
+        
         intake.setDefaultCommand(noSpin);
         elevator.setDefaultCommand(stopElevator);
+        arm.setDefaultCommand(armDefaultCmd);
+        
+        //Makes a mechanism (lines to show elevator and arm) in simulator
+        //Team colors!
+        Mechanism2d mech = new Mechanism2d(1, 1);
+        MechanismRoot2d root = mech.getRoot("root", 0.3, 0);
+        elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
+        elevatorMechanism.setColor(new Color8Bit(0, 204, 255));
+        elevatorMechanism.setLineWeight(20);
+        armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 140));
+        armMechanism.setColor(new Color8Bit(255, 0, 216));
+        SmartDashboard.putData("Mech2d", mech);
 
     }
 
     private void configureButtonBindings() {
+        new JoystickButton(joystick,0).whileTrue(moveArmUp);
+        new JoystickButton(joystick, 1).whileTrue(moveArmDown);
+        new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
         new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
         new JoystickButton(joystick,6).whileTrue(dropCone);
