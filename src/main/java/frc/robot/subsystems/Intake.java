@@ -28,7 +28,6 @@ import frc.robot.Constants.IntakeConstants;
 public class Intake extends SubsystemBase {
 
   private static double intakeSpeed;
-  SlewRateLimiter filter;
   private static CANSparkMax leftMotorController;
   private static CANSparkMax rightMotorController;
   //private DoubleSolenoid leftIntakeSolenoid;
@@ -37,6 +36,7 @@ public class Intake extends SubsystemBase {
   private SolenoidSim rightSolenoidSim;
   private DCMotorSim leftMotorSim;
   private DCMotorSim rightMotorSim;
+  private double slewRate = 0.6;
 
 
   /** Creates a new Intake. */
@@ -50,6 +50,9 @@ public class Intake extends SubsystemBase {
     rightMotorController.setInverted(true);
     leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
     rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    // built in slew rate for spark max
+    leftMotorController.setOpenLoopRampRate(slewRate);
+    rightMotorController.setOpenLoopRampRate(slewRate);
     
 
     if (RobotBase.isSimulation()) {
@@ -60,7 +63,6 @@ public class Intake extends SubsystemBase {
       rightMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
       
     }
-  filter = new SlewRateLimiter(IntakeConstants.INTAKE_SLEW_RATE);
     }
 
   //Pneumatic methods
@@ -99,14 +101,14 @@ public class Intake extends SubsystemBase {
   }
 
   public void setMotor(double intakeSpeed) {
-    double slewSpeed = filter.calculate(intakeSpeed);
+  
     if (RobotBase.isSimulation()) {
-      leftMotorSim.setInput(slewSpeed);
-      rightMotorSim.setInput(slewSpeed);
+      leftMotorSim.setInput(intakeSpeed);
+      rightMotorSim.setInput(intakeSpeed);
     }
     else {
-      leftMotorController.set(slewSpeed);
-      rightMotorController.set(slewSpeed);
+      leftMotorController.set(intakeSpeed);
+      rightMotorController.set(intakeSpeed);
     }
 }
 
