@@ -54,6 +54,13 @@ public class Constants {
         public static final int ELEVATOR_SLEW = 5;
         public static final double MIN_ELEVATOR_HEIGHT = Units.inchesToMeters(2);
         public static final double MAX_ELEVATOR_HEIGHT = Units.inchesToMeters(75);
+
+        public static final double CONE_TOP_NODE_HEIGHT = Units.inchesToMeters(47);
+        public static final double CUBE_TOP_NODE_HEIGHT = Units.inchesToMeters(36);
+        public static final double CONE_MID_NODE_HEIGHT = Units.inchesToMeters(35);
+        public static final double CUBE_MID_NODE_HEIGHT = Units.inchesToMeters(24);
+        public static final double CONE_LOW_NODE_HEIGHT = Units.inchesToMeters(2);
+        public static final double CUBE_LOW_NODE_HEIGHT = Units.inchesToMeters(2);
         
     }
     public static final class ArmConstants {
@@ -88,6 +95,13 @@ public class Constants {
         public static final int JOYSTICK_PORT = 1;
 
     } 
+
+    public static final class XboxMappingToJoystick{
+        public static final int A_BUTTON = 1;
+        public static final int B_BUTTON = 2;
+        public static final int X_BUTTON = 3;
+        public static final int Y_BUTTON = 4;
+    }
 
     public static final class XboxConstants {
         public static final int XBOX_PORT = 0;
