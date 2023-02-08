@@ -37,14 +37,6 @@ public class DriveTrain extends SubsystemBase {
 
     private DriveIO driveIO;
 
-    private static CANSparkMax leftFrontMotorController;
-    private static CANSparkMax rightFrontMotorController;
-    private static CANSparkMax leftBackMotorController;
-    private static CANSparkMax rightBackMotorController;
-
-    public static RelativeEncoder leftEncoder;
-    public static RelativeEncoder rightEncoder;
-
     public AHRS ahrs;
     public static PIDController turnController;
 
@@ -58,84 +50,17 @@ public class DriveTrain extends SubsystemBase {
     // simulation
     private DifferentialDriveOdometry odometry;
 
-    public SimEncoder leftEncoderSim;
-    public SimEncoder rightEncoderSim;
-    public SimGyro gyroSim;
-    private DifferentialDrivetrainSim driveSim;
+    
     public Field2d field = new Field2d();
 
-    public DriveTrain() {
-
-        if (RobotBase.isSimulation()) {
-            driveIO = new SimDrive();
-        } else {
-            driveIO = new RealDrive();
-        }
- 
-
-        leftFrontMotorController = new CANSparkMax(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
-        rightFrontMotorController = new CANSparkMax(DriveConstants.RIGHT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
-        leftBackMotorController = new CANSparkMax(DriveConstants.LEFT_BACK_DRIVE_CAN_ID, MotorType.kBrushless);
-        rightBackMotorController = new CANSparkMax(DriveConstants.RIGHT_BACK_DRIVE_CAN_ID, MotorType.kBrushless);
-
-        leftFrontMotorController.restoreFactoryDefaults();
-        rightFrontMotorController.restoreFactoryDefaults();
-        leftBackMotorController.restoreFactoryDefaults();
-        rightBackMotorController.restoreFactoryDefaults();
-
-        // Set motors to brake mode
-        leftFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        rightFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        leftBackMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        rightBackMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-
-        // Make wheels go in same direction
-        leftFrontMotorController.setInverted(false);
-        rightFrontMotorController.setInverted(true);
-
-        // sets motor controllers following leaders
-        leftBackMotorController.follow(leftFrontMotorController);
-        rightBackMotorController.follow(rightFrontMotorController);
-
-        // initialize motor encoder
-        leftEncoder = leftFrontMotorController.getEncoder();
-        rightEncoder = rightFrontMotorController.getEncoder();
-
-        leftEncoder.setPosition(0);
-        rightEncoder.setPosition(0);
-
-        leftEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CALIBRATION_METERS);
-        rightEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CALIBRATION_METERS);
-
-        // dividng by 60 to convert meters per miniute to meters per seconds
-        leftEncoder.setVelocityConversionFactor(DriveConstants.ENCODER_CALIBRATION_METERS / 60);
-        rightEncoder.setVelocityConversionFactor(DriveConstants.ENCODER_CALIBRATION_METERS / 60);
+    public DriveTrain(DriveIO io) {
+        driveIO = io;
 
         ahrs = new AHRS(SPI.Port.kMXP);
         ahrs.reset();
 
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
-        if (RobotBase.isSimulation()) {
-            leftEncoderSim = new SimEncoder("Left Drive");
-            rightEncoderSim = new SimEncoder("Right Drive");
-            gyroSim = new SimGyro("NavX");
-            // Create the simulation model of our drivetrain.
-            driveSim = new DifferentialDrivetrainSim(
-                DCMotor.getNEO(3),       // 3 NEO motors on each side of the drivetrain.
-                8,                       // 8:1 gearing reduction. for now
-                6,                       // MOI of 6 kg m^2 (from CAD model). for now
-                Units.lbsToKilograms(140), // The mass of the robot is 140 lbs (with battery) which is 63 kg
-                Units.inchesToMeters(2.1), // The robot uses 2.1" radius wheels.
-                Units.inchesToMeters(27.811), // The track width is 27.811 inches.
-
-                // The standard deviations for measurement noise:
-                // x and y:          0 m
-                // heading:          0 rad
-                // l and r velocity: 0  m/s
-                // l and r position: 0 m
-                VecBuilder.fill(0, 0, 0, 0, 0, 0, 0)
-            );
-        }
+        
         odometry = new DifferentialDriveOdometry(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
 
         field = new Field2d();
@@ -205,13 +130,7 @@ public class DriveTrain extends SubsystemBase {
     public void resetOdometry(Pose2d pose) {
         odometry.resetPosition(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), pose);
     }
-
-    /** Resets the drive encoders to currently read a position of 0. */
-    public void resetEncoders() {
-        leftEncoderSim.setDistance(0);
-        rightEncoderSim.setDistance(0);
-    }
-
+    
     /**
      * Gets the average distance of the two encoders.
      *
@@ -219,12 +138,6 @@ public class DriveTrain extends SubsystemBase {
      */
     public double getAverageEncoderDistanceMeters() {
         return (getLeftEncoderMeters() + getRightEncoderMeters()) / 2.0;
-    }
-
-    
-     /** Zeroes the heading of the robot. */
-    public void zeroHeading() {
-     gyroSim.setAngle(new Rotation2d());
     }
 
     /**

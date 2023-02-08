@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.SimEncoder;
 import frc.robot.util.SimGyro;;
 
-
 public class SimDrive implements DriveIO {
 
 
