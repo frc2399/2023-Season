@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.util.SimEncoder;
 
@@ -84,7 +85,7 @@ public class Elevator extends SubsystemBase {
           Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT,
           Constants.ElevatorConstants.MAX_ELEVATOR_HEIGHT,
           true,
-          VecBuilder.fill(0.01)
+          VecBuilder.fill(0.001)
       );
       Mechanism2d mech = new Mechanism2d(3, 2);
       MechanismRoot2d root = mech.getRoot("root", 2, 0);
@@ -112,7 +113,7 @@ public class Elevator extends SubsystemBase {
 
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
+    RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
 
   }
 
