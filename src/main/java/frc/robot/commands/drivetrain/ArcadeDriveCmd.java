@@ -2,7 +2,8 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.drivetrain.DriveTrain;
+
 import java.util.function.Supplier;
 
 public class ArcadeDriveCmd extends CommandBase {
@@ -34,8 +35,8 @@ public class ArcadeDriveCmd extends CommandBase {
         realTimeSpeed = speedFunction.get();
         realTimeTurn = turnFunction.get();
 
-        double left = realTimeSpeed + realTimeTurn;
-        double right = realTimeSpeed - realTimeTurn;
+        double left = realTimeSpeed - realTimeTurn;
+        double right = realTimeSpeed + realTimeTurn;
         if (isSlow) {        
             this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
         }

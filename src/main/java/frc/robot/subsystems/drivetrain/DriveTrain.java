@@ -1,0 +1,173 @@
+// Maisie was HERE HAHAHHAHAHAHHAHA :D
+// Shrividya was here :))
+// Alice was here ;3
+// Ethan was here
+// John was here (\/)(;;)(\/)
+// Clare was here!!!!!!!!!!!!!!
+// Anna (the better one) was here :)
+// Anna (the even better one) was here :)
+
+package frc.robot.subsystems.drivetrain;
+
+import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.util.SimEncoder;
+import frc.robot.util.SimGyro;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class DriveTrain extends SubsystemBase {
+
+    private DriveIO driveIO;
+
+    public AHRS ahrs;
+    public static PIDController turnController;
+
+    public static final double kP = 0;
+    static final double kI = 0;
+    static final double kD = 0;
+    static final double kF = 0;
+
+    public static double outputSpeed;
+
+    // simulation
+    private DifferentialDriveOdometry odometry;
+
+    
+    public Field2d field = new Field2d();
+
+    public DriveTrain(DriveIO io) {
+        driveIO = io;
+
+        ahrs = new AHRS(SPI.Port.kMXP);
+        ahrs.reset();
+
+        // this code is instantiating the simulated sensors and actuators when the robot is in simulation
+        
+        odometry = new DifferentialDriveOdometry(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
+
+        field = new Field2d();
+
+        SmartDashboard.putData("Field", field);
+
+        field.setRobotPose(new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
+
+    }
+
+    @Override
+    public void periodic() {
+
+        // runs sim periodic code in simDrive
+        driveIO.updateForSim();
+
+        odometry.update(
+            // we want CCW positive, CW negative
+            getGyroAngle(),
+            getLeftEncoderMeters(),
+            getRightEncoderMeters()
+        );
+
+        field.setRobotPose(odometry.getPoseMeters());
+
+        SmartDashboard.putNumber("gyro angle", getGyroAngle().getDegrees());
+        SmartDashboard.putNumber("left encoder postion", getLeftEncoderMeters());
+        SmartDashboard.putNumber("right encoder postion", getRightEncoderMeters());
+        SmartDashboard.putNumber("left encoder velocity", getLeftEncoderMetersPerSecond());
+        SmartDashboard.putNumber("right encoder veloicty", getRightEncoderMetersPerSecond());
+        SmartDashboard.putNumber("odometry x", getPoseMeters().getX());
+        SmartDashboard.putNumber("odometry y", getPoseMeters().getY());
+        SmartDashboard.putNumber("odometry angle", getPoseMeters().getRotation().getDegrees());
+
+    }
+
+    // Put methods for controlling this subsystem
+    // here. Call these from Commands.
+
+    public void setMotors(double leftSpeed, double rightSpeed) {
+        driveIO.setMotors(leftSpeed, rightSpeed);
+    }
+
+    public void setMotorVoltage(double leftVolt, double rightVolt) {
+        driveIO.setMotorVoltage(leftVolt, rightVolt);
+    }
+
+    /**
+     * Returns the current wheel speeds of the robot.
+     *
+     * @return The current wheel speeds.
+     */
+    public DifferentialDriveWheelSpeeds getWheelSpeedsMetersPerSecond() {        
+        return new DifferentialDriveWheelSpeeds(getLeftEncoderMetersPerSecond(), getRightEncoderMetersPerSecond());
+    }
+
+    public Pose2d getPoseMeters(){
+        return odometry.getPoseMeters();
+    }
+
+    /**
+     * Resets the odometry to the specified pose.
+     *
+     * @param pose The pose to which to set the odometry.
+     */
+
+    public void resetOdometry(Pose2d pose) {
+        odometry.resetPosition(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), pose);
+    }
+    
+    /**
+     * Gets the average distance of the two encoders.
+     *
+     * @return the average of the two encoder readings
+     */
+    public double getAverageEncoderDistanceMeters() {
+        return (getLeftEncoderMeters() + getRightEncoderMeters()) / 2.0;
+    }
+
+    /**
+     * Returns the turn rate of the robot.
+     *
+     * @return The turn rate of the robot, in degrees per second
+     */
+    // public double getTurnRate() {
+    //     return -gyroSim.get;
+    // }
+
+    public Rotation2d getGyroAngle() {
+        return driveIO.getGyroAngle(); 
+    }
+
+    public double getRightEncoderMeters() {
+        return driveIO.getRightEncoderMeters();
+    }
+
+    public double getLeftEncoderMeters() {
+            return driveIO.getLeftEncoderMeters();
+        }
+
+
+    public double getRightEncoderMetersPerSecond() {
+            return driveIO.getRightEncoderMetersPerSecond();
+        }
+
+    public double getLeftEncoderMetersPerSecond() {
+            return driveIO.getLeftEncoderMetersPerSecond();
+        }
+
+}

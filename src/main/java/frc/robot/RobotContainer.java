@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -33,9 +34,12 @@ import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
-import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.drivetrain.DriveIO;
+import frc.robot.subsystems.drivetrain.DriveTrain;
+import frc.robot.subsystems.drivetrain.RealDrive;
+import frc.robot.subsystems.drivetrain.SimDrive;
 import frc.robot.util.DriveTurnControls;
 
 /**
@@ -52,8 +56,8 @@ import frc.robot.util.DriveTurnControls;
 public class RobotContainer {
 
     // The robot's subsystems
+    public static DriveTrain driveTrain;
     public final static Arm arm = new Arm();
-    public static final DriveTrain driveTrain = new DriveTrain();
     public static final Intake intake = new Intake();
     public final Elevator elevator = new Elevator();
     
@@ -86,6 +90,16 @@ public class RobotContainer {
     private Command moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
 
     public RobotContainer() {
+        DriveIO driveIO;
+        
+        // implemented drivio interface 
+        if (RobotBase.isSimulation()) {
+            driveIO = new SimDrive();
+        } else {
+            driveIO = new RealDrive();
+        }
+
+        driveTrain = new DriveTrain(driveIO);
         DriverStation.silenceJoystickConnectionWarning(true);
         // Configure the button bindings
         configureButtonBindings();
