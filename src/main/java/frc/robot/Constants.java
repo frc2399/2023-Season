@@ -89,19 +89,10 @@ public class Constants {
 
     }
 
-
     public static final class JoystickConstants {
         // joystick ports
         public static final int JOYSTICK_PORT = 1;
-
     } 
-
-    public static final class XboxMappingToJoystick{
-        public static final int A_BUTTON = 1;
-        public static final int B_BUTTON = 2;
-        public static final int X_BUTTON = 3;
-        public static final int Y_BUTTON = 4;
-    }
 
     public static final class XboxConstants {
         public static final int XBOX_PORT = 0;

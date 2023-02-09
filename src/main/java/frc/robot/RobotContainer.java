@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -31,7 +32,6 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.Constants.XboxMappingToJoystick;
 import frc.robot.commands.SetArmAngleCmd;
 import frc.robot.subsystems.Arm;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
@@ -152,13 +152,13 @@ public class RobotContainer {
         new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
         new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
 
-        new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeMode);
+        new JoystickButton(xbox, Button.kA.value).onTrue(changeMode);
 
         // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeToConeMode);
         // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(changeToCubeMode);
 
-        new JoystickButton(xbox,XboxMappingToJoystick.X_BUTTON).onTrue(placePieceTop);
-        new JoystickButton(xbox,XboxMappingToJoystick.Y_BUTTON).onTrue(retractElevator);
+        new JoystickButton(xbox, Button.kX.value).onTrue(placePieceTop);
+        new JoystickButton(xbox, Button.kY.value).onTrue(retractElevator);
     }
 
     public Command getAutonomousCommand() {
