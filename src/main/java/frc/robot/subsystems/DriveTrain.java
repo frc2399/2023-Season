@@ -64,8 +64,6 @@ public class DriveTrain extends SubsystemBase {
 
     public DriveTrain() {
 
-    
-
         leftFrontMotorController = new CANSparkMax(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
         rightFrontMotorController = new CANSparkMax(DriveConstants.RIGHT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
         leftBackMotorController = new CANSparkMax(DriveConstants.LEFT_BACK_DRIVE_CAN_ID, MotorType.kBrushless);
@@ -159,9 +157,6 @@ public class DriveTrain extends SubsystemBase {
         SmartDashboard.putNumber("odometry x", getPoseMeters().getX());
         SmartDashboard.putNumber("odometry y", getPoseMeters().getY());
         SmartDashboard.putNumber("odometry angle", getPoseMeters().getRotation().getDegrees());
-
-
-
 
     }
 

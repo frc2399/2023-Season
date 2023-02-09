@@ -72,23 +72,22 @@ public class RobotContainer {
     public static boolean coneMode = true;
 
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
-    //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
-    //private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
+
     private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
 
     private Command coneTopNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_TOP_NODE_HEIGHT);
     private Command cubeTopNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_TOP_NODE_HEIGHT);
-
     private Command coneMidNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_MID_NODE_HEIGHT);
     private Command cubeMidNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_MID_NODE_HEIGHT);
-
     private Command coneLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_LOW_NODE_HEIGHT);
     private Command cubeLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_LOW_NODE_HEIGHT);
 
     private Command setElevatorSpeedUp = new RunCommand(() -> elevator.setSpeed(0.2), elevator);
     private Command setElevatorSpeedDown = new RunCommand(() -> elevator.setSpeed(-0.2), elevator);
     private Command stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
+
     private Command collectPiece = new CollectPieceCmd(intake);
+
     private Command dropCone = new InstantCommand(() -> intake.drop(), intake);
     // private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
     // private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
@@ -140,6 +139,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        
         new JoystickButton(joystick,0).whileTrue(moveArmUp);
         new JoystickButton(joystick, 1).whileTrue(moveArmDown);
         new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
