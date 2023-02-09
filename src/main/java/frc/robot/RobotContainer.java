@@ -40,6 +40,7 @@ import frc.robot.subsystems.drivetrain.DriveIO;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.drivetrain.RealDrive;
 import frc.robot.subsystems.drivetrain.SimDrive;
+import frc.robot.util.DotStarsLEDStrip;
 import frc.robot.util.DriveTurnControls;
 
 /**
@@ -57,8 +58,8 @@ public class RobotContainer {
 
     // The robot's subsystems
     public static DriveTrain driveTrain;
-    public final static Arm arm = new Arm();
-    public static final Intake intake = new Intake();
+    // public final static Arm arm = new Arm();
+    // public static final Intake intake = new Intake();
     public final Elevator elevator = new Elevator();
     
     public static MechanismLigament2d elevatorMechanism;
@@ -75,22 +76,25 @@ public class RobotContainer {
     private Command setElevatorSpeedUp = new RunCommand(() -> elevator.setSpeed(0.2), elevator);
     private Command setElevatorSpeedDown = new RunCommand(() -> elevator.setSpeed(-0.2), elevator);
     private Command stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
-    private Command collectPiece = new CollectPieceCmd(intake);
-    private Command dropCone = new InstantCommand(() -> intake.drop(), intake);
+    // private Command collectPiece = new CollectPieceCmd(intake);
+    // private Command dropCone = new InstantCommand(() -> intake.drop(), intake);
     // private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
     // private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
     // private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
-    private Command noSpin = new RunCommand(() -> intake.setMotor(0), intake);
-    private Command spinIn = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake);
-    private Command spitOut = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake);    
+    // private Command noSpin = new RunCommand(() -> intake.setMotor(0), intake);
+    // private Command spinIn = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake);
+    // private Command spitOut = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake);    
     
-    private Command moveArmUp = new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);});
-    private Command moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
-    private Command armDefaultCmd = new SetArmAngleCmd(arm);
-    private Command moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
+    // private Command moveArmUp = new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);});
+    // private Command moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
+    // private Command armDefaultCmd = new SetArmAngleCmd(arm);
+    // private Command moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
 
     public RobotContainer() {
         DriveIO driveIO;
+
+        DotStarsLEDStrip led = new DotStarsLEDStrip(60);
+
         
         // implemented drivio interface 
         if (RobotBase.isSimulation()) {
@@ -100,6 +104,13 @@ public class RobotContainer {
         }
 
         driveTrain = new DriveTrain(driveIO);
+        
+        led.clearColorBuffer();
+        led.setLEDColor(2, 255,0,216);
+        led.updateColors();
+        
+
+
         DriverStation.silenceJoystickConnectionWarning(true);
         // Configure the button bindings
         configureButtonBindings();
@@ -110,9 +121,9 @@ public class RobotContainer {
                 () -> -driveTurnControls.getDrive(),
                 () -> driveTurnControls.getTurn()));        
         
-        intake.setDefaultCommand(noSpin);
+        // intake.setDefaultCommand(noSpin);
         elevator.setDefaultCommand(stopElevator);
-        arm.setDefaultCommand(armDefaultCmd);
+        // arm.setDefaultCommand(armDefaultCmd);
         
         //Makes a mechanism (lines to show elevator and arm) in simulator
         //Team colors!
@@ -122,23 +133,23 @@ public class RobotContainer {
         elevatorMechanism.setColor(new Color8Bit(0, 204, 255));
         elevatorMechanism.setLineWeight(20);
         armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 140));
-        armMechanism.setColor(new Color8Bit(255, 0, 216));
+        armMechanism.setColor(new Color8Bit(200, 0, 216));
         SmartDashboard.putData("Mech2d", mech);
 
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(joystick,0).whileTrue(moveArmUp);
-        new JoystickButton(joystick, 1).whileTrue(moveArmDown);
-        new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
+        // new JoystickButton(joystick,0).whileTrue(moveArmUp);
+        // new JoystickButton(joystick, 1).whileTrue(moveArmDown);
+        // new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
         new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
-        new JoystickButton(joystick,6).whileTrue(dropCone);
-        new JoystickButton(joystick,7).whileTrue(collectPiece);
-        new JoystickButton(joystick,8).whileTrue(spinIn);
-        new JoystickButton(joystick,9).whileTrue(spitOut);
-        new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
-        new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
+        // new JoystickButton(joystick,6).whileTrue(dropCone);
+        // new JoystickButton(joystick,7).whileTrue(collectPiece);
+        // new JoystickButton(joystick,8).whileTrue(spinIn);
+        // new JoystickButton(joystick,9).whileTrue(spitOut);
+        // new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
+        // new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
     }
 
     public Command getAutonomousCommand() {
@@ -157,7 +168,7 @@ public class RobotContainer {
 
         HashMap<String, Command> eventMap = new HashMap<>();
         eventMap.put("leftCommunity", new PrintCommand("Left community"));
-        eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.INTAKE_IN_SPEED, 2));
+        // eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.INTAKE_IN_SPEED, 2));
         
         Command eventTesting = 
         new SequentialCommandGroup(
@@ -191,11 +202,11 @@ public class RobotContainer {
 
         return new SequentialCommandGroup(
             new SetElevatorPositionCmd(elevator, 1),
-            new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
+            // new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
             new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT),
             twoPieceAuton,
             new SetElevatorPositionCmd(elevator, 1.0),
-            new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
+            // new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
             new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT)
         );
     
