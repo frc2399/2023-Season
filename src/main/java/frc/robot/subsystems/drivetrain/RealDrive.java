@@ -105,6 +105,5 @@ public void setMotors(double leftSpeed, double rightSpeed) {
 @Override
 public void updateForSim() {
     // TODO Auto-generated method stub
-    
 }
 }
