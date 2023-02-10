@@ -3,13 +3,10 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.Constants.IntakeConstants;
 
 public class RealIntake implements IntakeIO {
 
-    private static double intakeSpeed;
     private static CANSparkMax leftMotorController;
     private static CANSparkMax rightMotorController;
     private double slewRate = 0.6;

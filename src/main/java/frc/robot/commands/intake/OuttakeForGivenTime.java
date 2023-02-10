@@ -2,7 +2,6 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.intake.Intake;
 
 //runs the intake at a given speed for a given amount of time
