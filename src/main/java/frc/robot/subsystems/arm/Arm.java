@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -28,33 +28,13 @@ public class Arm extends SubsystemBase {
   public static RelativeEncoder armEncoder;
   private SimEncoder armEncoderSim;
   private SingleJointedArmSim armSim;
+  private ArmIO armIO;
   private static double current_pos = 0;
   private static double current_vel = 0;
   private double targetAngle = - Math.PI/2; 
   
-  public Arm() {
-    armMotorController = new CANSparkMax(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless);
-    armMotorController.restoreFactoryDefaults();
-    armEncoder = armMotorController.getEncoder();
-    armMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    armMotorController.setInverted(true);
-    armEncoder.setPosition(0);
-
-    armEncoder.setPositionConversionFactor(Constants.ArmConstants.RADIANS_PER_REVOLUTION);
-    
-    if(RobotBase.isSimulation()) {
-      armEncoderSim = new SimEncoder("Elevator");
-      armSim = new SingleJointedArmSim(
-        DCMotor.getNEO(1), //1 NEO motor on the climber
-        10, //TODO find out gearing
-        SingleJointedArmSim.estimateMOI(ArmConstants.ARM_LENGTH, ArmConstants.ARM_MASS), 
-        ArmConstants.ARM_LENGTH,
-        ArmConstants.MIN_ARM_ANGLE,
-        ArmConstants.MAX_ARM_ANGLE,
-        ArmConstants.ARM_MASS,
-        true
-      ); 
-    }
+  public Arm(ArmIO io) {
+    armIO = io;
   }
 
   @Override
@@ -86,28 +66,15 @@ public class Arm extends SubsystemBase {
   }
   
   public double getEncoderPosition() {
-    if (RobotBase.isSimulation()) {
-      return armEncoderSim.getDistance();
-    }
-    else
-    {
-      return armEncoder.getPosition();
-    }
+    return armIO.getEncoderPosition();
   }
 
   public double getEncoderSpeed() {
-    if (RobotBase.isSimulation()) {
-      return armEncoderSim.getSpeed();
-    }
-    else
-    {
-      return armEncoder.getVelocity();
-    }
+    return armIO.getEncoderSpeed();
   }
 
   public void setSpeed(double speed) {
-    armMotorController.set(speed);
-    SmartDashboard.putNumber("ArmSpeed", speed);
+    armIO.setSpeed(speed);
   }
 
   public double getTargetAngle() {
