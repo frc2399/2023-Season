@@ -16,6 +16,8 @@ public class SimArm implements ArmIO{
     private SimEncoder armEncoderSim;
     private SingleJointedArmSim armSim;
     private double armPower;
+    private static double current_pos = 0;
+    private static double current_vel = 0;
 
     public SimArm() {
         armEncoderSim = new SimEncoder("Elevator");
@@ -50,6 +52,10 @@ public class SimArm implements ArmIO{
 
     @Override
     public void updateForSim(){
+        current_pos = armEncoderSim.getDistance();
+        current_vel = armEncoderSim.getSpeed();
+        SmartDashboard.putNumber("Arm Velocity", current_vel); 
+        SmartDashboard.putNumber("Arm Postion", current_pos); 
         // sets input for elevator motor in simulation
         armSim.setInput(armPower * RobotController.getBatteryVoltage());
         // Next, we update it. The standard loop time is 20ms.

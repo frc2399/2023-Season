@@ -29,8 +29,6 @@ public class Arm extends SubsystemBase {
   private SimEncoder armEncoderSim;
   private SingleJointedArmSim armSim;
   private ArmIO armIO;
-  private static double current_pos = 0;
-  private static double current_vel = 0;
   private double targetAngle = - Math.PI/2; 
   
   public Arm(ArmIO io) {

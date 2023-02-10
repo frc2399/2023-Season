@@ -170,8 +170,8 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(joystick,0).whileTrue(moveArmUp);
-        new JoystickButton(joystick, 1).whileTrue(moveArmDown);
+        new JoystickButton(joystick,14).whileTrue(moveArmUp);
+        new JoystickButton(joystick, 13).whileTrue(moveArmDown);
         new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
         new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
