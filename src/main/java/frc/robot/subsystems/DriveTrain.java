@@ -189,12 +189,24 @@ public class DriveTrain extends SubsystemBase {
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
-
+    
+    /**
+     * Sets all motor speeds based off speed, only works for real motors.
+     *
+     * @param leftSpeed The speed to set the left motor to.
+     * @param rightSpeed The speed to set the right motor to.
+     */
     public void setMotors(double leftSpeed, double rightSpeed) {
         leftFrontMotorController.set(leftSpeed);
         rightFrontMotorController.set(rightSpeed);
     }
 
+    /**
+     * Sets all motor speeds based off the voltage.
+     *
+     * @param leftVolt The voltage to set the left motor to.
+     * @param rightVolt The voltage to set the right motor to.
+     */
     public void setMotorVoltage(double leftVolt, double rightVolt) {
 
         if (RobotBase.isSimulation()) {
@@ -218,6 +230,11 @@ public class DriveTrain extends SubsystemBase {
         return new DifferentialDriveWheelSpeeds(getLeftEncoderMetersPerSecond(), getRightEncoderMetersPerSecond());
     }
 
+    /**
+     * Returns the current pose of the robot.
+     *
+     * @return The current pose.
+     */
     public Pose2d getPoseMeters(){
         return odometry.getPoseMeters();
     }
@@ -227,7 +244,6 @@ public class DriveTrain extends SubsystemBase {
      *
      * @param pose The pose to which to set the odometry.
      */
-
     public void resetOdometry(Pose2d pose) {
         odometry.resetPosition(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), pose);
     }
@@ -262,6 +278,11 @@ public class DriveTrain extends SubsystemBase {
     //     return -gyroSim.get;
     // }
 
+    /**
+     * Returns the angle of the robot, CCW being positive.
+     *
+     * @return The angle of the robot in radians.
+     */
     public Rotation2d getGyroAngle() {
         if (RobotBase.isSimulation()) {
             return gyroSim.getAngle();
@@ -272,6 +293,11 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
+    /**
+     * Returns the position of the right encoder.
+     *
+     * @return The position of the right encoder, in meters.
+     */
     public double getRightEncoderMeters() {
         if (RobotBase.isSimulation()) {
             return rightEncoderSim.getDistance();
@@ -281,6 +307,11 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
+    /**
+     * Returns the position of the left encoder.
+     *
+     * @return The position of the left encoder, in meters.
+     */
     public double getLeftEncoderMeters() {
         if (RobotBase.isSimulation()) {
             return leftEncoderSim.getDistance();
@@ -290,6 +321,11 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
+    /**
+     * Returns the speed of the right encoder.
+     *
+     * @return The speed of the right encoder, in meters per second.
+     */
     public double getRightEncoderMetersPerSecond() {
         if (RobotBase.isSimulation()) {
             return rightEncoderSim.getSpeed();
@@ -299,6 +335,11 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
+    /**
+     * Returns the speed of the left encoder.
+     *
+     * @return The speed of the left encoder, in meters per second.
+     */
     public double getLeftEncoderMetersPerSecond() {
         if (RobotBase.isSimulation()) {
             return leftEncoderSim.getSpeed();

@@ -1,8 +1,6 @@
 package frc.robot;
 
 import java.util.HashMap;
-import java.util.concurrent.locks.Condition;
-import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -33,11 +31,11 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.SetArmAngleCmd;
-import frc.robot.subsystems.Arm;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
-import frc.robot.commands.elevator.SetElevatorPositionCmd;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
