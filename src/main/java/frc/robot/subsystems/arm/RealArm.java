@@ -39,5 +39,10 @@ public class RealArm implements ArmIO {
         armMotorController.set(speed);
         SmartDashboard.putNumber("ArmSpeed", speed);
     }
+
+    @Override
+    public void updateForSim(){
+        
+    }
     
 }

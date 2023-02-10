@@ -38,31 +38,31 @@ public class Arm extends SubsystemBase {
   }
 
   @Override
-  public void simulationPeriodic() {
-    // sets input for elevator motor in simulation
-    armSim.setInput(armMotorController.get() * RobotController.getBatteryVoltage());
-    // Next, we update it. The standard loop time is 20ms.
-    armSim.update(0.02);
-    // Finally, we set our simulated encoder's readings
-    armEncoderSim.setDistance(armSim.getAngleRads());
-    // sets our simulated encoder speeds
-    armEncoderSim.setSpeed(armSim.getVelocityRadPerSec());
-
-    SmartDashboard.putNumber("arm angle", armSim.getAngleRads());
-
-    // SimBattery estimates loaded battery voltages
-    RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
-    RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(armSim.getAngleRads()) - 50);
-
-  }
-
-  @Override
   public void periodic() {
-    current_pos = armEncoderSim.getDistance();
-    current_vel = armEncoderSim.getSpeed();
-    SmartDashboard.putNumber("Arm Velocity", current_vel); 
-    SmartDashboard.putNumber("Arm Postion", current_pos); 
-  
+    armIO.updateForSim();
+    
+    //idk what to do with this
+    // current_pos = armEncoderSim.getDistance();
+    // current_vel = armEncoderSim.getSpeed();
+    // SmartDashboard.putNumber("Arm Velocity", current_vel); 
+    // SmartDashboard.putNumber("Arm Postion", current_pos); 
+
+
+    // // sets input for elevator motor in simulation
+    // armSim.setInput(armMotorController.get() * RobotController.getBatteryVoltage());
+    // // Next, we update it. The standard loop time is 20ms.
+    // armSim.update(0.02);
+    // // Finally, we set our simulated encoder's readings
+    // armEncoderSim.setDistance(armSim.getAngleRads());
+    // // sets our simulated encoder speeds
+    // armEncoderSim.setSpeed(armSim.getVelocityRadPerSec());
+
+    // SmartDashboard.putNumber("arm angle", armSim.getAngleRads());
+
+    // // SimBattery estimates loaded battery voltages
+    // RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    // RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(armSim.getAngleRads()) - 50);
+
   }
   
   public double getEncoderPosition() {
