@@ -33,33 +33,30 @@ public class Elevator extends SubsystemBase {
   public static SimEncoder elevatorSimEncoder;
   public static ElevatorSim elevatorSim;
 
-  private static double currentPos = 0;
-  private static double currentVel = 0;
-
   public Elevator(ElevatorIO io) {
     elevatorIO = io;
   }
 
   @Override
-  public void simulationPeriodic() {
+  public void periodic() {
+    elevatorIO.updateForSim();
+    // currentPos = elevatorSimEncoder.getDistance();
+    // currentVel = elevatorSimEncoder.getSpeed();
+    // SmartDashboard.putNumber("elevator position", currentPos); 
+    // SmartDashboard.putNumber("elevator velocity", currentVel); 
 
-    currentPos = elevatorSimEncoder.getDistance();
-    currentVel = elevatorSimEncoder.getSpeed();
-    SmartDashboard.putNumber("elevator position", currentPos); 
-    SmartDashboard.putNumber("elevator velocity", currentVel); 
+    // // sets input for elevator motor in simulation
+    // elevatorSim.setInput(elevatorMotorControllerRight.get() * RobotController.getBatteryVoltage());
+    // // Next, we update it. The standard loop time is 20ms.
+    // elevatorSim.update(0.02);
+    // // Finally, we set our simulated encoder's readings
+    // elevatorSimEncoder.setDistance(elevatorSim.getPositionMeters());
+    // // sets our simulated encoder speeds
+    // elevatorSimEncoder.setSpeed(elevatorSim.getVelocityMetersPerSecond());
 
-    // sets input for elevator motor in simulation
-    elevatorSim.setInput(elevatorMotorControllerRight.get() * RobotController.getBatteryVoltage());
-    // Next, we update it. The standard loop time is 20ms.
-    elevatorSim.update(0.02);
-    // Finally, we set our simulated encoder's readings
-    elevatorSimEncoder.setDistance(elevatorSim.getPositionMeters());
-    // sets our simulated encoder speeds
-    elevatorSimEncoder.setSpeed(elevatorSim.getVelocityMetersPerSecond());
-
-    // SimBattery estimates loaded battery voltages
-    RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
+    // // SimBattery estimates loaded battery voltages
+    // RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
+    // RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
 
   }
 

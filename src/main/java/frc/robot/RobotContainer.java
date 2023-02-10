@@ -46,6 +46,9 @@ import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.RealElevator;
 import frc.robot.subsystems.elevator.SimElevator;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.RealIntake;
+import frc.robot.subsystems.intake.SimIntake;
 import frc.robot.util.DriveTurnControls;
 
 /**
@@ -64,7 +67,7 @@ public class RobotContainer {
     // The robot's subsystems
     public static DriveTrain driveTrain;
     public static Arm arm;
-    public static final Intake intake = new Intake();
+    public static Intake intake;
     public static Elevator elevator;
     
     public static MechanismLigament2d elevatorMechanism;
@@ -83,41 +86,64 @@ public class RobotContainer {
     private Command stopElevator;
     private Command collectPiece;
     private Command dropCone;
+
     // private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
     // private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
     // private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
-    private Command noSpin = new RunCommand(() -> intake.setMotor(0), intake);
-    private Command spinIn = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake);
-    private Command spitOut = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake);    
+
+    //it broke :( owo
+    private Command noSpin;
+    private Command spinIn;
+    private Command spitOut;  
     
-    //these might break lol
-    private Command moveArmUp = new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);});
-    private Command moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
-    private Command armDefaultCmd = new SetArmAngleCmd(arm);
-    private Command moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
+    private Command moveArmUp;
+    private Command moveArmDown;
+    private Command armDefaultCmd;
+    private Command moveArmHalfway;
 
     public RobotContainer() {
         DriveIO driveIO;
         ElevatorIO elevatorIO;
         ArmIO armIO;
+        IntakeIO intakeIO;
         
         // implemented drivio interface 
         if (RobotBase.isSimulation()) {
             driveIO = new SimDrive();
             elevatorIO = new SimElevator();
             armIO = new SimArm();
+            intakeIO = new SimIntake();
         } else {
             driveIO = new RealDrive();
             elevatorIO = new RealElevator();
             armIO = new RealArm();
+            intakeIO = new RealIntake();
         }
 
         driveTrain = new DriveTrain(driveIO);
         elevator = new Elevator(elevatorIO);
         arm = new Arm(armIO);
+        intake = new Intake(intakeIO);
 
         DriverStation.silenceJoystickConnectionWarning(true);
         // Configure the button bindings
+        
+
+        setElevatorSpeedUp = new RunCommand(() -> elevator.setSpeed(0.2), elevator);
+        setElevatorSpeedDown = new RunCommand(() -> elevator.setSpeed(-0.2), elevator);
+        stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
+        collectPiece = new CollectPieceCmd(intake);
+        dropCone  = new InstantCommand(() -> intake.drop(), intake);
+
+        noSpin = new RunCommand(() -> intake.setMotor(0), intake);
+        spinIn = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake);
+        spitOut = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake);    
+    
+        moveArmUp = new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);});
+        moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
+        armDefaultCmd = new SetArmAngleCmd(arm);
+        moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
+
         configureButtonBindings();
 
         // Configure default commands
@@ -125,12 +151,6 @@ public class RobotContainer {
             new ArcadeDriveCmd(driveTrain,
                 () -> -driveTurnControls.getDrive(),
                 () -> driveTurnControls.getTurn()));        
-        
-        setElevatorSpeedUp = new RunCommand(() -> elevator.setSpeed(0.2), elevator);
-        setElevatorSpeedDown = new RunCommand(() -> elevator.setSpeed(-0.2), elevator);
-        stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
-        collectPiece = new CollectPieceCmd(intake);
-        dropCone = new InstantCommand(() -> intake.drop(), intake);
 
         intake.setDefaultCommand(noSpin);
         elevator.setDefaultCommand(stopElevator);

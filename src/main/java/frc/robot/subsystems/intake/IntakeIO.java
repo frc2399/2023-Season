@@ -1,5 +1,5 @@
 package frc.robot.subsystems.intake;
 
-public class IntakeIO {
-    
+public interface IntakeIO {
+    public void setMotor(double intakeSpeed);
 }
