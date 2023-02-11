@@ -11,13 +11,16 @@ import com.pathplanner.lib.commands.PPRamseteCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -36,12 +39,14 @@ import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.drivetrain.DriveIO;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.drivetrain.RealDrive;
 import frc.robot.subsystems.drivetrain.SimDrive;
-import frc.robot.util.DotStarsLEDStrip;
 import frc.robot.util.DriveTurnControls;
+import frc.robot.util.LEDController;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -58,6 +63,7 @@ public class RobotContainer {
 
     // The robot's subsystems
     public static DriveTrain driveTrain;
+    public static LED led = new LED();
     // public final static Arm arm = new Arm();
     // public static final Intake intake = new Intake();
     public final Elevator elevator = new Elevator();
@@ -93,9 +99,9 @@ public class RobotContainer {
     public RobotContainer() {
         DriveIO driveIO;
 
-        DotStarsLEDStrip led = new DotStarsLEDStrip(60);
-
         
+
+     
         // implemented drivio interface 
         if (RobotBase.isSimulation()) {
             driveIO = new SimDrive();
@@ -105,11 +111,6 @@ public class RobotContainer {
 
         driveTrain = new DriveTrain(driveIO);
         
-        led.clearColorBuffer();
-        led.setLEDColor(2, 255,0,216);
-        led.updateColors();
-        
-
 
         DriverStation.silenceJoystickConnectionWarning(true);
         // Configure the button bindings
@@ -236,4 +237,5 @@ public class RobotContainer {
 
     }
 
+    
 }
