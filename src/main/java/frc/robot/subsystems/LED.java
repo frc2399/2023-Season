@@ -6,12 +6,13 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.util.LEDController;
 
 public class LED extends SubsystemBase {
-  LEDController red = new LEDController(0);
-  LEDController green= new LEDController(1);
-  LEDController blue = new LEDController(2);
+  LEDController red = new LEDController(Constants.LEDConstants.RED_CHANNEL);
+  LEDController green= new LEDController(Constants.LEDConstants.GREEN_CHANNEL);
+  LEDController blue = new LEDController(Constants.LEDConstants.BLUE_CHANNEL);
   Timer timer = new Timer();
 
 
@@ -24,16 +25,11 @@ public class LED extends SubsystemBase {
 
 
   }
-private void setPink(){
-  red.set(50);
-  green.set(255);
-  blue.set(39);
 
-}
-private void setBlue() {
-  red.set(255);
-  green.set(100);
-  blue.set(0);
+public void setColor(int r, int g, int b) {
+  red.set(r);
+  green.set(g);
+  blue.set(b);
 }
 
 
@@ -44,10 +40,14 @@ private void setBlue() {
     {
       if(isPink)
       {
-        this.setBlue();
+        this.setColor(Constants.LEDConstants.blue2399[0], 
+        Constants.LEDConstants.blue2399[1], 
+        Constants.LEDConstants.blue2399[2]);
       }
       else {
-        this.setPink();
+        this.setColor(Constants.LEDConstants.pink2399[0], 
+        Constants.LEDConstants.pink2399[1], 
+        Constants.LEDConstants.pink2399[2]);
       }
       isPink = !isPink;
       timer.reset();
