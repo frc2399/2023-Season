@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants.DriveConstants;
@@ -20,6 +21,7 @@ public class RealDrive implements DriveIO {
    private static CANSparkMax rightBackMotorController;
    public static RelativeEncoder leftEncoder, rightEncoder;
    public AHRS ahrs;
+   double[] temps = new double[4];
 
 
    public RealDrive() {
@@ -101,6 +103,22 @@ public void setMotors(double leftSpeed, double rightSpeed) {
     rightFrontMotorController.set(rightSpeed);
 }
 
+public double[] getMotorTemperature()
+{
+    temps[0] = leftFrontMotorController.getMotorTemperature();
+    temps[1] = leftBackMotorController.getMotorTemperature();
+    temps[2] = rightFrontMotorController.getMotorTemperature();
+    temps[3] = rightBackMotorController.getMotorTemperature();
+    return temps;
+}
+
+//explode!! :)
+@Override
+public void update()
+{
+    this.getMotorTemperature();
+    SmartDashboard.putNumberArray("Temperatures (LF/LB/RF/RB)", temps);
+}
 
 @Override
 public void updateForSim() {

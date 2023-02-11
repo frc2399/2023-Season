@@ -113,4 +113,11 @@ public class SimDrive implements DriveIO {
         gyroSim.setAngle(new Rotation2d(driveSim.getHeading().getRadians()));
         
     }
+
+
+    @Override
+    public void update() {
+        // TODO Auto-generated method stub
+        
+    }
 }
