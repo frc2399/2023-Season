@@ -7,7 +7,7 @@ package frc.robot.commands.intake;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intake.Intake;
 
 public class CollectPieceCmd extends CommandBase {
   private Intake intake;

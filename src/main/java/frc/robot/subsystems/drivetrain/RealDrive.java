@@ -115,6 +115,5 @@ public void updateForReal()
 @Override
 public void updateForSim() {
     // TODO Auto-generated method stub
-    
 }
 }
