@@ -38,7 +38,7 @@ public class EngageCmd extends CommandBase {
     this.currentAngle = drivetrain.getGyroPitch();
 
     error = Constants.DriveConstants.BEAM_BALANCED_GOAL_DEGREES - currentAngle;
-    drivePower = -Math.min(Constants.DriveConstants.kPDriveVel* error, 1);
+    drivePower = -Math.min(1/180. * error, 1);
 
     // Our robot needed an extra push to drive up in reverse, probably due to weight imbalances
     if (drivePower < 0) {
@@ -46,8 +46,8 @@ public class EngageCmd extends CommandBase {
     }
 
     // Limit the max power
-    if (Math.abs(drivePower) > 0.4) {
-      drivePower = Math.copySign(0.4, drivePower);
+    if (Math.abs(drivePower) > 0.2) {
+      drivePower = Math.copySign(0.2, drivePower);
     }
 
     drivetrain.setMotors(drivePower, drivePower);
@@ -67,6 +67,7 @@ public class EngageCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(error) < Constants.DriveConstants.BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES; // End the command when we are within the specified threshold of being 'flat' (gyroscope pitch of 0 degrees)
+   // return Math.abs(error) < Constants.DriveConstants.BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES; // End the command when we are within the specified threshold of being 'flat' (gyroscope pitch of 0 degrees)
+    return false;
   }
 }
