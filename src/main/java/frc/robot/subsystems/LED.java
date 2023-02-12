@@ -36,7 +36,7 @@ public void setColor(int r, int g, int b) {
 
   @Override
   public void periodic() {
-    if(timer.get() > 1.0 )
+    if(timer.get() > Constants.LEDConstants.WAIT_TIME)
     {
       if(isPink)
       {

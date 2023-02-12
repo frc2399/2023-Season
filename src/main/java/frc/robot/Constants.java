@@ -88,6 +88,7 @@ public class Constants {
         public static final int BLUE_CHANNEL = 2;
         public static final int[] blue2399 = {255, 100, 0};
         public static final int[] pink2399 = {50, 255, 39};
+        public static final double WAIT_TIME = 1.0;
 
     }
 
