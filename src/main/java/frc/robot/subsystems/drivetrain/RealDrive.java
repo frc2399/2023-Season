@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants.DriveConstants;
@@ -101,6 +102,15 @@ public void setMotors(double leftSpeed, double rightSpeed) {
     rightFrontMotorController.set(rightSpeed);
 }
 
+//explode!! :)
+@Override
+public void updateForReal()
+{
+    SmartDashboard.putNumber("LF Celsius", leftFrontMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("LB Celsius", leftBackMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("RF Celsius", rightFrontMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("RB Celsius", rightBackMotorController.getMotorTemperature());
+}
 
 @Override
 public void updateForSim() {

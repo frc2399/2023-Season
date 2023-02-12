@@ -25,14 +25,13 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.SetArmAngleCmd;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
-import frc.robot.commands.intake.CollectPieceCmd;
-import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
+import frc.robot.commands.intake.CollectPieceCmd;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.RealArm;
@@ -51,6 +50,7 @@ import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
 import frc.robot.util.DriveTurnControls;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -66,6 +66,9 @@ public class RobotContainer {
 
     // The robot's subsystems
     public static DriveTrain driveTrain;
+    public static LED led = new LED();
+    // public final static Arm arm = new Arm();
+    // public static final Intake intake = new Intake();
     public static Arm arm;
     public static Intake intake;
     public static Elevator elevator;
@@ -107,6 +110,8 @@ public class RobotContainer {
         ArmIO armIO;
         IntakeIO intakeIO;
         
+
+     
         // implemented drivio interface 
         if (RobotBase.isSimulation()) {
             driveIO = new SimDrive();
@@ -154,7 +159,7 @@ public class RobotContainer {
 
         intake.setDefaultCommand(noSpin);
         elevator.setDefaultCommand(stopElevator);
-        arm.setDefaultCommand(armDefaultCmd);
+        // arm.setDefaultCommand(armDefaultCmd);
         
         //Makes a mechanism (lines to show elevator and arm) in simulator
         //Team colors!
@@ -164,7 +169,7 @@ public class RobotContainer {
         elevatorMechanism.setColor(new Color8Bit(0, 204, 255));
         elevatorMechanism.setLineWeight(20);
         armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 140));
-        armMechanism.setColor(new Color8Bit(255, 0, 216));
+        armMechanism.setColor(new Color8Bit(200, 0, 216));
         SmartDashboard.putData("Mech2d", mech);
 
     }
@@ -175,12 +180,12 @@ public class RobotContainer {
         new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
         new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
-        new JoystickButton(joystick,6).whileTrue(dropCone);
-        new JoystickButton(joystick,7).whileTrue(collectPiece);
-        new JoystickButton(joystick,8).whileTrue(spinIn);
-        new JoystickButton(joystick,9).whileTrue(spitOut);
-        new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
-        new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
+        // new JoystickButton(joystick,6).whileTrue(dropCone);
+        // new JoystickButton(joystick,7).whileTrue(collectPiece);
+        // new JoystickButton(joystick,8).whileTrue(spinIn);
+        // new JoystickButton(joystick,9).whileTrue(spitOut);
+        // new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
+        // new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
     }
 
     public Command getAutonomousCommand() {
@@ -199,7 +204,7 @@ public class RobotContainer {
 
         HashMap<String, Command> eventMap = new HashMap<>();
         eventMap.put("leftCommunity", new PrintCommand("Left community"));
-        eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.INTAKE_IN_SPEED, 2));
+        // eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.INTAKE_IN_SPEED, 2));
         
         Command eventTesting = 
         new SequentialCommandGroup(
@@ -233,11 +238,11 @@ public class RobotContainer {
 
         return new SequentialCommandGroup(
             new SetElevatorPositionCmd(elevator, 1),
-            new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
+            // new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
             new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT),
             twoPieceAuton,
             new SetElevatorPositionCmd(elevator, 1.0),
-            new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
+            // new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
             new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT)
         );
     
@@ -267,4 +272,5 @@ public class RobotContainer {
 
     }
 
+    
 }

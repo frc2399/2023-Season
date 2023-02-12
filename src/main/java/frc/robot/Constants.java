@@ -82,6 +82,16 @@ public class Constants {
 
     }
 
+    public static final class LEDConstants {
+        public static final int RED_CHANNEL = 0;
+        public static final int GREEN_CHANNEL = 1;
+        public static final int BLUE_CHANNEL = 2;
+        public static final int[] blue2399 = {255, 100, 0};
+        public static final int[] pink2399 = {50, 255, 39};
+        public static final double WAIT_TIME = 1.0;
+
+    }
+
 
     public static final class JoystickConstants {
         // joystick ports

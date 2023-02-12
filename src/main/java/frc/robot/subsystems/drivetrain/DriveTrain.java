@@ -64,12 +64,16 @@ public class DriveTrain extends SubsystemBase {
 
         // runs sim periodic code in simDrive
         driveIO.updateForSim();
+        driveIO.updateForReal();
 
         odometry.update(
             // we want CCW positive, CW negative
             getGyroAngle(),
             getLeftEncoderMeters(),
             getRightEncoderMeters()
+
+        
+        
         );
 
         field.setRobotPose(odometry.getPoseMeters());
