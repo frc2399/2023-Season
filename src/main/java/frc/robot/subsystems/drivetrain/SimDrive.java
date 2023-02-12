@@ -116,7 +116,7 @@ public class SimDrive implements DriveIO {
 
 
     @Override
-    public void update() {
+    public void updateForReal() {
         // TODO Auto-generated method stub
         
     }

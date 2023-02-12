@@ -21,7 +21,6 @@ public class RealDrive implements DriveIO {
    private static CANSparkMax rightBackMotorController;
    public static RelativeEncoder leftEncoder, rightEncoder;
    public AHRS ahrs;
-   double[] temps = new double[4];
 
 
    public RealDrive() {
@@ -103,21 +102,14 @@ public void setMotors(double leftSpeed, double rightSpeed) {
     rightFrontMotorController.set(rightSpeed);
 }
 
-public double[] getMotorTemperature()
-{
-    temps[0] = leftFrontMotorController.getMotorTemperature();
-    temps[1] = leftBackMotorController.getMotorTemperature();
-    temps[2] = rightFrontMotorController.getMotorTemperature();
-    temps[3] = rightBackMotorController.getMotorTemperature();
-    return temps;
-}
-
 //explode!! :)
 @Override
-public void update()
+public void updateForReal()
 {
-    this.getMotorTemperature();
-    SmartDashboard.putNumberArray("Temperatures (LF/LB/RF/RB)", temps);
+    SmartDashboard.putNumber("LF Celsius", leftFrontMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("LB Celsius", leftBackMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("RF Celsius", rightFrontMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("RB Celsius", rightBackMotorController.getMotorTemperature());
 }
 
 @Override
