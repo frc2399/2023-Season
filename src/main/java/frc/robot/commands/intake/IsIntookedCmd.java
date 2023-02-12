@@ -5,47 +5,42 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
 
-public class CollectPieceCmd extends CommandBase {
+public class IsIntookedCmd extends CommandBase {
+
   private Intake intake;
   double speed;
   SlewRateLimiter filter;
-  /** Creates a new CollectPieceCmd. */
-  public CollectPieceCmd(Intake intake) {
+
+  
+  /** Creates a new IsIntookedCmd. */
+  public IsIntookedCmd(Intake intake){
+  
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
     addRequirements(intake);
-
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
     intake.closeRight();
-    // intake.closeLeft();
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //speed = filter.calculate(targetSpeed);
-    intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
-    SmartDashboard.putNumber("Left Current", intake.getLeftCurrent());
-    SmartDashboard.putNumber("Right Current", intake.getRightCurrent());
+    intake.getRightCurrent();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    intake.openRight();
-    // intake.openLeft();
-    intake.setMotor(0);
-    System.out.println("speed set to 0");
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

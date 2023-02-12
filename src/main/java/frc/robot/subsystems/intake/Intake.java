@@ -38,6 +38,16 @@ public class Intake extends SubsystemBase {
 
   // }
 
+  public double getRightCurrent()
+  {
+    return intakeIO.getCurrentRight();
+  }
+
+  public double getLeftCurrent()
+  {
+    return intakeIO.getCurrentLeft();
+  }
+
   public void closeRight() {
 
       rightIntakeSolenoid.set(Value.kForward);
