@@ -128,16 +128,16 @@ public class RobotContainer {
             intakeIO = new RealIntake();
         }
 
-        photonCamera = new PhotonCamera ("Limelight");
-
-        poseEstimator = new PoseEstimator(photonCamera, driveTrain);
-
         driveTrain = new DriveTrain(driveIO);
         elevator = new Elevator(elevatorIO);
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
 
         DriverStation.silenceJoystickConnectionWarning(true);
+
+        photonCamera = new PhotonCamera ("OV5647");
+
+        poseEstimator = new PoseEstimator(photonCamera, driveTrain);
         // Configure the button bindings
         
 

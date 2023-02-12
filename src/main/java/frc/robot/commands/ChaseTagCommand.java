@@ -8,6 +8,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -36,6 +37,7 @@ public class ChaseTagCommand extends CommandBase {
   private final PhotonCamera photonCamera;
   private final DriveTrain drivetrainSubsystem;
   private final Supplier<Pose2d> poseProvider;
+  SimpleMotorFeedforward feedforward;
 
   private final ProfiledPIDController xController = new ProfiledPIDController(3, 0, 0, X_CONSTRAINTS);
   private final ProfiledPIDController yController = new ProfiledPIDController(3, 0, 0, Y_CONSTRAINTS);
@@ -50,6 +52,10 @@ public class ChaseTagCommand extends CommandBase {
     this.photonCamera = photonCamera;
     this.drivetrainSubsystem = drivetrainSubsystem;
     this.poseProvider = poseProvider;
+
+    feedforward = new SimpleMotorFeedforward(Constants.DriveConstants.ks,
+                Constants.DriveConstants.kv,
+                Constants.DriveConstants.ka);
 
     xController.setTolerance(0.2);
     yController.setTolerance(0.2);
@@ -131,14 +137,13 @@ public class ChaseTagCommand extends CommandBase {
 
       DifferentialDriveWheelSpeeds wheelSpeeds = Constants.DriveConstants.kDriveKinematics.toWheelSpeeds(chassisSpeeds);
 
-      // TODO convert to volts 
       // Left velocity
       double leftVelocity = wheelSpeeds.leftMetersPerSecond;
       
       // Right velocity
       double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
-      drivetrainSubsystem.setMotors(leftVelocity, rightVelocity);
+      drivetrainSubsystem.setMotorVoltage(feedforward.calculate(leftVelocity), feedforward.calculate(rightVelocity));
         
     }
   }

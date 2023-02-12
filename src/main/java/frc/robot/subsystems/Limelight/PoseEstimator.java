@@ -83,7 +83,7 @@ public class PoseEstimator extends SubsystemBase {
         stateStdDevs,
         visionMeasurementStdDevs);
     
-    tab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
+    tab.addString("Pose", this::getFormattedPose).withPosition(0, 0).withSize(2, 0);
     tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
   }
 
@@ -117,7 +117,7 @@ public class PoseEstimator extends SubsystemBase {
     field2d.setRobotPose(getCurrentPose());
   }
 
-  private String getFomattedPose() {
+  private String getFormattedPose() {
     var pose = getCurrentPose();
     return String.format("(%.2f, %.2f) %.2f degrees", 
         pose.getX(), 

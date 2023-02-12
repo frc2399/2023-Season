@@ -63,8 +63,8 @@ public class Constants {
     //TODO add real coordinates
     public static final class LimelightConstants {
         public static final Transform3d APRILTAG_CAMERA_TO_ROBOT =
-            new Transform3d(new Translation3d(0, Units.inchesToMeters(34), Units.inchesToMeters(-14)), 
-            new Rotation3d(Units.degreesToRadians(90.0),0, Units.degreesToRadians(90.0))); //guessing rotations
+            new Transform3d(new Translation3d(Units.inchesToMeters(14), Units.inchesToMeters(34), Units.inchesToMeters(0)), 
+            new Rotation3d(Units.degreesToRadians(-90.0), 0, Units.degreesToRadians(-90.0))); 
         public static final Transform3d APRILTAG_ROBOT_TO_CAMERA = APRILTAG_CAMERA_TO_ROBOT.inverse();
     }
 
