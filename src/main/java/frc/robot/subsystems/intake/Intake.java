@@ -133,5 +133,7 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
     // SmartDashboard.putBoolean("Left Intake Open? ", isLeftOpen());
     SmartDashboard.putBoolean("Right Intake Open? ", isRightOpen());
+    SmartDashboard.putNumber("Left Current", getLeftCurrent());
+    SmartDashboard.putNumber("Right Current", getRightCurrent());
   }
 }

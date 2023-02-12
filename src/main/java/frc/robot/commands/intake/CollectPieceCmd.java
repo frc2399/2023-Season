@@ -34,8 +34,8 @@ public class CollectPieceCmd extends CommandBase {
   public void execute() {
     //speed = filter.calculate(targetSpeed);
     intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
-    SmartDashboard.putNumber("Left Current", intake.getLeftCurrent());
-    SmartDashboard.putNumber("Right Current", intake.getRightCurrent());
+    // SmartDashboard.putNumber("Left Current", intake.getLeftCurrent());
+    // SmartDashboard.putNumber("Right Current", intake.getRightCurrent());
   }
 
   // Called once the command ends or is interrupted.
