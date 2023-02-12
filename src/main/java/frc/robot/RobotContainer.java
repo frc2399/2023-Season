@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.HashMap;
 
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -28,11 +30,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
+import frc.robot.commands.ChaseTagCommand;
 import frc.robot.commands.SetArmAngleCmd;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
+import frc.robot.subsystems.Limelight.PoseEstimator;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.RealArm;
@@ -69,7 +73,9 @@ public class RobotContainer {
     public static Arm arm;
     public static Intake intake;
     public static Elevator elevator;
-    
+    public static PoseEstimator poseEstimator;
+    public static PhotonCamera photonCamera;
+     
     public static MechanismLigament2d elevatorMechanism;
     public static MechanismLigament2d armMechanism;
 
@@ -101,6 +107,8 @@ public class RobotContainer {
     private Command armDefaultCmd;
     private Command moveArmHalfway;
 
+    private Command chaseTagCmd;
+
     public RobotContainer() {
         DriveIO driveIO;
         ElevatorIO elevatorIO;
@@ -119,6 +127,10 @@ public class RobotContainer {
             armIO = new RealArm();
             intakeIO = new RealIntake();
         }
+
+        photonCamera = new PhotonCamera ("Limelight");
+
+        poseEstimator = new PoseEstimator(photonCamera, driveTrain);
 
         driveTrain = new DriveTrain(driveIO);
         elevator = new Elevator(elevatorIO);
@@ -143,6 +155,7 @@ public class RobotContainer {
         moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
         armDefaultCmd = new SetArmAngleCmd(arm);
         moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
+        chaseTagCmd = new ChaseTagCommand(photonCamera, driveTrain, () -> poseEstimator.getCurrentPose());
 
         configureButtonBindings();
 
@@ -170,15 +183,16 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(joystick,14).whileTrue(moveArmUp);
+        //new JoystickButton(joystick,14).whileTrue(moveArmUp);
         new JoystickButton(joystick, 13).whileTrue(moveArmDown);
-        new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
+        //new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
         new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
         new JoystickButton(joystick,6).whileTrue(dropCone);
         new JoystickButton(joystick,7).whileTrue(collectPiece);
         new JoystickButton(joystick,8).whileTrue(spinIn);
         new JoystickButton(joystick,9).whileTrue(spitOut);
+        new JoystickButton(joystick,2).whileTrue(chaseTagCmd);
         new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
         new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
     }

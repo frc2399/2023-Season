@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
@@ -56,6 +59,15 @@ public class Constants {
         public static final double MAX_ELEVATOR_HEIGHT = Units.inchesToMeters(75);
         
     }
+
+    //TODO add real coordinates
+    public static final class LimelightConstants {
+        public static final Transform3d APRILTAG_CAMERA_TO_ROBOT =
+            new Transform3d(new Translation3d(0, Units.inchesToMeters(34), Units.inchesToMeters(-14)), 
+            new Rotation3d(Units.degreesToRadians(90.0),0, Units.degreesToRadians(90.0))); //guessing rotations
+        public static final Transform3d APRILTAG_ROBOT_TO_CAMERA = APRILTAG_CAMERA_TO_ROBOT.inverse();
+    }
+
     public static final class ArmConstants {
         //Arm angle in radians
         public static final double MAX_ARM_ANGLE = Math.PI/4;
