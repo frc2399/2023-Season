@@ -29,6 +29,7 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.SetArmAngleCmd;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.subsystems.LED;
@@ -104,6 +105,8 @@ public class RobotContainer {
     private Command armDefaultCmd;
     private Command moveArmHalfway;
 
+    private Command engage;
+
     public RobotContainer() {
         DriveIO driveIO;
         ElevatorIO elevatorIO;
@@ -149,6 +152,8 @@ public class RobotContainer {
         armDefaultCmd = new SetArmAngleCmd(arm);
         moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
 
+        engage = new EngageCmd();
+
         configureButtonBindings();
 
         // Configure default commands
@@ -180,6 +185,7 @@ public class RobotContainer {
         new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
         new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
+        new JoystickButton(joystick,15).whileTrue(engage);
         // new JoystickButton(joystick,6).whileTrue(dropCone);
         // new JoystickButton(joystick,7).whileTrue(collectPiece);
         // new JoystickButton(joystick,8).whileTrue(spinIn);

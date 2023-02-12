@@ -141,10 +141,12 @@ public class DriveTrain extends SubsystemBase {
     //     return -gyroSim.get;
     // }
 
+    public double getGyroPitch() {
+        return driveIO.getGyroPitch();
+    }
     public Rotation2d getGyroAngle() {
         return driveIO.getGyroAngle(); 
     }
-
     public double getRightEncoderMeters() {
         return driveIO.getRightEncoderMeters();
     }
