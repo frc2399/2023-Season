@@ -116,4 +116,11 @@ public class SimDrive implements DriveIO {
         // TODO Auto-generated method stub
         
     }
+
+
+    @Override
+    public double getGyroPitch() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }
