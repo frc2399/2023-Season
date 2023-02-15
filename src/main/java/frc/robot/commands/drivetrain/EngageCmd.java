@@ -50,7 +50,7 @@ public class EngageCmd extends CommandBase {
       drivePower = Math.copySign(0.2, drivePower);
     }
 
-    drivetrain.setMotors(drivePower, drivePower);
+    drivetrain.setMotors(-drivePower, -drivePower);
     
     // Debugging Print Statments
     System.out.println("Current Angle: " + currentAngle);
