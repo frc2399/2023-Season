@@ -196,8 +196,6 @@ public class RobotContainer {
         new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
         new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
-        new JoystickButton(joystick,10).whileTrue(new Engage(driveTrain));
-        new JoystickButton(joystick, 9).onTrue(new DriveForwardGivenDistance(1.0, 80, driveTrain));
         // new JoystickButton(joystick,6).whileTrue(dropCone);
         // new JoystickButton(joystick,7).whileTrue(collectPiece);
         // new JoystickButton(joystick,8).whileTrue(spinIn);
