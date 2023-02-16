@@ -52,10 +52,10 @@ public class EngageCmd extends CommandBase {
 
     drivetrain.setMotors(-drivePower, -drivePower);
     
-    // Debugging Print Statments
-    System.out.println("Current Angle: " + currentAngle);
-    System.out.println("Error " + error);
-    System.out.println("Drive Power: " + drivePower);
+    // // Debugging Print Statments
+    // System.out.println("Current Angle: " + currentAngle);
+    // System.out.println("Error " + error);
+    // System.out.println("Drive Power: " + drivePower);
   }
 
   // Called once the command ends or is interrupted.
