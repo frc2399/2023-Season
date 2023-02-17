@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix.led.RgbFadeAnimation;
+
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
@@ -96,8 +98,8 @@ public class Constants {
         public static final int RED_CHANNEL = 0;
         public static final int GREEN_CHANNEL = 1;
         public static final int BLUE_CHANNEL = 2;
-        public static final int[] blue2399 = {255, 100, 0};
-        public static final int[] pink2399 = {50, 255, 39};
+        public static final int[] blue2399 = {0, 100, 255};
+        public static final int[] pink2399 = {255, 50, 200};
         public static final double WAIT_TIME = 1.0;
 
     }

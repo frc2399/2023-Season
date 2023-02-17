@@ -5,8 +5,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.util.LEDController;
 
 public class LED extends SubsystemBase {
@@ -22,14 +24,13 @@ public class LED extends SubsystemBase {
   public LED() {
     timer.reset();
     timer.start();
-
-
   }
 
 public void setColor(int r, int g, int b) {
   red.set(r);
   green.set(g);
   blue.set(b);
+  RobotContainer.LEDMechanism.setColor(new Color8Bit(r, g, b));
 }
 
 
