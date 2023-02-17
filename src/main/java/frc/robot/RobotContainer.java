@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ElevatorConstants;
@@ -25,6 +26,7 @@ import frc.robot.commands.SetArmAngleCmd;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.commands.intake.CollectPieceCmd;
@@ -153,6 +155,8 @@ public class RobotContainer {
 
         chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator, intake, arm));
         chooser.addOption("engage", new Engage(driveTrain));
+        chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
+        chooser.addOption("leave community", new DriveForwardGivenDistance(-1, 5, driveTrain));
 
         DriverStation.silenceJoystickConnectionWarning(true);
         // Configure the button bindings
