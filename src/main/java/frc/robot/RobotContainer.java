@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
@@ -47,7 +48,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
-import frc.robot.util.DriveTurnControls;
 
 
 /**
@@ -80,8 +80,6 @@ public class RobotContainer {
     public static final Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
     public static boolean coneMode = true;
-
-    private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
 
     private Command retractElevator;
 
@@ -200,8 +198,8 @@ public class RobotContainer {
         // Configure default commands
         driveTrain.setDefaultCommand(
             new ArcadeDriveCmd(driveTrain,
-                () -> -driveTurnControls.getDrive(),
-                () -> driveTurnControls.getTurn()));        
+                () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
+                () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
 
         intake.setDefaultCommand(noSpin);
         elevator.setDefaultCommand(stopElevator);
