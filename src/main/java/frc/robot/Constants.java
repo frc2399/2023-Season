@@ -21,10 +21,10 @@ public class Constants {
         public static final double BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES = 5;
 
         //motor ids
-        public static final int RIGHT_FRONT_DRIVE_CAN_ID = 1;
-        public static final int RIGHT_BACK_DRIVE_CAN_ID = 2;
-        public static final int LEFT_FRONT_DRIVE_CAN_ID = 4;
-        public static final int LEFT_BACK_DRIVE_CAN_ID = 3;
+        public static final int RIGHT_FRONT_DRIVE_CAN_ID = 3;
+        public static final int RIGHT_BACK_DRIVE_CAN_ID = 4;
+        public static final int LEFT_FRONT_DRIVE_CAN_ID = 1;
+        public static final int LEFT_BACK_DRIVE_CAN_ID = 2;
 
         // encoder 
         public static final double ENCODER_CALIBRATION_METERS = 0.0493;
