@@ -4,12 +4,10 @@
 
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drivetrain.DriveTrain;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 // This command self=balances on the charging station using gyroscope pitch as feedback
 public class EngageCmd extends CommandBase {

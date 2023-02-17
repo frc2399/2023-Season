@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -24,11 +25,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.SetArmAngleCmd;
@@ -88,7 +91,19 @@ public class RobotContainer {
     public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
     public static final Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
+    public static boolean coneMode = true;
+
     private DriveTurnControls driveTurnControls = new DriveTurnControls(xbox);
+
+    private Command retractElevator;
+
+    private Command coneTopNode;
+    private Command cubeTopNode;
+    private Command coneMidNode;
+    private Command cubeMidNode;
+    private Command coneLowNode;
+    private Command cubeLowNode;
+
     //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
     //private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     //private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
@@ -114,6 +129,14 @@ public class RobotContainer {
 
     private Command engage;
 
+    private Command changeMode;
+
+    // private Command changeToConeMode;
+    // private Command changeToCubeMode;
+
+    private Command placePieceTop;
+    private Command placePieceMid;
+    private Command placePieceLow;
      // A chooser for autonomous commands
      final SendableChooser < Command > chooser = new SendableChooser < > ();
      final ComplexWidget autonChooser = Shuffleboard.getTab("Driver")
@@ -124,7 +147,6 @@ public class RobotContainer {
         ElevatorIO elevatorIO;
         ArmIO armIO;
         IntakeIO intakeIO;
-
         // implemented drivio interface 
         if (RobotBase.isSimulation()) {
             driveIO = new SimDrive();
@@ -149,12 +171,19 @@ public class RobotContainer {
         DriverStation.silenceJoystickConnectionWarning(true);
         // Configure the button bindings
         
+        coneTopNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_TOP_NODE_HEIGHT);
+        cubeTopNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_TOP_NODE_HEIGHT);
+        coneMidNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_MID_NODE_HEIGHT);
+        cubeMidNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_MID_NODE_HEIGHT);
+        coneLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_LOW_NODE_HEIGHT);
+        cubeLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_LOW_NODE_HEIGHT);
 
         setElevatorSpeedUp = new RunCommand(() -> elevator.setSpeed(0.2), elevator);
         setElevatorSpeedDown = new RunCommand(() -> elevator.setSpeed(-0.2), elevator);
         stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
         collectPiece = new CollectPieceCmd(intake);
         dropCone  = new InstantCommand(() -> intake.drop(), intake);
+        retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
 
         noSpin = new RunCommand(() -> intake.setMotor(0), intake);
         spinIn = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake);
@@ -164,6 +193,17 @@ public class RobotContainer {
         moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
         armDefaultCmd = new SetArmAngleCmd(arm);
         moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
+
+        changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
+
+        // changeToConeMode = new InstantCommand(() -> {coneMode = true;});
+        // changeToCubeMode = new InstantCommand(() -> {coneMode = false;});
+
+        placePieceTop = new ConditionalCommand(coneTopNode, cubeTopNode, () -> coneMode);
+        placePieceMid = new ConditionalCommand(coneMidNode, cubeMidNode, () -> coneMode);
+        placePieceLow = new ConditionalCommand(coneLowNode, cubeLowNode, () -> coneMode);
+
+        engage = new EngageCmd();
 
         configureButtonBindings();
 
@@ -191,6 +231,15 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+       
+        new JoystickButton(xbox, Button.kA.value).onTrue(changeMode);
+
+        // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeToConeMode);
+        // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(changeToCubeMode);
+
+        new JoystickButton(xbox, Button.kX.value).onTrue(placePieceTop);
+        new JoystickButton(xbox, Button.kY.value).onTrue(retractElevator);
+
         new JoystickButton(joystick,12).whileTrue(moveArmUp);
         new JoystickButton(joystick, 13).whileTrue(moveArmDown);
         new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
