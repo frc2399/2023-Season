@@ -76,6 +76,7 @@ public class RobotContainer {
     
     public static MechanismLigament2d elevatorMechanism;
     public static MechanismLigament2d armMechanism;
+    public static MechanismLigament2d LEDMechanism;
 
     // Joysticks
     public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
@@ -218,6 +219,9 @@ public class RobotContainer {
         elevatorMechanism.setLineWeight(20);
         armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 140));
         armMechanism.setColor(new Color8Bit(200, 0, 216));
+        LEDMechanism = root.append(new MechanismLigament2d("LED", 0.1, 0));
+        LEDMechanism.setColor(new Color8Bit(0, 0, 0));
+        LEDMechanism.setLineWeight(20);
         SmartDashboard.putData("Mech2d", mech);
 
     }
