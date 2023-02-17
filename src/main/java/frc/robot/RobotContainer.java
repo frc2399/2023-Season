@@ -105,25 +105,13 @@ public class RobotContainer {
     //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
     //private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     //private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
-    private Command setElevatorSpeedUp;
-    private Command setElevatorSpeedDown;
-    private Command stopElevator;
-    private Command collectPiece;
-    private Command dropCone;
 
     // private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
     // private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
     // private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
 
     //it broke :( owo
-    private Command noSpin;
-    private Command spinIn;
-    private Command spitOut;  
     
-    private Command moveArmUp;
-    private Command moveArmDown;
-    private Command armDefaultCmd;
-    private Command moveArmHalfway;
 
     private Command engage;
 
@@ -176,21 +164,9 @@ public class RobotContainer {
         coneLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_LOW_NODE_HEIGHT);
         cubeLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_LOW_NODE_HEIGHT);
 
-        setElevatorSpeedUp = new RunCommand(() -> elevator.setSpeed(0.2), elevator);
-        setElevatorSpeedDown = new RunCommand(() -> elevator.setSpeed(-0.2), elevator);
-        stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
-        collectPiece = new CollectPieceCmd(intake);
-        dropCone  = new InstantCommand(() -> intake.drop(), intake);
         retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
 
-        noSpin = new RunCommand(() -> intake.setMotor(0), intake);
-        spinIn = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake);
-        spitOut = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake);    
     
-        moveArmUp = new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);});
-        moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
-        armDefaultCmd = new SetArmAngleCmd(arm);
-        moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
 
         changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
 
@@ -204,27 +180,8 @@ public class RobotContainer {
         engage = new EngageCmd();
 
         configureButtonBindings();
-
-        // Configure default commands
-        driveTrain.setDefaultCommand(
-            new ArcadeDriveCmd(driveTrain,
-                () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
-                () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
-
-        intake.setDefaultCommand(noSpin);
-        elevator.setDefaultCommand(stopElevator);
-        // arm.setDefaultCommand(armDefaultCmd);
-        
-        //Makes a mechanism (lines to show elevator and arm) in simulator
-        //Team colors!
-        Mechanism2d mech = new Mechanism2d(1, 1);
-        MechanismRoot2d root = mech.getRoot("root", 0.3, 0);
-        elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
-        elevatorMechanism.setColor(new Color8Bit(0, 204, 255));
-        elevatorMechanism.setLineWeight(20);
-        armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 140));
-        armMechanism.setColor(new Color8Bit(200, 0, 216));
-        SmartDashboard.putData("Mech2d", mech);
+        setDefaultCommands();
+        simulationMechanisms();
 
     }
 
@@ -238,17 +195,41 @@ public class RobotContainer {
         new JoystickButton(xbox, Button.kX.value).onTrue(placePieceTop);
         new JoystickButton(xbox, Button.kY.value).onTrue(retractElevator);
 
-        new JoystickButton(joystick,12).whileTrue(moveArmUp);
-        new JoystickButton(joystick, 13).whileTrue(moveArmDown);
-        new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
-        new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
-        new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
-        // new JoystickButton(joystick,6).whileTrue(dropCone);
-        // new JoystickButton(joystick,7).whileTrue(collectPiece);
-        // new JoystickButton(joystick,8).whileTrue(spinIn);
-        // new JoystickButton(joystick,9).whileTrue(spitOut);
+        new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);}));
+        new JoystickButton(joystick, 13).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);}));
+        new JoystickButton(joystick, 2).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);}));
+        new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.2), elevator));
+        new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.2), elevator));
+        // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> intake.drop(), intake));
+        // new JoystickButton(joystick,7).whileTrue(new CollectPieceCmd(intake));
+        // new JoystickButton(joystick,8).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake));
+        // new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
         // new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
         // new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
+    }
+
+    private void setDefaultCommands() {
+        driveTrain.setDefaultCommand(
+            new ArcadeDriveCmd(driveTrain,
+                () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
+                () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
+
+        intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
+        elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
+        // arm.setDefaultCommand(new SetArmAngleCmd(arm));
+    }
+    
+    private void simulationMechanisms() {
+        //Makes a mechanism (lines to show elevator and arm) in simulator
+        //Team colors!
+        Mechanism2d mech = new Mechanism2d(1, 1);
+        MechanismRoot2d root = mech.getRoot("root", 0.3, 0);
+        elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
+        elevatorMechanism.setColor(new Color8Bit(0, 204, 255));
+        elevatorMechanism.setLineWeight(20);
+        armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 140));
+        armMechanism.setColor(new Color8Bit(200, 0, 216));
+        SmartDashboard.putData("Mech2d", mech);
     }
 
     public Command getAutonomousCommand() {
