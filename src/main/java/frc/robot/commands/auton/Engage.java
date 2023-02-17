@@ -20,7 +20,7 @@ public class Engage extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       //TODO use meters instead of inches
-      new DriveForwardGivenDistance(0.3, 80, driveTrain),
+      new DriveForwardGivenDistance(0.3, 2, driveTrain),
       new EngageCmd()
     );
   }

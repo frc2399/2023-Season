@@ -17,14 +17,18 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.auton.Engage;
+import frc.robot.commands.auton.LeaveEngage;
+import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.subsystems.LED;
@@ -68,6 +72,7 @@ public class RobotContainer {
     
     public static MechanismLigament2d elevatorMechanism;
     public static MechanismLigament2d armMechanism;
+    public static MechanismLigament2d LEDMechanism;
 
     // Joysticks
     public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
@@ -120,9 +125,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
        
         new JoystickButton(xbox, Button.kA.value).onTrue(changeMode);
+       
+        // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(new InstantCommand(() -> {coneMode = true;}));
+        // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(new InstantCommand(() -> {coneMode = false;}));
 
-        // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeToConeMode);
-        // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(changeToCubeMode);
 
         // if coneMode true, set elevator to cone mode for top node
         new JoystickButton(xbox, Button.kX.value).onTrue(new ConditionalCommand(coneTopNode, cubeTopNode, () -> coneMode));
@@ -164,7 +170,11 @@ public class RobotContainer {
         elevatorMechanism.setLineWeight(20);
         armMechanism = elevatorMechanism.append(new MechanismLigament2d("arm", Constants.ArmConstants.ARM_LENGTH, 140));
         armMechanism.setColor(new Color8Bit(200, 0, 216));
+        LEDMechanism = root.append(new MechanismLigament2d("LED", 0.1, 0));
+        LEDMechanism.setColor(new Color8Bit(0, 0, 0));
+        LEDMechanism.setLineWeight(20);
         SmartDashboard.putData("Mech2d", mech);
+
     }
 
     public Command getAutonomousCommand() {
@@ -184,9 +194,8 @@ public class RobotContainer {
 
         changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
 
-        // changeToConeMode = new InstantCommand(() -> {coneMode = true;});
-        // changeToCubeMode = new InstantCommand(() -> {coneMode = false;});
-
+        
+        placePieceTop = new ConditionalCommand(coneTopNode, cubeTopNode, () -> coneMode);
         placePieceMid = new ConditionalCommand(coneMidNode, cubeMidNode, () -> coneMode);
         placePieceLow = new ConditionalCommand(coneLowNode, cubeLowNode, () -> coneMode);
     }
@@ -218,9 +227,11 @@ public class RobotContainer {
     }
 
     private void setUpAutonChooser () {
-        chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator));
+        chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator, intake, arm));
         chooser.addOption("engage", new Engage(driveTrain));
-    }
-
-    
+        chooser.addOption("leave and engage", new LeaveEngage(driveTrain));
+        chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
+        chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
+        chooser.addOption("leave community", new DriveForwardGivenDistance(-1, 5, driveTrain));
+    }    
 }

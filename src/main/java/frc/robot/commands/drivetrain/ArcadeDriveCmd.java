@@ -9,17 +9,21 @@ import frc.robot.subsystems.drivetrain.DriveTrain;
 
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+
 public class ArcadeDriveCmd extends CommandBase {
 
     private final DriveTrain driveSubsystem;
     private SlewRateLimiter driveLimiter;
+    private SlewRateLimiter turnLimiter;
     public static boolean isSlow = false;
     private final Supplier<Double> speedFunction, turnFunction;
 
     /* This command does this (fill in)... */
     public ArcadeDriveCmd(DriveTrain driveSubsystem, Supplier<Double> speedFunction, Supplier<Double> turnFunction) {
         double driveSlew = SmartDashboard.getNumber("drive slew", XboxConstants.DRIVE_SLEW_RATE);
-        this.driveLimiter = new SlewRateLimiter(driveSlew);
+        this.driveLimiter = new SlewRateLimiter(5.0);
+        this.turnLimiter = new SlewRateLimiter(5.0);
         this.driveSubsystem = driveSubsystem;
         this.speedFunction = speedFunction;
         this.turnFunction = turnFunction;
@@ -43,13 +47,17 @@ public class ArcadeDriveCmd extends CommandBase {
 
         // calculate real time speed
         val = speedFunction.get();
+        SmartDashboard.putNumber("Speed function", val);
         if (Math.abs(val) <= XboxConstants.FORWARD_DEADBAND) {
             val = 0;
         } 
         realTimeSpeed  = driveLimiter.calculate(val);
+        SmartDashboard.putNumber("Real Time Speed", realTimeSpeed);
 
         //calculate real time turn
         val = turnFunction.get();
+        SmartDashboard.putNumber("Turn function", val);
+
         if (Math.abs(val) <= XboxConstants.TURN_DEADBAND) {
             val = 0.0;
         }
@@ -57,10 +65,15 @@ public class ArcadeDriveCmd extends CommandBase {
         val = -val;
         double a = DriveConstants.TURN_SENSITIVITY;
         val = ((1 - a) * val) + (a * Math.pow(val, 3));
-        realTimeTurn = driveLimiter.calculate(val);
         
+        realTimeTurn = turnLimiter.calculate(val);
+        SmartDashboard.putNumber("Real Time Turn", realTimeTurn);
+
         double left = realTimeSpeed - realTimeTurn;
+        SmartDashboard.putNumber("Left Speed", left);
         double right = realTimeSpeed + realTimeTurn;
+        SmartDashboard.putNumber("Right Speed", right);
+
 
         if (isSlow) {        
             this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
