@@ -37,6 +37,7 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.SetArmAngleCmd;
 import frc.robot.commands.auton.Engage;
+import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
@@ -165,6 +166,7 @@ public class RobotContainer {
 
         chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator));
         chooser.addOption("engage", new Engage(driveTrain));
+        chooser.addOption("leave and engage", new LeaveEngage(driveTrain));
 
         DriverStation.silenceJoystickConnectionWarning(true);
         // Configure the button bindings

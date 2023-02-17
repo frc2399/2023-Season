@@ -17,16 +17,16 @@ public class DriveForwardGivenDistance extends CommandBase {
     //insantiate global variables
     double speed;
     double currentPosition;
-    double targetDistance;
+    double targetDistanceMeters;
     double newTargetDistance;
     DriveTrain m_driveTrain;
     
  
-	public DriveForwardGivenDistance(double speed, double targetDistance, DriveTrain subsystem) {
+	public DriveForwardGivenDistance(double speed, double targetDistanceMeters, DriveTrain subsystem) {
         
         //initialize variables
         this.speed = speed;
-        this.targetDistance = targetDistance;
+        this.targetDistanceMeters = targetDistanceMeters;
         m_driveTrain = subsystem;
         addRequirements(m_driveTrain);
 
@@ -40,12 +40,12 @@ public class DriveForwardGivenDistance extends CommandBase {
     public void initialize() {
         // Sets the current position to where robot is starting
         currentPosition = (
-            Units.metersToInches(m_driveTrain.getLeftEncoderMeters()) + 
-            Units.metersToInches(m_driveTrain.getRightEncoderMeters()) )/ 2;
+            m_driveTrain.getLeftEncoderMeters() + 
+            m_driveTrain.getRightEncoderMeters() )/ 2;
         System.out.println("starting current position " + currentPosition);
         
         // find distance robot needs to travel to from its current position
-        newTargetDistance = currentPosition + targetDistance;
+        newTargetDistance = currentPosition + targetDistanceMeters;
 
     }
 
@@ -54,13 +54,13 @@ public class DriveForwardGivenDistance extends CommandBase {
     public void execute() {
 
         // Get the average position between leftEncoder and rightEncoder
-        currentPosition = (Units.metersToInches(m_driveTrain.getLeftEncoderMeters()) + Units.metersToInches(m_driveTrain.getRightEncoderMeters())) / 2;
+        currentPosition = (m_driveTrain.getLeftEncoderMeters() + m_driveTrain.getRightEncoderMeters()) / 2;
 
 
         double error = newTargetDistance - currentPosition;
 
 
-        double outputSpeed = (1/20.) * error;
+        double outputSpeed = (2 * error);
         outputSpeed = MathUtil.clamp(outputSpeed, -0.3, 0.3);
 
         m_driveTrain.setMotors(outputSpeed, outputSpeed);
@@ -69,7 +69,7 @@ public class DriveForwardGivenDistance extends CommandBase {
     // Make this return true when this Command no longer needs to run execute()
     @Override
     public boolean isFinished() {
-        double butteryErrorTolerance = 0.5;
+        double butteryErrorTolerance = 0.01;
         // SmartDashboard.getNumber("Error Tolerance Distance", 0.5);
         // SmartDashboard.putNumber("distance bt td and cp", Math.abs(targetDistance - currentPosition));
         // System.out.println("distance bt td and cp " +  Math.abs(td - cp));
