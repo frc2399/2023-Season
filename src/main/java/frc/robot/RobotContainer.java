@@ -15,21 +15,32 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.SetArmAngleCmd;
+import frc.robot.commands.auton.Engage;
+import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
+import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.subsystems.LED;
@@ -80,6 +91,17 @@ public class RobotContainer {
     public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
     public static final Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
 
+    public static boolean coneMode = true;
+
+    private Command retractElevator;
+
+    private Command coneTopNode;
+    private Command cubeTopNode;
+    private Command coneMidNode;
+    private Command cubeMidNode;
+    private Command coneLowNode;
+    private Command cubeLowNode;
+
     //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
     //private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
     //private Command retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
@@ -103,14 +125,26 @@ public class RobotContainer {
     private Command armDefaultCmd;
     private Command moveArmHalfway;
 
+    private Command engage;
+
+    private Command changeMode;
+
+    // private Command changeToConeMode;
+    // private Command changeToCubeMode;
+
+    private Command placePieceTop;
+    private Command placePieceMid;
+    private Command placePieceLow;
+     // A chooser for autonomous commands
+     final SendableChooser < Command > chooser = new SendableChooser < > ();
+     final ComplexWidget autonChooser = Shuffleboard.getTab("Driver")
+     .add("Choose Auton", chooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withPosition(4, 4).withSize(9, 1);
+
     public RobotContainer() {
         DriveIO driveIO;
         ElevatorIO elevatorIO;
         ArmIO armIO;
         IntakeIO intakeIO;
-        
-
-     
         // implemented drivio interface 
         if (RobotBase.isSimulation()) {
             driveIO = new SimDrive();
@@ -129,15 +163,25 @@ public class RobotContainer {
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
 
+        chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator));
+        chooser.addOption("engage", new Engage(driveTrain));
+
         DriverStation.silenceJoystickConnectionWarning(true);
         // Configure the button bindings
         
+        coneTopNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_TOP_NODE_HEIGHT);
+        cubeTopNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_TOP_NODE_HEIGHT);
+        coneMidNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_MID_NODE_HEIGHT);
+        cubeMidNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_MID_NODE_HEIGHT);
+        coneLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_LOW_NODE_HEIGHT);
+        cubeLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_LOW_NODE_HEIGHT);
 
         setElevatorSpeedUp = new RunCommand(() -> elevator.setSpeed(0.2), elevator);
         setElevatorSpeedDown = new RunCommand(() -> elevator.setSpeed(-0.2), elevator);
         stopElevator = new InstantCommand(() -> elevator.setSpeed(0), elevator);
         collectPiece = new CollectPieceCmd(intake);
         dropCone  = new InstantCommand(() -> intake.drop(), intake);
+        retractElevator = new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT);
 
         noSpin = new RunCommand(() -> intake.setMotor(0), intake);
         spinIn = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake);
@@ -147,6 +191,17 @@ public class RobotContainer {
         moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
         armDefaultCmd = new SetArmAngleCmd(arm);
         moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
+
+        changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
+
+        // changeToConeMode = new InstantCommand(() -> {coneMode = true;});
+        // changeToCubeMode = new InstantCommand(() -> {coneMode = false;});
+
+        placePieceTop = new ConditionalCommand(coneTopNode, cubeTopNode, () -> coneMode);
+        placePieceMid = new ConditionalCommand(coneMidNode, cubeMidNode, () -> coneMode);
+        placePieceLow = new ConditionalCommand(coneLowNode, cubeLowNode, () -> coneMode);
+
+        engage = new EngageCmd();
 
         configureButtonBindings();
 
@@ -174,7 +229,16 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(joystick,14).whileTrue(moveArmUp);
+       
+        new JoystickButton(xbox, Button.kA.value).onTrue(changeMode);
+
+        // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeToConeMode);
+        // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(changeToCubeMode);
+
+        new JoystickButton(xbox, Button.kX.value).onTrue(placePieceTop);
+        new JoystickButton(xbox, Button.kY.value).onTrue(retractElevator);
+
+        new JoystickButton(joystick,12).whileTrue(moveArmUp);
         new JoystickButton(joystick, 13).whileTrue(moveArmDown);
         new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
@@ -188,87 +252,9 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        //PathPlannerTrajectory examplePath = PathPlanner.loadPath("Go Straight", new PathConstraints(1, 1));
-        // This will load the file "Example Path.path" and generate it with a max
-        // velocity of 4 m/s and a max acceleration of 3 m/s^2
-
-        
-        //driveTrain.field.getObject("goStraightTrajectory").setTrajectory(goStraight);
-
-        //mirror if on red alliance
-        boolean useAllianceColor = true;
-
-        PathPlannerTrajectory twoPiecePath = PathPlanner.loadPath("Two-Cone Auton", new PathConstraints(1, 1));
-        driveTrain.field.getObject("traj").setTrajectory(twoPiecePath);
-
-        HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("leftCommunity", new PrintCommand("Left community"));
-        // eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.INTAKE_IN_SPEED, 2));
-        
-        Command eventTesting = 
-        new SequentialCommandGroup(
-            new InstantCommand(() -> {
-                // Reset odometry for the first path you run during auto
-                
-                driveTrain.resetOdometry(twoPiecePath.getInitialPose());
-
-            }, driveTrain),
-        new PPRamseteCommand(
-            twoPiecePath,
-            () -> driveTrain.getPoseMeters(), // Pose supplier
-            new RamseteController(),
-            new SimpleMotorFeedforward(Constants.DriveConstants.ks,
-                Constants.DriveConstants.kv,
-                Constants.DriveConstants.ka),
-            Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
-            () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
-            new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
-                    // will only use feedforwards.
-            new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
-            (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
-            driveTrain // Requires this drive subsystem
-        ));
-
-        FollowPathWithEvents twoPieceAuton = new FollowPathWithEvents(
-            eventTesting,
-            twoPiecePath.getMarkers(),
-            eventMap
-        );
-
-        return new SequentialCommandGroup(
-            new SetElevatorPositionCmd(elevator, 1),
-            // new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
-            new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT),
-            twoPieceAuton,
-            new SetElevatorPositionCmd(elevator, 1.0),
-            // new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
-            new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT)
-        );
-    
-        // return new SequentialCommandGroup(
-        //     new InstantCommand(() -> {
-        //         // Reset odometry for the first path you run during auto
-                
-        //         driveTrain.resetOdometry(examplePath.getInitialPose());
-
-        //     }, driveTrain),
-        //     new PPRamseteCommand(
-        //         examplePath,
-        //         () -> driveTrain.getPoseMeters(), // Pose supplier
-        //         new RamseteController(),
-        //         new SimpleMotorFeedforward(Constants.DriveConstants.ks,
-        //             Constants.DriveConstants.kv,
-        //             Constants.DriveConstants.ka),
-        //         Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
-        //         () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
-        //         new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
-        //                 // will only use feedforwards.
-        //         new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
-        //         (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
-        //         useAllianceColor, 
-        //         driveTrain // Requires this drive subsystem
-        //     ));
-
+        // The selected command will be run in autonomous
+        System.out.println("Autonomous command! " + chooser.getSelected());
+        return chooser.getSelected();
     }
 
     

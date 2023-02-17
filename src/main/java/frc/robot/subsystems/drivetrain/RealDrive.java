@@ -116,4 +116,10 @@ public void updateForReal()
 public void updateForSim() {
     // TODO Auto-generated method stub
 }
+
+
+@Override
+public double getGyroPitch() {
+    return -ahrs.getPitch();
+}
 }
