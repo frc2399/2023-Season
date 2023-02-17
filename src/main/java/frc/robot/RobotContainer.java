@@ -1,16 +1,5 @@
 package frc.robot;
 
-import java.util.HashMap;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
-import com.pathplanner.lib.commands.PPRamseteCommand;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -27,9 +16,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
@@ -38,7 +25,6 @@ import frc.robot.commands.SetArmAngleCmd;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
-import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.commands.intake.CollectPieceCmd;
@@ -165,7 +151,7 @@ public class RobotContainer {
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
 
-        chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator));
+        chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator, intake, arm));
         chooser.addOption("engage", new Engage(driveTrain));
 
         DriverStation.silenceJoystickConnectionWarning(true);
