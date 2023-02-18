@@ -9,8 +9,6 @@ import frc.robot.subsystems.drivetrain.DriveTrain;
 
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
-
 public class ArcadeDriveCmd extends CommandBase {
 
     private final DriveTrain driveSubsystem;

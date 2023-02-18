@@ -1,7 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix.led.RgbFadeAnimation;
-
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
