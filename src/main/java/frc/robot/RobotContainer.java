@@ -130,6 +130,7 @@ public class RobotContainer {
         new JoystickButton(joystick, 2).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);}));
         new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.4), elevator));
         new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.4), elevator));
+        //TODO make proper kill command :O
         new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> intake.drop(), intake));
         // new JoystickButton(joystick,7).whileTrue(new CollectPieceCmd(intake));
@@ -142,7 +143,8 @@ public class RobotContainer {
         // new JoystickButton(joystick,7).whileTrue(collectPiece);
         new JoystickButton(joystick,8).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake));
         new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
-        }
+        
+    }
 
     private void setDefaultCommands() {
         driveTrain.setDefaultCommand(

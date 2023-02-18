@@ -53,7 +53,7 @@ public class Constants {
     public static final class ElevatorConstants {
 
         public static final int LEFT_ELEVATOR_MOTOR_ID = 7;
-        public static final int RIGHT_ELEVATOR_MOTOR_ID = 8;
+        public static final int RIGHT_ELEVATOR_MOTOR_ID = 10;
         public static final int ELEVATOR_SLEW = 5;
         public static final double MIN_ELEVATOR_HEIGHT = Units.inchesToMeters(2);
         public static final double MAX_ELEVATOR_HEIGHT = Units.inchesToMeters(75);
