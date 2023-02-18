@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;

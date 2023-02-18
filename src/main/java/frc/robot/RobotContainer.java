@@ -128,8 +128,9 @@ public class RobotContainer {
         new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);}));
         new JoystickButton(joystick, 13).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);}));
         new JoystickButton(joystick, 2).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);}));
-        new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.2), elevator));
-        new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.2), elevator));
+        new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.4), elevator));
+        new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.4), elevator));
+        new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> intake.drop(), intake));
         // new JoystickButton(joystick,7).whileTrue(new CollectPieceCmd(intake));
         // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeToConeMode);
