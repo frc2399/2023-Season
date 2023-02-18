@@ -113,14 +113,12 @@ public class SimDrive implements DriveIO {
 
     @Override
     public void updateForReal() {
-        // TODO Auto-generated method stub
         
     }
 
 
     @Override
     public double getGyroPitch() {
-        // TODO Auto-generated method stub
         return 0;
     }
 }

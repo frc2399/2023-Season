@@ -56,9 +56,7 @@ public class RealElevator implements ElevatorIO {
     }
 
     @Override
-    public void updateForSim() {
-        // TODO Auto-generated method stub
-        
+    public void updateForSim() {        
     }
 
 }
