@@ -86,14 +86,6 @@ public class RobotContainer {
     private Command cubeMidNode;
     private Command coneLowNode;
     private Command cubeLowNode;
-
-    //private Command extendElevator = new SetElevatorPositionCmd(elevator, 1);
-    //private Command middleElevator = new SetElevatorPositionCmd(elevator, .5);
-
-    // private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
-    // private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
-    // private Command rightOnly = new InstantCommand(() -> intake.intakeRight(), intake);
-
     private Command changeMode;
 
     // private Command changeToConeMode;
@@ -102,6 +94,7 @@ public class RobotContainer {
     private Command placePieceTop;
     private Command placePieceMid;
     private Command placePieceLow;
+    
      // A chooser for autonomous commands
      final SendableChooser < Command > chooser = new SendableChooser < > ();
      final ComplexWidget autonChooser = Shuffleboard.getTab("Driver")
@@ -143,11 +136,14 @@ public class RobotContainer {
         new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.2), elevator));
         // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> intake.drop(), intake));
         // new JoystickButton(joystick,7).whileTrue(new CollectPieceCmd(intake));
-        // new JoystickButton(joystick,8).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake));
-        // new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
-        // new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
-        // new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
-    }
+        // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeToConeMode);
+        // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(changeToCubeMode);
+
+        new JoystickButton(xbox, Button.kX.value).onTrue(placePieceTop);
+        // new JoystickButton(joystick,7).whileTrue(collectPiece);
+        new JoystickButton(joystick,8).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake));
+        new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
+        }
 
     private void setDefaultCommands() {
         driveTrain.setDefaultCommand(
