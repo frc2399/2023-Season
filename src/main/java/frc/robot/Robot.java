@@ -35,32 +35,32 @@ public class Robot extends TimedRobot {
     // gearbox is constructed, you might have to invert the left side instead.
     robotContainer = new RobotContainer();
 
-//     PPRamseteCommand.setLoggingCallbacks(
-//       (PathPlannerTrajectory activeTrajectory) -> {
-//           // Log current trajectory
-//       },
-//       (Pose2d targetPose) -> {
-//           // Log target pose
-//       },
-//       (ChassisSpeeds setpointSpeeds) -> {
-//           // Log setpoint ChassisSpeeds
-//           // System.out.println("log setpoint ChassisSpeeds " + setpointSpeeds);
-//           DifferentialDriveWheelSpeeds targetWheelSpeeds =
-//           DriveConstants.kDriveKinematics.toWheelSpeeds(setpointSpeeds);
-//           // ChassisSpeeds chassisSpeeds = 
-//           // DriveConstants.kDriveKinematics.toChassisSpeeds(targetWheelSpeeds);
-//           double leftTargetVelocity = targetWheelSpeeds.leftMetersPerSecond;
-//           double rightTargetVelocity = targetWheelSpeeds.rightMetersPerSecond;
+    PPRamseteCommand.setLoggingCallbacks(
+      (PathPlannerTrajectory activeTrajectory) -> {
+          // Log current trajectory
+      },
+      (Pose2d targetPose) -> {
+          // Log target pose
+      },
+      (ChassisSpeeds setpointSpeeds) -> {
+          // Log setpoint ChassisSpeeds
+          // System.out.println("log setpoint ChassisSpeeds " + setpointSpeeds);
+          DifferentialDriveWheelSpeeds targetWheelSpeeds =
+          DriveConstants.kDriveKinematics.toWheelSpeeds(setpointSpeeds);
+          // ChassisSpeeds chassisSpeeds = 
+          // DriveConstants.kDriveKinematics.toChassisSpeeds(targetWheelSpeeds);
+          double leftTargetVelocity = targetWheelSpeeds.leftMetersPerSecond;
+          double rightTargetVelocity = targetWheelSpeeds.rightMetersPerSecond;
 
-//           SmartDashboard.putNumber("Left Target Velocity", leftTargetVelocity);
-//           SmartDashboard.putNumber("Right Target Velocity", rightTargetVelocity);
+          SmartDashboard.putNumber("Left Target Velocity", leftTargetVelocity);
+          SmartDashboard.putNumber("Right Target Velocity", rightTargetVelocity);
 
-//       },
-//       (Translation2d translationError, Rotation2d rotationError) -> {
-//           // Log path following error
-//           //TODO what is this?
-//       }
-// );
+      },
+      (Translation2d translationError, Rotation2d rotationError) -> {
+          // Log path following error
+          //TODO what is this?
+      }
+    );
   }
 
   @Override

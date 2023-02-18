@@ -122,10 +122,6 @@ public class RobotContainer {
         // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(new InstantCommand(() -> {coneMode = true;}));
         // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(new InstantCommand(() -> {coneMode = false;}));
 
-
-        // if coneMode true, set elevator to cone mode for top node
-        new JoystickButton(xbox, Button.kX.value).onTrue(new ConditionalCommand(coneTopNode, cubeTopNode, () -> coneMode));
-
         // set elevator to bottom 
         new JoystickButton(xbox, Button.kY.value).onTrue(new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT));
 
@@ -139,7 +135,9 @@ public class RobotContainer {
         // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeToConeMode);
         // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(changeToCubeMode);
 
+        // if coneMode true, set elevator to cone mode for top node
         new JoystickButton(xbox, Button.kX.value).onTrue(placePieceTop);
+        
         // new JoystickButton(joystick,7).whileTrue(collectPiece);
         new JoystickButton(joystick,8).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake));
         new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
