@@ -89,7 +89,8 @@ public class Constants {
         public static final double INTAKE_SLEW_RATE = 10;
         public static final double INTAKE_IN_SPEED = 1.0;
         public static final double INTAKE_OUT_SPEED = -1.0;
-        public static final int NEO_CURRENT_LIMIT = 20;
+        public static final int NEO550_CURRENT_LIMIT = 20;
+        public static final int NEO_CURRENT_LIMIT = 60;
 
     }
 

@@ -11,38 +11,28 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.util.MotorUtil;
 
 
 public class RealDrive implements DriveIO {
    // Basically copy over the entire rest of the drive subsystem that is "not sim"
-   private static CANSparkMax leftFrontMotorController, rightFrontMotorController;
-   private static CANSparkMax leftBackMotorController;
-   private static CANSparkMax rightBackMotorController;
+   private static CANSparkMax leftFrontMotorController, rightFrontMotorController, leftBackMotorController, rightBackMotorController;
    public static RelativeEncoder leftEncoder, rightEncoder;
    public AHRS ahrs;
 
 
    public RealDrive() {
-        rightFrontMotorController = new CANSparkMax(DriveConstants.RIGHT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
-        leftFrontMotorController = new CANSparkMax(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless);
-        leftBackMotorController = new CANSparkMax(DriveConstants.LEFT_BACK_DRIVE_CAN_ID, MotorType.kBrushless);
-        rightBackMotorController = new CANSparkMax(DriveConstants.RIGHT_BACK_DRIVE_CAN_ID, MotorType.kBrushless);
         
-        leftFrontMotorController.restoreFactoryDefaults();
-        rightFrontMotorController.restoreFactoryDefaults();
-        leftBackMotorController.restoreFactoryDefaults();
-        rightBackMotorController.restoreFactoryDefaults();
-
-        // Set motors to brake mode
-        leftFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        rightFrontMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        leftBackMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        rightBackMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-
-        // Make wheels go in same direction
-        leftFrontMotorController.setInverted(false);
-        rightFrontMotorController.setInverted(true);
+        rightFrontMotorController = MotorUtil.createSparkMAX(DriveConstants.RIGHT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless, 
+            Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, true, 0);
+        leftFrontMotorController = MotorUtil.createSparkMAX(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless, 
+            Constants.IntakeConstants.NEO_CURRENT_LIMIT, false, true, 0);
+        
+        rightBackMotorController = MotorUtil.createSparkMAX(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless, Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, 0);
+        leftBackMotorController = MotorUtil.createSparkMAX(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless, Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, 0);
 
         // sets motor controllers following leaders
         leftBackMotorController.follow(leftFrontMotorController);
