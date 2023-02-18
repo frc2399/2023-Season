@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
           // Log path following error
           //TODO what is this?
       }
-);
+    );
   }
 
   @Override
