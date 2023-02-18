@@ -76,21 +76,22 @@ public class Constants {
         public static final double ARM_MASS = 1;
         //arm length in meters
         public static final double ARM_LENGTH = 0.3;
-        public static final int ARM_MOTOR_ID = 5;
+        public static final int ARM_MOTOR_ID = 23; //TODO
         public static final double RADIANS_PER_REVOLUTION = 2 * Math.PI;
     }
 
     public static final class IntakeConstants {
 
-        public static final int LEFT_INTAKE_MOTOR_ID = 9;
-        public static final int RIGHT_INTAKE_MOTOR_ID = 10;
+        public static final int LEFT_INTAKE_MOTOR_ID = 5;
+        //public static final int RIGHT_INTAKE_MOTOR_ID = 10;
         public static final int PCM_CAN_ID = 3;
-        public static final int FORWARD_CHANNEL_SOLENOID_ID = 2;
-        public static final int REVERSE_CHANNEL_SOLENOID_ID = 3;
+        //public static final int FORWARD_CHANNEL_SOLENOID_ID = 2;
+        //public static final int REVERSE_CHANNEL_SOLENOID_ID = 3;
         public static final int EXTEND_INTAKE_ARM_RIGHT = 2;
         public static final double INTAKE_SLEW_RATE = 10;
         public static final double INTAKE_IN_SPEED = 1.0;
         public static final double INTAKE_OUT_SPEED = -1.0;
+        public static final int NEO_CURRENT_LIMIT = 20;
 
     }
 

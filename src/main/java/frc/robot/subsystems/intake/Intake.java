@@ -16,13 +16,14 @@ public class Intake extends SubsystemBase {
 
   private IntakeIO intakeIO;
   //private DoubleSolenoid leftIntakeSolenoid;
-  private DoubleSolenoid rightIntakeSolenoid;
+  //private DoubleSolenoid rightIntakeSolenoid;
+
 
   /** Creates a new Intake. */
   public Intake(IntakeIO io) {
     intakeIO = io;
-    rightIntakeSolenoid = new DoubleSolenoid(IntakeConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, 
-    IntakeConstants.FORWARD_CHANNEL_SOLENOID_ID, IntakeConstants.REVERSE_CHANNEL_SOLENOID_ID);
+    //rightIntakeSolenoid = new DoubleSolenoid(IntakeConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, 
+    //IntakeConstants.FORWARD_CHANNEL_SOLENOID_ID, IntakeConstants.REVERSE_CHANNEL_SOLENOID_ID);
         
   }
 
@@ -38,11 +39,11 @@ public class Intake extends SubsystemBase {
 
   // }
 
-  public void closeRight() {
+  // public void closeRight() {
 
-      rightIntakeSolenoid.set(Value.kForward);
+  //     rightIntakeSolenoid.set(Value.kForward);
 
-  }
+  // }
 
   // public void openLeft() {
 
@@ -55,11 +56,11 @@ public class Intake extends SubsystemBase {
 
   // }
 
-  public void openRight() {
+  // public void openRight() {
 
-    rightIntakeSolenoid.set(Value.kReverse);
+  //   rightIntakeSolenoid.set(Value.kReverse);
 
-  }
+  // }
 
   public void setMotor(double intakeSpeed) {
   
@@ -70,7 +71,7 @@ public class Intake extends SubsystemBase {
   public void intakeBothArms() {
 
     //closeLeft();
-    closeRight();
+    //closeRight();
     setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
 
   }
@@ -78,14 +79,14 @@ public class Intake extends SubsystemBase {
   public void intakeRight() {
 
     // openLeft();
-    closeRight();
+    //closeRight();
     setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
 
   }
 
   public void intakeLeft() {
 
-    openRight();
+    //openRight();
     // closeLeft();
     setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
 
@@ -93,14 +94,14 @@ public class Intake extends SubsystemBase {
 
   public void outtake() {
     // closeLeft();
-    closeRight();
+    //closeRight();
     setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED);
   }
 
   public void drop() {
 
     // openLeft();
-    openRight();
+    //openRight();
 
   }
 
@@ -114,14 +115,14 @@ public class Intake extends SubsystemBase {
   //   }
   // }
 
-  public boolean isRightOpen() {
-      return (rightIntakeSolenoid.get()== Value.kForward);
-  }
+  // public boolean isRightOpen() {
+  //     return (rightIntakeSolenoid.get()== Value.kForward);
+  // }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     // SmartDashboard.putBoolean("Left Intake Open? ", isLeftOpen());
-    SmartDashboard.putBoolean("Right Intake Open? ", isRightOpen());
+    //SmartDashboard.putBoolean("Right Intake Open? ", isRightOpen());
   }
 }

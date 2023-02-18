@@ -241,10 +241,9 @@ public class RobotContainer {
         new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
         new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
-        // new JoystickButton(joystick,6).whileTrue(dropCone);
         // new JoystickButton(joystick,7).whileTrue(collectPiece);
-        // new JoystickButton(joystick,8).whileTrue(spinIn);
-        // new JoystickButton(joystick,9).whileTrue(spitOut);
+        new JoystickButton(joystick,8).whileTrue(spinIn);
+        new JoystickButton(joystick,9).whileTrue(spitOut);
         // new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
         // new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
     }

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.simulation.SolenoidSim;
 
 public class SimIntake implements IntakeIO{
 
+    //TODO remove these SolenoidSims
     private SolenoidSim leftSolenoidSim;
     private SolenoidSim rightSolenoidSim;
     private DCMotorSim leftMotorSim;
