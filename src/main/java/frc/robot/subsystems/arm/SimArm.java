@@ -1,6 +1,8 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -18,6 +20,8 @@ public class SimArm implements ArmIO{
     private double armPower;
     private static double current_pos = 0;
     private static double current_vel = 0;
+    ArmFeedforward armFeedforward;
+
 
     public SimArm() {
         armEncoderSim = new SimEncoder("Elevator");
@@ -70,6 +74,19 @@ public class SimArm implements ArmIO{
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
         RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(armSim.getAngleRads()) - 50);
+    }
+
+    @Override
+    public void useOutput(double output, State setpoint) {
+        // Calculate the feedforward from the sepoint
+        double feedforward = armFeedforward.calculate(setpoint.position, setpoint.velocity);
+        // Add the feedforward to the PID output to get the motor output
+        armSim.setInputVoltage(output + feedforward);
+    }
+
+    @Override
+    public double getMeasurement() {
+        return armEncoderSim.getDistance();
     }
 
 

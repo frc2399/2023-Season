@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
 
@@ -43,6 +44,16 @@ public class RealArm implements ArmIO {
     @Override
     public void updateForSim(){
         
+    }
+
+    @Override
+    public void useOutput(double output, State setpoint) {
+        
+    }
+
+    @Override
+    public double getMeasurement() {
+        return armEncoder.getPosition();
     }
     
 }

@@ -75,6 +75,7 @@ public class ArcadeDriveCmd extends CommandBase {
 
         if (isSlow) {        
             this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
+    
         }
         else {
             this.driveSubsystem.setMotors(left, right);

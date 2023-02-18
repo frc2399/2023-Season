@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -36,6 +37,7 @@ import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmPID;
 import frc.robot.subsystems.arm.RealArm;
 import frc.robot.subsystems.arm.SimArm;
 import frc.robot.subsystems.drivetrain.DriveIO;
@@ -71,8 +73,14 @@ public class RobotContainer {
     // public final static Arm arm = new Arm();
     // public static final Intake intake = new Intake();
     public static Arm arm;
+    public static ArmPID armPID;
     public static Intake intake;
     public static Elevator elevator;
+
+    private static DriveIO driveIO;
+    private static ElevatorIO elevatorIO;
+    private static ArmIO armIO;
+    private static IntakeIO intakeIO;
     
     public static MechanismLigament2d elevatorMechanism;
     public static MechanismLigament2d armMechanism;
@@ -132,10 +140,6 @@ public class RobotContainer {
      .add("Choose Auton", chooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withPosition(4, 4).withSize(9, 1);
 
     public RobotContainer() {
-        DriveIO driveIO;
-        ElevatorIO elevatorIO;
-        ArmIO armIO;
-        IntakeIO intakeIO;
         // implemented drivio interface 
         if (RobotBase.isSimulation()) {
             driveIO = new SimDrive();
@@ -145,7 +149,7 @@ public class RobotContainer {
         } else {
             driveIO = new RealDrive();
             elevatorIO = new RealElevator();
-            armIO = new RealArm();
+            armIO = new ArmPID();
             intakeIO = new RealIntake();
         }
 
@@ -208,6 +212,7 @@ public class RobotContainer {
 
         intake.setDefaultCommand(noSpin);
         elevator.setDefaultCommand(stopElevator);
+        arm.setDefaultCommand(new PrintCommand("arm PID doing nothing"));
         // arm.setDefaultCommand(armDefaultCmd);
         
         //Makes a mechanism (lines to show elevator and arm) in simulator
@@ -246,6 +251,32 @@ public class RobotContainer {
         new JoystickButton(joystick,9).whileTrue(spitOut);
         // new JoystickButton(joystick,11).whileTrue(new InstantCommand(() -> intake.closeRight(), intake));
         // new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> intake.openRight(), intake));
+
+        // Move the arm halfway: radians above horizontal when the 'B' button is pressed.
+        new JoystickButton(xbox, Button.kB.value).onTrue(
+                Commands.runOnce(
+                    () -> {
+                      arm.setGoal(-Math.PI/4);
+                      arm.enable();
+                    },
+                    arm));
+        
+        // Move the arm up: radians above horizontal when the 1 button is pressed.
+        new JoystickButton(joystick, 1).onTrue(
+            Commands.runOnce(
+                () -> {
+                    arm.setGoal(Math.PI/4);
+                    arm.enable();
+                },
+                arm));
+        // Move the arm down: radians below horizontal when the 1 is pressed
+        new JoystickButton(joystick, 5).onTrue(
+            Commands.runOnce(
+                () -> {
+                    armPID.setGoal(-Math.PI/4 * 3);
+                    armPID.enable();
+                },
+                armPID));
     }
 
     public Command getAutonomousCommand() {
@@ -256,3 +287,4 @@ public class RobotContainer {
 
     
 }
+ 
