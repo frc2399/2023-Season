@@ -10,9 +10,6 @@ import frc.robot.util.SimEncoder;
 public class Elevator extends SubsystemBase {
 
   private ElevatorIO elevatorIO;
-
-  public static CANSparkMax elevatorMotorControllerRight;
-  public static CANSparkMax elevatorMotorControllerLeft;
   public static RelativeEncoder elevatorEncoderRight;
   public static RelativeEncoder elevatorEncoderLeft;
   public static SimEncoder elevatorSimEncoder;
