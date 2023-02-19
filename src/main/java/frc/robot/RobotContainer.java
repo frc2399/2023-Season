@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.commands.SetArmAngleCmd;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OnePieceEngage;
