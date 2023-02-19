@@ -37,7 +37,6 @@ import frc.robot.commands.intake.CollectPieceCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
-import frc.robot.subsystems.arm.ArmPID;
 import frc.robot.subsystems.arm.RealArm;
 import frc.robot.subsystems.arm.SimArm;
 import frc.robot.subsystems.drivetrain.DriveIO;
@@ -73,7 +72,7 @@ public class RobotContainer {
     // public final static Arm arm = new Arm();
     // public static final Intake intake = new Intake();
     public static Arm arm;
-    public static ArmPID armPID;
+    
     public static Intake intake;
     public static Elevator elevator;
 
@@ -109,6 +108,8 @@ public class RobotContainer {
     private Command stopElevator;
     private Command collectPiece;
     private Command dropCone;
+
+    private Command armDoNothing;
 
     // private Command bigIntake = new InstantCommand(() -> intake.intakeBothArms(), intake);
     // private Command leftOnly = new InstantCommand(() -> intake.intakeLeft(), intake);
@@ -149,7 +150,7 @@ public class RobotContainer {
         } else {
             driveIO = new RealDrive();
             elevatorIO = new RealElevator();
-            armIO = new ArmPID();
+            armIO = new RealArm();
             intakeIO = new RealIntake();
         }
 
@@ -188,8 +189,9 @@ public class RobotContainer {
     
         moveArmUp = new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);});
         moveArmDown = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);});
-        armDefaultCmd = new SetArmAngleCmd(arm);
+        armDoNothing = new RunCommand(() -> arm.setSpeed(0), arm);
         moveArmHalfway = new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);});
+
 
         changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
 
@@ -212,7 +214,7 @@ public class RobotContainer {
 
         intake.setDefaultCommand(noSpin);
         elevator.setDefaultCommand(stopElevator);
-        arm.setDefaultCommand(new PrintCommand("arm PID doing nothing"));
+        arm.setDefaultCommand(armDoNothing);
         // arm.setDefaultCommand(armDefaultCmd);
         
         //Makes a mechanism (lines to show elevator and arm) in simulator
@@ -273,10 +275,10 @@ public class RobotContainer {
         new JoystickButton(joystick, 5).onTrue(
             Commands.runOnce(
                 () -> {
-                    armPID.setGoal(-Math.PI/4 * 3);
-                    armPID.enable();
+                    arm.setGoal(-Math.PI/4 * 3);
+                    arm.enable();
                 },
-                armPID));
+                arm));
     }
 
     public Command getAutonomousCommand() {
