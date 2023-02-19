@@ -37,22 +37,30 @@ public void setColor(int r, int g, int b) {
 
   @Override
   public void periodic() {
-    if(timer.get() > Constants.LEDConstants.WAIT_TIME)
-    {
-      if(isPink)
-      {
-        this.setColor(Constants.LEDConstants.blue2399[0], 
-        Constants.LEDConstants.blue2399[1], 
-        Constants.LEDConstants.blue2399[2]);
-      }
-      else {
-        this.setColor(Constants.LEDConstants.pink2399[0], 
-        Constants.LEDConstants.pink2399[1], 
-        Constants.LEDConstants.pink2399[2]);
-      }
-      isPink = !isPink;
-      timer.reset();
-      timer.start();
+    // if(timer.get() > Constants.LEDConstants.WAIT_TIME)
+    // {
+    //   if(isPink)
+    //   {
+    //     this.setColor(Constants.LEDConstants.blue2399[0], 
+    //     Constants.LEDConstants.blue2399[1], 
+    //     Constants.LEDConstants.blue2399[2]);
+    //   }
+    //   else {
+    //     this.setColor(Constants.LEDConstants.pink2399[0], 
+    //     Constants.LEDConstants.pink2399[1], 
+    //     Constants.LEDConstants.pink2399[2]);
+    //   }
+    //   isPink = !isPink;
+    //   timer.reset();
+    //   timer.start();
+    // }
+    
+    if(RobotContainer.coneMode == true) {
+      this.setColor(240, 200, 50);
     }
+    else {
+      this.setColor(150, 30, 150);
+    }
+
   }
 }
