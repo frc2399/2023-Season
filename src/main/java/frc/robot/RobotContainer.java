@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ElevatorConstants;
@@ -122,7 +123,7 @@ public class RobotContainer {
         // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(new InstantCommand(() -> {coneMode = false;}));
 
         // set elevator to bottom 
-        new JoystickButton(xbox, Button.kY.value).onTrue(new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT));
+        new JoystickButton(xbox, Button.kY.value).onTrue(makeSetPositionCommand(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT));
 
         new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.2), elevator));
         new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.2), elevator));
@@ -141,32 +142,15 @@ public class RobotContainer {
         new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
         
          // Move the arm halfway: radians above horizontal when the 'B' button is pressed.
-         new JoystickButton(xbox, Button.kB.value).onTrue(
-            Commands.runOnce(
-                () -> {
-                  arm.setGoal(-Math.PI/4);
-                  arm.enable();
-                },
-                arm));
+         new JoystickButton(xbox, Button.kB.value).onTrue(makeSetPositionCommand(arm, -Math.PI/4));
     
         // Move the arm up: radians above horizontal when the 1 button is pressed.
-        new JoystickButton(joystick, 1).onTrue(
-            Commands.runOnce(
-                () -> {
-                    arm.setGoal(Math.PI/4);
-                    arm.enable();
-                },
-                arm));
+        new JoystickButton(joystick, 1).onTrue(makeSetPositionCommand(arm, Math.PI/4));
+        
         // Move the arm down: radians below horizontal when the 1 is pressed
-        new JoystickButton(joystick, 5).onTrue(
-            Commands.runOnce(
-                () -> {
-                    arm.setGoal(-Math.PI/4 * 3);
-                    arm.enable();
-                },
-                arm));
+        new JoystickButton(joystick, 5).onTrue(makeSetPositionCommand(arm, -Math.PI/4 * 3));
 
-        new JoystickButton(joystick, 1).onTrue(new InstantCommand(() -> {ArcadeDriveCmd.isSlow = !ArcadeDriveCmd.isSlow;}));
+        new JoystickButton(joystick, 2).onTrue(new InstantCommand(() -> {ArcadeDriveCmd.isSlow = !ArcadeDriveCmd.isSlow;}));
 
     }
 
@@ -206,12 +190,12 @@ public class RobotContainer {
 
     private void setUpConeCubeCommands () {
 
-        coneTopNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_TOP_NODE_HEIGHT);
-        cubeTopNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_TOP_NODE_HEIGHT);
-        coneMidNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_MID_NODE_HEIGHT);
-        cubeMidNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_MID_NODE_HEIGHT);
-        coneLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CONE_LOW_NODE_HEIGHT);
-        cubeLowNode = new SetElevatorPositionCmd(elevator, ElevatorConstants.CUBE_LOW_NODE_HEIGHT);
+        coneTopNode = makeSetPositionCommand(elevator, ElevatorConstants.CONE_TOP_NODE_HEIGHT);
+        cubeTopNode = makeSetPositionCommand(elevator, ElevatorConstants.CUBE_TOP_NODE_HEIGHT);
+        coneMidNode = makeSetPositionCommand(elevator, ElevatorConstants.CONE_MID_NODE_HEIGHT);
+        cubeMidNode = makeSetPositionCommand(elevator, ElevatorConstants.CUBE_MID_NODE_HEIGHT);
+        coneLowNode = makeSetPositionCommand(elevator, ElevatorConstants.CONE_LOW_NODE_HEIGHT);
+        cubeLowNode = makeSetPositionCommand(elevator, ElevatorConstants.CUBE_LOW_NODE_HEIGHT);
 
         changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
 
@@ -254,6 +238,16 @@ public class RobotContainer {
         chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
         chooser.addOption("leave community", new DriveForwardGivenDistance(-1, 5, driveTrain));
-    }    
+    }  
+    
+    private Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
+        return new InstantCommand(
+                () -> {
+                    base.setGoal(target);
+                    base.enable();
+                },
+                base);
+    }
+
 }
  
