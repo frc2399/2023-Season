@@ -166,6 +166,8 @@ public class RobotContainer {
                 },
                 arm));
 
+        new JoystickButton(joystick, 1).onTrue(new InstantCommand(() -> {ArcadeDriveCmd.isSlow = !ArcadeDriveCmd.isSlow;}));
+
     }
 
     private void setDefaultCommands() {
