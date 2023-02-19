@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -29,7 +30,6 @@ import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
-import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
@@ -67,6 +67,7 @@ public class RobotContainer {
     public static DriveTrain driveTrain;
     public static LED led = new LED();
     public static Arm arm;
+    
     public static Intake intake;
     public static Elevator elevator;
     
@@ -123,9 +124,6 @@ public class RobotContainer {
         // set elevator to bottom 
         new JoystickButton(xbox, Button.kY.value).onTrue(new SetElevatorPositionCmd(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT));
 
-        new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);}));
-        new JoystickButton(joystick, 13).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);}));
-        new JoystickButton(joystick, 2).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);}));
         new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.2), elevator));
         new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.2), elevator));
         //TODO make proper kill command :O
@@ -142,6 +140,32 @@ public class RobotContainer {
         new JoystickButton(joystick,8).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake));
         new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
         
+         // Move the arm halfway: radians above horizontal when the 'B' button is pressed.
+         new JoystickButton(xbox, Button.kB.value).onTrue(
+            Commands.runOnce(
+                () -> {
+                  arm.setGoal(-Math.PI/4);
+                  arm.enable();
+                },
+                arm));
+    
+        // Move the arm up: radians above horizontal when the 1 button is pressed.
+        new JoystickButton(joystick, 1).onTrue(
+            Commands.runOnce(
+                () -> {
+                    arm.setGoal(Math.PI/4);
+                    arm.enable();
+                },
+                arm));
+        // Move the arm down: radians below horizontal when the 1 is pressed
+        new JoystickButton(joystick, 5).onTrue(
+            Commands.runOnce(
+                () -> {
+                    arm.setGoal(-Math.PI/4 * 3);
+                    arm.enable();
+                },
+                arm));
+
     }
 
     private void setDefaultCommands() {
@@ -230,3 +254,4 @@ public class RobotContainer {
         chooser.addOption("leave community", new DriveForwardGivenDistance(-1, 5, driveTrain));
     }    
 }
+ 

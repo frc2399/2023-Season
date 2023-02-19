@@ -78,6 +78,10 @@ public class Constants {
         public static final double ARM_LENGTH = 0.3;
         public static final int ARM_MOTOR_ID = 23; //TODO
         public static final double RADIANS_PER_REVOLUTION = 2 * Math.PI;
+
+        // Arm PID constants
+        
+
     }
 
     public static final class IntakeConstants {
