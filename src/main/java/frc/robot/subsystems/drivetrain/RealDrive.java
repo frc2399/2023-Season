@@ -31,8 +31,8 @@ public class RealDrive implements DriveIO {
         leftFrontMotorController = MotorUtil.createSparkMAX(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless, 
             Constants.IntakeConstants.NEO_CURRENT_LIMIT, false, true, 0);
         
-        rightBackMotorController = MotorUtil.createSparkMAX(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless, Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, 0);
-        leftBackMotorController = MotorUtil.createSparkMAX(DriveConstants.LEFT_FRONT_DRIVE_CAN_ID, MotorType.kBrushless, Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, 0);
+        rightBackMotorController = MotorUtil.createSparkMAX(DriveConstants.RIGHT_BACK_DRIVE_CAN_ID, MotorType.kBrushless, Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, 0);
+        leftBackMotorController = MotorUtil.createSparkMAX(DriveConstants.LEFT_BACK_DRIVE_CAN_ID, MotorType.kBrushless, Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, 0);
 
         // sets motor controllers following leaders
         leftBackMotorController.follow(leftFrontMotorController);

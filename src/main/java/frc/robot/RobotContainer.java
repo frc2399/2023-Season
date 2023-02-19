@@ -102,10 +102,8 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        if (RobotBase.isSimulation()) {
-            DriverStation.silenceJoystickConnectionWarning(true);
-        }
-    
+        DriverStation.silenceJoystickConnectionWarning(true);
+
         setUpSubsystems();
         setUpAutonChooser();
         setUpConeCubeCommands();
@@ -128,8 +126,8 @@ public class RobotContainer {
         new JoystickButton(joystick,12).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(Math.PI/4);}));
         new JoystickButton(joystick, 13).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4 * 3);}));
         new JoystickButton(joystick, 2).whileTrue(new InstantCommand(() -> {arm.setTargetAngle(-Math.PI/4);}));
-        new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.4), elevator));
-        new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.4), elevator));
+        new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.2), elevator));
+        new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.2), elevator));
         //TODO make proper kill command :O
         new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> intake.drop(), intake));

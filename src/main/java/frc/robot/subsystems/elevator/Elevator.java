@@ -1,19 +1,14 @@
 package frc.robot.subsystems.elevator;
 
-import com.revrobotics.RelativeEncoder;
-
-import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.SimEncoder;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Elevator extends SubsystemBase {
 
   private ElevatorIO elevatorIO;
-  public static RelativeEncoder elevatorEncoderRight;
-  public static RelativeEncoder elevatorEncoderLeft;
-  public static SimEncoder elevatorSimEncoder;
-  public static ElevatorSim elevatorSim;
-
+  
   public Elevator(ElevatorIO io) {
     elevatorIO = io;
   }
@@ -21,6 +16,11 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     elevatorIO.updateForSim();
+    double currentPos = getEncoderPosition();
+    double currentVel = getEncoderSpeed();
+    SmartDashboard.putNumber("elevator position", currentPos); 
+    SmartDashboard.putNumber("elevator velocity", currentVel); 
+    RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
   }
 
   //returns height the elevator is at
