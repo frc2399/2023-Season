@@ -1,27 +1,16 @@
 package frc.robot.subsystems.elevator;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
-import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.SimEncoder;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Elevator extends ProfiledPIDSubsystem {
 
   private ElevatorIO elevatorIO;
-
-  public static CANSparkMax elevatorMotorControllerRight;
-  public static CANSparkMax elevatorMotorControllerLeft;
-  public static RelativeEncoder elevatorEncoderRight;
-  public static RelativeEncoder elevatorEncoderLeft;
-  public static SimEncoder elevatorSimEncoder;
-  public static ElevatorSim elevatorSim;
 
   // tuned values:
   private static final double feedForward = 1.666666666666667;
@@ -42,6 +31,11 @@ public class Elevator extends ProfiledPIDSubsystem {
   public void periodic() {
     super.periodic();
     elevatorIO.updateForSim();
+    double currentPos = getEncoderPosition();
+    double currentVel = getEncoderSpeed();
+    SmartDashboard.putNumber("elevator position", currentPos); 
+    SmartDashboard.putNumber("elevator velocity", currentVel); 
+    RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
   }
 
   //returns height the elevator is at

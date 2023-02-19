@@ -53,7 +53,7 @@ public class Constants {
     public static final class ElevatorConstants {
 
         public static final int LEFT_ELEVATOR_MOTOR_ID = 7;
-        public static final int RIGHT_ELEVATOR_MOTOR_ID = 8;
+        public static final int RIGHT_ELEVATOR_MOTOR_ID = 10;
         public static final int ELEVATOR_SLEW = 5;
         public static final double MIN_ELEVATOR_HEIGHT = Units.inchesToMeters(2);
         public static final double MAX_ELEVATOR_HEIGHT = Units.inchesToMeters(75);
@@ -64,7 +64,9 @@ public class Constants {
         public static final double CUBE_MID_NODE_HEIGHT = Units.inchesToMeters(24);
         public static final double CONE_LOW_NODE_HEIGHT = Units.inchesToMeters(2);
         public static final double CUBE_LOW_NODE_HEIGHT = Units.inchesToMeters(2);
-        
+        // 27 inches, 41.951946 encoder counts
+        public static final double ENCODER_CALIBRATION_METERS = Units.inchesToMeters(27) / 41.951946;
+
     }
     public static final class ArmConstants {
         //Arm angle in radians
@@ -93,7 +95,8 @@ public class Constants {
         public static final double INTAKE_SLEW_RATE = 10;
         public static final double INTAKE_IN_SPEED = 1.0;
         public static final double INTAKE_OUT_SPEED = -1.0;
-        public static final int NEO_CURRENT_LIMIT = 20;
+        public static final int NEO550_CURRENT_LIMIT = 20;
+        public static final int NEO_CURRENT_LIMIT = 60;
 
     }
 

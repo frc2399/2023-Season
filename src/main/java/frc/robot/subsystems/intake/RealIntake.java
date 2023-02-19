@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.util.MotorUtil;
 
 public class RealIntake implements IntakeIO {
 
@@ -13,16 +14,8 @@ public class RealIntake implements IntakeIO {
 
     public RealIntake()
     {
-        leftMotorController = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR_ID, MotorType.kBrushless);
-        // rightMotorController = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR_ID, MotorType.kBrushless);
-        leftMotorController.setInverted(false);
-        // rightMotorController.setInverted(true);
-        leftMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        // rightMotorController.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        // built in slew rate for spark max
-        leftMotorController.setOpenLoopRampRate(slewRate);
-        // rightMotorController.setOpenLoopRampRate(slewRate);
-        leftMotorController.setSmartCurrentLimit(IntakeConstants.NEO_CURRENT_LIMIT);
+        leftMotorController = MotorUtil.createSparkMAX(IntakeConstants.LEFT_INTAKE_MOTOR_ID, MotorType.kBrushless, 
+            IntakeConstants.NEO550_CURRENT_LIMIT, false, true, slewRate);
     }
 
     @Override
