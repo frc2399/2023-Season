@@ -41,30 +41,30 @@ public class ArcadeDriveCmd extends CommandBase {
     public void execute() {
         double realTimeSpeed;
         double realTimeTurn;
-        double val;
 
         // calculate real time speed
-        val = speedFunction.get();
-        SmartDashboard.putNumber("Speed function", val);
-        if (Math.abs(val) <= XboxConstants.FORWARD_DEADBAND) {
-            val = 0;
+        //inverting to make forwards positive
+        realTimeSpeed = -speedFunction.get();
+        SmartDashboard.putNumber("Speed function", realTimeSpeed);
+        if (Math.abs(realTimeSpeed) <= XboxConstants.FORWARD_DEADBAND) {
+            realTimeSpeed = 0;
         } 
-        realTimeSpeed  = driveLimiter.calculate(val);
+        realTimeSpeed  = driveLimiter.calculate(realTimeSpeed);
         SmartDashboard.putNumber("Real Time Speed", realTimeSpeed);
 
         //calculate real time turn
-        val = turnFunction.get();
-        SmartDashboard.putNumber("Turn function", val);
+        //inverting to make left positive (ccw)
+        realTimeTurn = -turnFunction.get();
+        SmartDashboard.putNumber("Turn function", realTimeTurn);
 
-        if (Math.abs(val) <= XboxConstants.TURN_DEADBAND) {
-            val = 0.0;
+        if (Math.abs(realTimeTurn) <= XboxConstants.TURN_DEADBAND) {
+            realTimeTurn = 0.0;
         }
-        // inverting :)
-        val = -val;
+
         double a = DriveConstants.TURN_SENSITIVITY;
-        val = ((1 - a) * val) + (a * Math.pow(val, 3));
+        realTimeTurn = ((1 - a) * realTimeTurn) + (a * Math.pow(realTimeTurn, 3));
         
-        realTimeTurn = turnLimiter.calculate(val);
+        realTimeTurn = turnLimiter.calculate(realTimeTurn);
         SmartDashboard.putNumber("Real Time Turn", realTimeTurn);
 
         double left = realTimeSpeed - realTimeTurn;
@@ -75,7 +75,6 @@ public class ArcadeDriveCmd extends CommandBase {
 
         if (isSlow) {        
             this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
-    
         }
         else {
             this.driveSubsystem.setMotors(left, right);

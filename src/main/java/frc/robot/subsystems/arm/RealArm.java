@@ -15,7 +15,7 @@ public class RealArm implements ArmIO {
 
     public RealArm() {
 
-        armMotorController = MotorUtil.createSparkMAX(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless, Constants.IntakeConstants.NEO_CURRENT_LIMIT, 
+        armMotorController = MotorUtil.createSparkMAX(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless, Constants.NEO_CURRENT_LIMIT, 
             true, false, 0);
         armEncoder = armMotorController.getEncoder();
         armEncoder.setPosition(0);

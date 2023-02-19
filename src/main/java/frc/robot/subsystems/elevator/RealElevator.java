@@ -17,9 +17,9 @@ public class RealElevator implements ElevatorIO {
     public RealElevator()
     {
         elevatorMotorControllerRight = MotorUtil.createSparkMAX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
-            Constants.IntakeConstants.NEO_CURRENT_LIMIT, false, true, 0);
+            Constants.NEO_CURRENT_LIMIT, false, true, 0);
         elevatorMotorControllerLeft = MotorUtil.createSparkMAX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
-            Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, true, 0);
+            Constants.NEO_CURRENT_LIMIT, true, true, 0);
 
         // initialize motor encoder
         elevatorEncoderRight = elevatorMotorControllerRight.getEncoder();

@@ -12,6 +12,10 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public class Constants {
+
+    public static final int NEO550_CURRENT_LIMIT = 20;
+    public static final int NEO_CURRENT_LIMIT = 60;
+
     public static final class DriveConstants {
 
         public static final double BEAM_BALANCED_GOAL_DEGREES = 0;
@@ -76,7 +80,7 @@ public class Constants {
         public static final double ARM_MASS = 1;
         //arm length in meters
         public static final double ARM_LENGTH = 0.3;
-        public static final int ARM_MOTOR_ID = 23; //TODO
+        public static final int ARM_MOTOR_ID = 6;
         public static final double RADIANS_PER_REVOLUTION = 2 * Math.PI;
 
         // Arm PID constants
@@ -95,9 +99,6 @@ public class Constants {
         public static final double INTAKE_SLEW_RATE = 10;
         public static final double INTAKE_IN_SPEED = 1.0;
         public static final double INTAKE_OUT_SPEED = -1.0;
-        public static final int NEO550_CURRENT_LIMIT = 20;
-        public static final int NEO_CURRENT_LIMIT = 60;
-
     }
 
     public static final class LEDConstants {
