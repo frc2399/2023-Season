@@ -20,7 +20,6 @@ public class SimElevator implements ElevatorIO {
     public static SimEncoder elevatorSimEncoder;
     public static ElevatorSim elevatorSim;
     public double elevatorPower;
-    private MechanismLigament2d elevatorMechanism;
     public static CANSparkMax elevatorMotorControllerRight;
     public final static DCMotor elevatorGearbox = DCMotor.getNEO(1);
     // Simulated elevator constants and gearbox
@@ -29,8 +28,6 @@ public class SimElevator implements ElevatorIO {
     public static final double elevatorCarriageMass = 4.0; // kg
     // The simulated encoder will return
     public static final double elevatorEncoderDistPerPulse = 2.0 * Math.PI * elevatorDrumRadius / 4096;
-    private static double currentPos = 0;
-    private static double currentVel = 0;
 
     public SimElevator()
     {
@@ -45,10 +42,10 @@ public class SimElevator implements ElevatorIO {
         true,
         VecBuilder.fill(0.001)
       );
-      Mechanism2d mech = new Mechanism2d(3, 2);
-      MechanismRoot2d root = mech.getRoot("root", 2, 0);
-      elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
-      SmartDashboard.putData("Mech2d", mech);
+    //   Mechanism2d mech = new Mechanism2d(3, 2);
+    //   MechanismRoot2d root = mech.getRoot("root", 2, 0);
+    //   elevatorMechanism = root.append(new MechanismLigament2d("elevator", Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT, 50));
+    //   SmartDashboard.putData("Mech2d", mech);
     
     }
     @Override
@@ -67,10 +64,6 @@ public class SimElevator implements ElevatorIO {
     }
 
     public void updateForSim() {
-        currentPos = elevatorSimEncoder.getDistance();
-        currentVel = elevatorSimEncoder.getSpeed();
-        SmartDashboard.putNumber("elevator position", currentPos); 
-        SmartDashboard.putNumber("elevator velocity", currentVel); 
 
         // sets input for elevator motor in simulation
         elevatorSim.setInput(elevatorPower * RobotController.getBatteryVoltage());
@@ -83,8 +76,6 @@ public class SimElevator implements ElevatorIO {
 
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-        elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
-
     }
 }
 

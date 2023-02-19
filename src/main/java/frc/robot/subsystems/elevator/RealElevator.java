@@ -17,9 +17,9 @@ public class RealElevator implements ElevatorIO {
     public RealElevator()
     {
         elevatorMotorControllerRight = MotorUtil.createSparkMAX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
-            Constants.IntakeConstants.NEO_CURRENT_LIMIT, false, false, 0);
-        elevatorMotorControllerRight = MotorUtil.createSparkMAX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
-            Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, false, 0);
+            Constants.IntakeConstants.NEO_CURRENT_LIMIT, false, true, 0);
+        elevatorMotorControllerLeft = MotorUtil.createSparkMAX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
+            Constants.IntakeConstants.NEO_CURRENT_LIMIT, true, true, 0);
 
         // initialize motor encoder
         elevatorEncoderRight = elevatorMotorControllerRight.getEncoder();
@@ -28,12 +28,19 @@ public class RealElevator implements ElevatorIO {
         elevatorEncoderRight.setPosition(0); 
         elevatorEncoderLeft.setPosition(0); 
 
+        elevatorEncoderRight.setPositionConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS);
+        elevatorEncoderLeft.setPositionConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS);
+
+        // dividng by 60 to convert meters per miniute to meters per seconds
+        elevatorEncoderRight.setVelocityConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS / 60);
+        elevatorEncoderLeft.setVelocityConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS / 60);
+
         elevatorMotorControllerLeft.follow(elevatorMotorControllerRight);
     }
 
     @Override
     public double getEncoderPosition() {
-        return elevatorEncoderRight.getPosition();
+        return elevatorEncoderLeft.getPosition();
     }
     @Override
     public double getEncoderSpeed() {

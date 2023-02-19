@@ -18,7 +18,6 @@ public class MotorUtil {
     public static CANSparkMax createSparkMAX(int id, MotorType motortype, int stallLimit, boolean isIdleBreak, double slewRate) {
         CANSparkMax sparkMAX = new CANSparkMax(id, motortype);
         sparkMAX.restoreFactoryDefaults();
-        // sparkMAX.enableVoltageCompensation(voltageCompensation);
         sparkMAX.setSmartCurrentLimit(stallLimit);
 
         if(isIdleBreak) {
@@ -29,9 +28,8 @@ public class MotorUtil {
         }
 
         // built in slew rate for spark max
-        sparkMAX.setOpenLoopRampRate(slewRate);
-
-        sparkMAX.burnFlash();
-        return sparkMAX;
+       sparkMAX.setOpenLoopRampRate(slewRate);
+    
+       return sparkMAX;
     }
 }
