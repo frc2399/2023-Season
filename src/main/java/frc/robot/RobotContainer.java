@@ -243,9 +243,6 @@ public class RobotContainer {
         new JoystickButton(xbox, Button.kX.value).onTrue(placePieceTop);
         new JoystickButton(xbox, Button.kY.value).onTrue(retractElevator);
 
-        new JoystickButton(joystick,12).whileTrue(moveArmUp);
-        new JoystickButton(joystick, 13).whileTrue(moveArmDown);
-        new JoystickButton(joystick, 2).whileTrue(moveArmHalfway);
         new JoystickButton(joystick,3).whileTrue(setElevatorSpeedUp);
         new JoystickButton(joystick,4).whileTrue(setElevatorSpeedDown);
         // new JoystickButton(joystick,7).whileTrue(collectPiece);
