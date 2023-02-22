@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
@@ -125,10 +127,15 @@ public class RobotContainer {
         // set elevator to bottom 
         new JoystickButton(xbox, Button.kY.value).onTrue(makeSetPositionCommand(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT));
 
-        new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.2), elevator));
-        new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.2), elevator));
+        // new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.2), elevator));
+        // new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.2), elevator));
+        
+        // temp arm commands
+        new JoystickButton(joystick,3).whileTrue(new InstantCommand(() -> arm.disable()).andThen(new RunCommand(() -> arm.setSpeedGravityCompensation(0.2), arm)));
+        new JoystickButton(joystick,4).whileTrue(new InstantCommand(() -> arm.disable()).andThen(new RunCommand(() -> arm.setSpeedGravityCompensation(-0.2), arm)));
+        new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
         //TODO make proper kill command :O
-        new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
+        //new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> intake.drop(), intake));
         // new JoystickButton(joystick,7).whileTrue(new CollectPieceCmd(intake));
         // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeToConeMode);
@@ -145,10 +152,10 @@ public class RobotContainer {
          new JoystickButton(xbox, Button.kB.value).onTrue(makeSetPositionCommand(arm, -Math.PI/4));
     
         // Move the arm up: radians above horizontal when the 1 button is pressed.
-        new JoystickButton(joystick, 1).onTrue(makeSetPositionCommand(arm, Math.PI/4));
+        new JoystickButton(joystick, 1).onTrue(makeSetPositionCommand(arm, Units.degreesToRadians(30)));
         
-        // Move the arm down: radians below horizontal when the 1 is pressed
-        new JoystickButton(joystick, 5).onTrue(makeSetPositionCommand(arm, -Math.PI/4 * 3));
+        // Move the arm down: radians below horizontal when the 5 is pressed
+        new JoystickButton(joystick, 5).onTrue(makeSetPositionCommand(arm, Units.degreesToRadians(-20)));
 
         new JoystickButton(joystick, 2).onTrue(new InstantCommand(() -> {ArcadeDriveCmd.isSlow = !ArcadeDriveCmd.isSlow;}));
 
@@ -162,7 +169,7 @@ public class RobotContainer {
 
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
         elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
-        // arm.setDefaultCommand(new SetArmAngleCmd(arm));
+        arm.setDefaultCommand(new ConditionalCommand(new PrintCommand("Arm PID running"), new RunCommand(() -> arm.setSpeedGravityCompensation(0), arm), () -> arm.isEnabled()));
     }
     
     private void simulationMechanisms() {
@@ -248,6 +255,13 @@ public class RobotContainer {
                 },
                 base);
     }
+
+    // private Command makeSetSpeedGravityCompensationCommand(ProfiledPIDSubsystem base, double target) {
+    //     return new SequentialCommand(
+    //         new InstantCommand(() -> base.disable()), 
+    //         new RunCommand(() -> base.setSpeedGravityCompensation(target), base)
+    //     );
+    // }
 
 }
  

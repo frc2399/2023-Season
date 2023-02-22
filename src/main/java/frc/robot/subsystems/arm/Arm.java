@@ -18,7 +18,7 @@ public class Arm extends ProfiledPIDSubsystem {
   /** Creates a new Arm. */
   private ArmIO armIO;
   private double targetAngle = - Math.PI/2; 
-  private static final double feedForward = 0.1/6 * 1.17;
+  private static final double feedForward = 0.133;
 
   // TODO: find actual values (took from setArmAngleCmd)
   private static final double kpPos = 0.8;
@@ -27,7 +27,7 @@ public class Arm extends ProfiledPIDSubsystem {
   private static final double max_vel = 1.0;  // rad/s
   private static final double max_accel = 1.8;  // rad/s/s
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
-  private static double gravityCompensation = 0.11;
+  private static double gravityCompensation = 0.075;
 
   public Arm(ArmIO io) {
     super(new ProfiledPIDController(kpPos, 0, 0, constraints));
@@ -42,8 +42,8 @@ public class Arm extends ProfiledPIDSubsystem {
 
     SmartDashboard.putNumber("arm goal position", getGoal());
 
-    SmartDashboard.putNumber("Arm Velocity", getEncoderSpeed()); 
-    SmartDashboard.putNumber("Arm Postion", getEncoderPosition()); 
+    SmartDashboard.putNumber("arm velocity", getEncoderSpeed()); 
+    SmartDashboard.putNumber("arm postion", getEncoderPosition()); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);
   
   }
@@ -69,6 +69,10 @@ public class Arm extends ProfiledPIDSubsystem {
     targetAngle = angle; 
   }
 
+  public void setSpeedGravityCompensation(double speed) {
+    armIO.setSpeed(speed + gravityCompensation * Math.cos(getEncoderPosition()));
+  }
+
   @Override
   protected void useOutput(double output, State setpoint) {
     SmartDashboard.putNumber("arm setpoint pos", setpoint.position);
@@ -90,5 +94,9 @@ public class Arm extends ProfiledPIDSubsystem {
 
   public double getGoal() {
     return m_controller.getGoal().position;
+  }
+
+  public void setPosition(double position) {
+    armIO.setPosition(position);
   }
 }

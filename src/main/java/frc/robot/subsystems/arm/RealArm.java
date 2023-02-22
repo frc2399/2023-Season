@@ -16,10 +16,13 @@ public class RealArm implements ArmIO {
     public RealArm() {
 
         armMotorController = MotorUtil.createSparkMAX(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless, Constants.NEO_CURRENT_LIMIT, 
-            true, false, 0);
+            true, true, 0);
         armEncoder = armMotorController.getEncoder();
-        armEncoder.setPosition(0);
-        armEncoder.setPositionConversionFactor(Constants.ArmConstants.RADIANS_PER_REVOLUTION);
+        
+        armEncoder.setPositionConversionFactor(ArmConstants.RADIANS_PER_REVOLUTION);
+        armEncoder.setVelocityConversionFactor(ArmConstants.RADIANS_PER_REVOLUTION / 60);
+
+        armEncoder.setPosition(ArmConstants.INITIAL_OFFSET);
     }
 
     @Override
@@ -35,7 +38,11 @@ public class RealArm implements ArmIO {
     @Override
     public void setSpeed(double speed) {
         armMotorController.set(speed);
-        SmartDashboard.putNumber("ArmSpeed", speed);
+    }
+
+    @Override
+    public void setPosition(double position) {
+        armEncoder.setPosition(position);
     }
 
     @Override

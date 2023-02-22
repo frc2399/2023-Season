@@ -33,6 +33,7 @@ public class Elevator extends ProfiledPIDSubsystem {
     elevatorIO.updateForSim();
     double currentPos = getEncoderPosition();
     double currentVel = getEncoderSpeed();
+    SmartDashboard.putNumber("elevator goal position", getGoal());
     SmartDashboard.putNumber("elevator position", currentPos); 
     SmartDashboard.putNumber("elevator velocity", currentVel); 
     RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
@@ -71,5 +72,9 @@ public class Elevator extends ProfiledPIDSubsystem {
   protected double getMeasurement() {
     return elevatorIO.getEncoderPosition();
   }
-  
+
+  public double getGoal() {
+    return m_controller.getGoal().position;
+  }
+
 }

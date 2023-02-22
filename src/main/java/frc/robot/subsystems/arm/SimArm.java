@@ -39,9 +39,12 @@ public class SimArm implements ArmIO{
 
     @Override
     public void setSpeed(double speed) {
-        armPower = speed;
-        SmartDashboard.putNumber("ArmSpeed", speed);
-        
+        armPower = speed;        
+    }
+
+    @Override
+    public void setPosition(double position) {
+        armEncoderSim.setDistance(position);
     }
 
     @Override
