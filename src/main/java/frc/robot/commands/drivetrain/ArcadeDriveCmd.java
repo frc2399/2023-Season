@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.subsystems.drivetrain.DriveTrain;
+import frc.robot.util.DriveUtil;
 
 import java.util.function.Supplier;
 
@@ -19,7 +20,6 @@ public class ArcadeDriveCmd extends CommandBase {
 
     /* This command does this (fill in)... */
     public ArcadeDriveCmd(DriveTrain driveSubsystem, Supplier<Double> speedFunction, Supplier<Double> turnFunction) {
-        double driveSlew = SmartDashboard.getNumber("drive slew", XboxConstants.DRIVE_SLEW_RATE);
         this.driveLimiter = new SlewRateLimiter(5.0);
         this.turnLimiter = new SlewRateLimiter(5.0);
         this.driveSubsystem = driveSubsystem;
@@ -46,9 +46,7 @@ public class ArcadeDriveCmd extends CommandBase {
         //inverting to make forwards positive
         realTimeSpeed = -speedFunction.get();
         SmartDashboard.putNumber("Speed function", realTimeSpeed);
-        if (Math.abs(realTimeSpeed) <= XboxConstants.FORWARD_DEADBAND) {
-            realTimeSpeed = 0;
-        } 
+        realTimeSpeed = DriveUtil.computeDeadband(realTimeSpeed, XboxConstants.FORWARD_DEADBAND);
         realTimeSpeed  = driveLimiter.calculate(realTimeSpeed);
         SmartDashboard.putNumber("Real Time Speed", realTimeSpeed);
 
@@ -56,13 +54,9 @@ public class ArcadeDriveCmd extends CommandBase {
         //inverting to make left positive (ccw)
         realTimeTurn = -turnFunction.get();
         SmartDashboard.putNumber("Turn function", realTimeTurn);
+    
+        realTimeTurn = DriveUtil.computeDeadband(realTimeTurn, XboxConstants.TURN_DEADBAND);
 
-        if (Math.abs(realTimeTurn) <= XboxConstants.TURN_DEADBAND) {
-            realTimeTurn = 0.0;
-        }
-
-        double a = DriveConstants.TURN_SENSITIVITY;
-        realTimeTurn = ((1 - a) * realTimeTurn) + (a * Math.pow(realTimeTurn, 3));
         
         realTimeTurn = turnLimiter.calculate(realTimeTurn);
         SmartDashboard.putNumber("Real Time Turn", realTimeTurn);
@@ -84,7 +78,6 @@ public class ArcadeDriveCmd extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         System.out.println("ArcadeDriveCmd ended!");
-        isSlow = false;
     }
 
     @Override

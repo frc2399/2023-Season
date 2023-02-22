@@ -49,6 +49,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
+import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 
 
 /**
@@ -105,14 +106,14 @@ public class RobotContainer {
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
-
+        
         setUpSubsystems();
         setUpAutonChooser();
         setUpConeCubeCommands();
         configureButtonBindings();
         setDefaultCommands();
         simulationMechanisms();
-
+        setUpDriveCommands();
     }
 
     private void configureButtonBindings() {
@@ -247,6 +248,12 @@ public class RobotContainer {
                     base.enable();
                 },
                 base);
+    }
+
+    private void setUpDriveCommands() {
+        SmartDashboard.putData("ArcadeDrive",  new ArcadeDriveCmd(driveTrain,
+        () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));
     }
 
 }
