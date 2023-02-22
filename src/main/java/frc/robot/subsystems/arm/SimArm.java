@@ -5,9 +5,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.util.SimEncoder;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.util.SimEncoder;
 
 public class SimArm implements ArmIO{
 

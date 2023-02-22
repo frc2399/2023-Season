@@ -1,13 +1,12 @@
 package frc.robot.subsystems.arm;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.util.MotorUtil;
-import frc.robot.Constants;
 
 public class RealArm implements ArmIO {
     private static CANSparkMax armMotorController;

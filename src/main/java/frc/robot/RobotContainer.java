@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -33,7 +32,6 @@ import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
-import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -92,9 +90,6 @@ public class RobotContainer {
     private Command cubeLowNode;
     private Command changeMode;
 
-    // private Command changeToConeMode;
-    // private Command changeToCubeMode;
-
     private Command placePieceTop;
     private Command placePieceMid;
     private Command placePieceLow;
@@ -120,30 +115,27 @@ public class RobotContainer {
     private void configureButtonBindings() {
        
         new JoystickButton(xbox, Button.kA.value).onTrue(changeMode);
-       
-        // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(new InstantCommand(() -> {coneMode = true;}));
-        // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(new InstantCommand(() -> {coneMode = false;}));
 
-        // set elevator to bottom 
-        new JoystickButton(xbox, Button.kY.value).onTrue(makeSetPositionCommand(elevator, Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT));
-
-        // new JoystickButton(joystick,3).whileTrue(new RunCommand(() -> elevator.setSpeed(0.2), elevator));
-        // new JoystickButton(joystick,4).whileTrue(new RunCommand(() -> elevator.setSpeed(-0.2), elevator));
+        // new JoystickButton(xbox, Button.kA.value).onTrue(new InstantCommand(() -> {coneMode = true;}));
+        // new JoystickButton(xbox, Button.kB.value).onTrue(new InstantCommand(() -> {coneMode = false;}));
         
-        // temp arm commands
-        new JoystickButton(joystick,3).whileTrue(new InstantCommand(() -> arm.disable()).andThen(new RunCommand(() -> arm.setSpeedGravityCompensation(0.2), arm)));
-        new JoystickButton(joystick,4).whileTrue(new InstantCommand(() -> arm.disable()).andThen(new RunCommand(() -> arm.setSpeedGravityCompensation(-0.2), arm)));
-        new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
+        // // temp arm testing commands, comment out as needed
+        // new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2));
+        // new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.2));
+        // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
+
+        // temp elevator testing commands, comment out as needed
+        new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2));
+        new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.2));
+        new JoystickButton(xbox, Button.kY.value).onTrue(placePieceTop);
+        new JoystickButton(xbox, Button.kX.value).onTrue(placePieceMid);
+        new JoystickButton(xbox, Button.kB.value).onTrue(placePieceLow);
+
         //TODO make proper kill command :O
-        //new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
+        // new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> intake.drop(), intake));
-        // new JoystickButton(joystick,7).whileTrue(new CollectPieceCmd(intake));
-        // new JoystickButton(xbox,XboxMappingToJoystick.A_BUTTON).onTrue(changeToConeMode);
-        // new JoystickButton(xbox,XboxMappingToJoystick.B_BUTTON).onTrue(changeToCubeMode);
+        // new JoystickButton(joystick,7).whileTrue(new CollectPieceCmd(intake));        
 
-        // if coneMode true, set elevator to cone mode for top node
-        new JoystickButton(xbox, Button.kX.value).onTrue(placePieceTop);
-        
         // new JoystickButton(joystick,7).whileTrue(collectPiece);
         new JoystickButton(joystick,8).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake));
         new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
@@ -256,12 +248,19 @@ public class RobotContainer {
                 base);
     }
 
-    // private Command makeSetSpeedGravityCompensationCommand(ProfiledPIDSubsystem base, double target) {
-    //     return new SequentialCommand(
-    //         new InstantCommand(() -> base.disable()), 
-    //         new RunCommand(() -> base.setSpeedGravityCompensation(target), base)
-    //     );
-    // }
+    private Command makeSetSpeedGravityCompensationCommand(Arm a, double target) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> a.disable()), 
+            new RunCommand(() -> a.setSpeedGravityCompensation(target), a)
+        );
+    }
+
+    private Command makeSetSpeedGravityCompensationCommand(Elevator e, double target) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> e.disable()), 
+            new RunCommand(() -> e.setSpeedGravityCompensation(target), e)
+        );
+    }
 
 }
  

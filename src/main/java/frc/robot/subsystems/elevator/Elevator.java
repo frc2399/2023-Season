@@ -53,6 +53,10 @@ public class Elevator extends ProfiledPIDSubsystem {
     elevatorIO.setSpeed(speed);
   }
 
+  public void setSpeedGravityCompensation(double speed) {
+    elevatorIO.setSpeed(speed + gravityCompensation);
+  }
+
   @Override
   protected void useOutput(double output, State setpoint) {
     SmartDashboard.putNumber("elevator setpoint pos", setpoint.position);
@@ -65,7 +69,6 @@ public class Elevator extends ProfiledPIDSubsystem {
     // Add PID output to speed to account for error in elevator
     speed += output;
     elevatorIO.setSpeed(speed);
-    
   }
 
   @Override

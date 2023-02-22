@@ -59,7 +59,6 @@ public class RealElevator implements ElevatorIO {
     @Override
     public void setSpeed(double speed) {
         elevatorMotorControllerLeft.set(speed);
-        
     }
 
     @Override
