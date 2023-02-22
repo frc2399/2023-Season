@@ -77,11 +77,13 @@ public class Constants {
         public static final double MAX_ARM_ANGLE = Math.PI/4;
         public static final double MIN_ARM_ANGLE = -Math.PI/4 * 3;
         //arm Mass in kg
-        public static final double ARM_MASS = 1;
+        public static final double ARM_MASS = 2;
         //arm length in meters
         public static final double ARM_LENGTH = 0.3;
-        public static final int ARM_MOTOR_ID = 6;
-        public static final double RADIANS_PER_REVOLUTION = 2 * Math.PI;
+
+        public static final int ARM_MOTOR_ID = 8;
+        public static final double RADIANS_PER_REVOLUTION = 0.0837;
+        public static final double INITIAL_OFFSET = 0.711;
 
         // Arm PID constants
         
