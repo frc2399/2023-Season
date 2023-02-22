@@ -119,17 +119,17 @@ public class RobotContainer {
         // new JoystickButton(xbox, Button.kA.value).onTrue(new InstantCommand(() -> {coneMode = true;}));
         // new JoystickButton(xbox, Button.kB.value).onTrue(new InstantCommand(() -> {coneMode = false;}));
         
-        // // temp arm testing commands, comment out as needed
-        // new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2));
-        // new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.2));
-        // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
+        // temp arm testing commands, comment out as needed
+        new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2));
+        new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.2));
+        new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
 
-        // temp elevator testing commands, comment out as needed
-        new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2));
-        new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.2));
-        new JoystickButton(xbox, Button.kY.value).onTrue(placePieceTop);
-        new JoystickButton(xbox, Button.kX.value).onTrue(placePieceMid);
-        new JoystickButton(xbox, Button.kB.value).onTrue(placePieceLow);
+        // // temp elevator testing commands, comment out as needed
+        // new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2));
+        // new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.2));
+        // new JoystickButton(xbox, Button.kY.value).onTrue(placePieceTop);
+        // new JoystickButton(xbox, Button.kX.value).onTrue(placePieceMid);
+        // new JoystickButton(xbox, Button.kB.value).onTrue(placePieceLow);
 
         //TODO make proper kill command :O
         // new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
@@ -161,7 +161,8 @@ public class RobotContainer {
 
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
         elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
-        arm.setDefaultCommand(new ConditionalCommand(new PrintCommand("Arm PID running"), new RunCommand(() -> arm.setSpeedGravityCompensation(0), arm), () -> arm.isEnabled()));
+        //arm.setDefaultCommand(new ConditionalCommand(new RunCommand(() -> {}), new RunCommand(() -> arm.setSpeedGravityCompensation(0), arm), () -> arm.isEnabled()));
+        arm.setDefaultCommand(makeSetSpeedGravityCompensationCommand(arm,0));
     }
     
     private void simulationMechanisms() {
@@ -240,12 +241,10 @@ public class RobotContainer {
     }  
     
     private Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
-        return new InstantCommand(
-                () -> {
-                    base.setGoal(target);
-                    base.enable();
-                },
-                base);
+        return new SequentialCommandGroup(
+            new ConditionalCommand(new InstantCommand(() -> {}), new InstantCommand(() -> base.enable()), () -> base.isEnabled()),    
+            new InstantCommand(() -> base.setGoal(target))
+        );
     }
 
     private Command makeSetSpeedGravityCompensationCommand(Arm a, double target) {

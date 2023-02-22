@@ -18,7 +18,7 @@ public class SimArm implements ArmIO{
         armEncoderSim = new SimEncoder("Elevator");
         armSim = new SingleJointedArmSim(
                 DCMotor.getNEO(1), // 1 NEO motor on the climber
-                10., // TODO find out gearing
+                75,
                 SingleJointedArmSim.estimateMOI(ArmConstants.ARM_LENGTH, ArmConstants.ARM_MASS),
                 ArmConstants.ARM_LENGTH,
                 ArmConstants.MIN_ARM_ANGLE,
