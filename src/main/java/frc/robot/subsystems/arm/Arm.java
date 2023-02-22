@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.util.PIDUtil;
 
 public class Arm extends ProfiledPIDSubsystem {
   /** Creates a new Arm. */
@@ -91,4 +93,10 @@ public class Arm extends ProfiledPIDSubsystem {
   public double getGoal() {
     return m_controller.getGoal().position;
   }
+
+    // Checks to see if arm is within range of the setpoints
+    public boolean atGoal() {
+      return (PIDUtil.checkWithinRange(getGoal(), getMeasurement(), ArmConstants.ANGLE_TOLERANCE));
+    }
+  
 }

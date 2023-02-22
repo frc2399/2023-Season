@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.commands.SetArmAngleCmd;
-import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.DriveTrain;
@@ -49,8 +49,8 @@ public class TwoPieceAuton extends SequentialCommandGroup {
     driveTrain.field.getObject("traj").setTrajectory(twoPiecePath);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("leftCommunity", new PrintCommand("Left community"));
-    // eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.INTAKE_IN_SPEED, 2));
+    eventMap.put("LeftCommunity", new PrintCommand("Left community"));
+    eventMap.put("Intake", new IntakeForGivenTime(intake, IntakeConstants.INTAKE_IN_SPEED, 2));
         
     Command eventTesting = 
       new SequentialCommandGroup(
@@ -85,21 +85,17 @@ public class TwoPieceAuton extends SequentialCommandGroup {
         );
 
     addCommands(
-      new ParallelCommandGroup(
-        new SetArmAngleCmd(arm),
-        new SequentialCommandGroup(
-          new InstantCommand(() -> arm.setTargetAngle(0)),
-          new SetElevatorPositionCmd(elevator, 1),
-          new PrintCommand("arm angle: " + arm.getTargetAngle()),
-          new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
-          new SetElevatorPositionCmd(elevator, ElevatorConstants.MIN_ELEVATOR_HEIGHT),
-          twoPieceAuton,
-          new SetElevatorPositionCmd(elevator, 1.0),
-          new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
-          new SetElevatorPositionCmd(elevator, ElevatorConstants.MIN_ELEVATOR_HEIGHT)
-        )
-      )
-    );
+      RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.CONE_TOP_NODE_HEIGHT),
+      RobotContainer.makeSetPositionCommand(arm, 0),
+      new PrintCommand("arm angle: " + arm.getGoal()),
+      new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
+      RobotContainer.makeSetPositionCommand(arm, ArmConstants.MAX_ARM_ANGLE),
+      RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.MIN_ELEVATOR_HEIGHT),
+      twoPieceAuton,
+      RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.CONE_TOP_NODE_HEIGHT),
+      new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
+      RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.MIN_ELEVATOR_HEIGHT)
+      );
 
   }
 }

@@ -31,7 +31,6 @@ import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
-import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -161,7 +160,7 @@ public class RobotContainer {
                 () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
 
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
-        elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
+        // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));
     }
     
@@ -240,7 +239,7 @@ public class RobotContainer {
         chooser.addOption("leave community", new DriveForwardGivenDistance(-1, 5, driveTrain));
     }  
     
-    private Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
+    public static Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
         return new InstantCommand(
                 () -> {
                     base.setGoal(target);

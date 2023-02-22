@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.util.PIDUtil;
 
 public class Elevator extends ProfiledPIDSubsystem {
 
@@ -71,5 +73,14 @@ public class Elevator extends ProfiledPIDSubsystem {
   protected double getMeasurement() {
     return elevatorIO.getEncoderPosition();
   }
+
+  public double getGoal() {
+    return m_controller.getGoal().position;
+  }
+
+    // Checks to see if elevators are within range of the setpoints
+    public boolean atGoal() {
+      return (PIDUtil.checkWithinRange(getGoal(), getMeasurement(), ElevatorConstants.HEIGHT_TOLERANCE));
+    }
   
 }

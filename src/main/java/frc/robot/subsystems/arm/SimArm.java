@@ -18,15 +18,13 @@ public class SimArm implements ArmIO{
     public SimArm() {
         armEncoderSim = new SimEncoder("Elevator");
         armSim = new SingleJointedArmSim(
-        DCMotor.getNEO(1), //1 NEO motor on the climber
-        10, //TODO find out gearing
-        SingleJointedArmSim.estimateMOI(ArmConstants.ARM_LENGTH, ArmConstants.ARM_MASS), 
-        ArmConstants.ARM_LENGTH,
-        ArmConstants.MIN_ARM_ANGLE,
-        ArmConstants.MAX_ARM_ANGLE,
-        ArmConstants.ARM_MASS,
-        true
-      ); 
+            DCMotor.getNEO(1), // 1 NEO motor on the climber
+            10., // TODO find out gearing
+            SingleJointedArmSim.estimateMOI(ArmConstants.ARM_LENGTH, ArmConstants.ARM_MASS),
+            ArmConstants.ARM_LENGTH,
+            ArmConstants.MIN_ARM_ANGLE,
+            ArmConstants.MAX_ARM_ANGLE,
+            true);
     }
 
     @Override
