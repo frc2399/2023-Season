@@ -26,6 +26,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.intake.IntakeForGivenTime;
+import frc.robot.commands.robot.PlaceConeOnNode;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.elevator.Elevator;
@@ -85,16 +86,9 @@ public class TwoPieceAuton extends SequentialCommandGroup {
         );
 
     addCommands(
-      RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.CONE_TOP_NODE_HEIGHT),
-      RobotContainer.makeSetPositionCommand(arm, 0),
-      new PrintCommand("arm angle: " + arm.getGoal()),
-      new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
-      RobotContainer.makeSetPositionCommand(arm, ArmConstants.MAX_ARM_ANGLE),
-      RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.MIN_ELEVATOR_HEIGHT),
+      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_NODE_HEIGHT),
       twoPieceAuton,
-      RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.CONE_TOP_NODE_HEIGHT),
-      new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
-      RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.MIN_ELEVATOR_HEIGHT)
+      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_NODE_HEIGHT)
       );
 
   }
