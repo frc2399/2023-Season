@@ -120,8 +120,8 @@ public class RobotContainer {
         // new JoystickButton(xbox, Button.kB.value).onTrue(new InstantCommand(() -> {coneMode = false;}));
         
         // temp arm testing commands, comment out as needed
-        new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2));
-        new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.2));
+        new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
         new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
 
         // // temp elevator testing commands, comment out as needed
@@ -161,8 +161,7 @@ public class RobotContainer {
 
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
         elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
-        //arm.setDefaultCommand(new ConditionalCommand(new RunCommand(() -> {}), new RunCommand(() -> arm.setSpeedGravityCompensation(0), arm), () -> arm.isEnabled()));
-        arm.setDefaultCommand(makeSetSpeedGravityCompensationCommand(arm,0));
+        
     }
     
     private void simulationMechanisms() {
@@ -243,7 +242,7 @@ public class RobotContainer {
     private Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(() -> {}), new InstantCommand(() -> base.enable()), () -> base.isEnabled()),    
-            new InstantCommand(() -> base.setGoal(target))
+            new InstantCommand(() -> base.setGoal(target), base)
         );
     }
 
