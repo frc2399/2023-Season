@@ -30,6 +30,7 @@ import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.elevator.SetElevatorPositionCmd;
 import frc.robot.subsystems.LED;
@@ -157,7 +158,7 @@ public class RobotContainer {
 
     private void setDefaultCommands() {
         driveTrain.setDefaultCommand(
-            new ArcadeDriveCmd(driveTrain,
+            new CurvatureDriveCmd(driveTrain,
                 () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
                 () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
 
@@ -252,6 +253,9 @@ public class RobotContainer {
 
     private void setUpDriveCommands() {
         SmartDashboard.putData("ArcadeDrive",  new ArcadeDriveCmd(driveTrain,
+        () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));
+        SmartDashboard.putData("CurvatureDrive",  new CurvatureDriveCmd(driveTrain,
         () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
         () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));
     }
