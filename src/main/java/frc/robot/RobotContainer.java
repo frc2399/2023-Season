@@ -239,7 +239,7 @@ public class RobotContainer {
         chooser.addOption("leave community", new DriveForwardGivenDistance(-1, 5, driveTrain));
     }  
     
-    private Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
+    public static Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(() -> {}), new InstantCommand(() -> base.enable()), () -> base.isEnabled()),    
             new InstantCommand(() -> base.setGoal(target), base)
