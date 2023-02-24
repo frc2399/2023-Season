@@ -23,35 +23,6 @@ public class Intake extends SubsystemBase {
     intakeIO.setMotor(intakeSpeed);
 }
 
-  //Intake methods (different combos of spinny spin and pneumatics)
-  public void intakeBothArms() {
-
-    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
-
-  }
-
-  public void intakeRight() {
-
-    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
-
-  }
-
-  public void intakeLeft() {
-
-    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
-
-  }
-
-  public void outtake() {
-
-    setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED);
-    
-  }
-
-  public void drop() {
-
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

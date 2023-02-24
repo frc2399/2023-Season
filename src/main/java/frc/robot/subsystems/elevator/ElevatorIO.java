@@ -5,6 +5,7 @@ public interface ElevatorIO {
     public double getEncoderPosition();
     public double getEncoderSpeed();
     public void setSpeed(double speed);
+    public void setPosition(double position);
     public void updateForSim();
 
 }
