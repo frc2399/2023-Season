@@ -166,8 +166,8 @@ public class RobotContainer {
                 () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
 
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
-        //elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
-        
+        // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
+        // arm.setDefaultCommand(new SetArmAngleCmd(arm));
     }
     
     private void simulationMechanisms() {
@@ -245,7 +245,7 @@ public class RobotContainer {
         chooser.addOption("leave community", new DriveForwardGivenDistance(-1, 5, driveTrain));
     }  
     
-    private Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
+    public static Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(() -> {}), new InstantCommand(() -> base.enable()), () -> base.isEnabled()),    
             new InstantCommand(() -> base.setGoal(target), base)

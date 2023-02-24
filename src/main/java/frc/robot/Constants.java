@@ -71,6 +71,8 @@ public class Constants {
         // 27 inches, 41.951946 encoder counts
         public static final double ENCODER_CALIBRATION_METERS = Units.inchesToMeters(27) / 41.951946;
 
+        public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(1);
+
     }
     public static final class ArmConstants {
         //Arm angle in radians
@@ -85,6 +87,7 @@ public class Constants {
         public static final double RADIANS_PER_REVOLUTION = 0.0837;
         public static final double INITIAL_OFFSET = 0.711;
 
+        public static final double ANGLE_TOLERANCE = Units.degreesToRadians(2);
         // Arm PID constants
         
 
