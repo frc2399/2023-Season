@@ -1,7 +1,6 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.drivetrain.DriveTrain;
@@ -11,7 +10,6 @@ public class CurvatureDriveCmd extends CommandBase {
 
     private final DriveTrain driveSubsystem;
     private final Supplier<Double> speedFunction, turnFunction;
-    Timer timer;
     Debouncer m_debouncer;
 
     /* This command does this (fill in)... */
@@ -21,9 +19,8 @@ public class CurvatureDriveCmd extends CommandBase {
         this.turnFunction = turnFunction;
         this.driveSubsystem = driveSubsystem;
         addRequirements(driveSubsystem);
-        timer = new Timer();
         // Creates a Debouncer in "both" mode.
-        Debouncer m_debouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
+        m_debouncer = new Debouncer(2, Debouncer.DebounceType.kRising);
 
         // So if currently false the signal must go true for at least .1 seconds before being read as a True signal.
 
@@ -32,7 +29,6 @@ public class CurvatureDriveCmd extends CommandBase {
     @Override
     public void initialize() {
         System.out.println("CurvatureDriveCmd started!");
-        timer.reset();
     }
 
     @Override
@@ -45,44 +41,17 @@ public class CurvatureDriveCmd extends CommandBase {
         realTimeSpeed = speedFunction.get();
         realTimeTurn = -turnFunction.get();
 
-        //Multiplied by realTimeSpeed to make turn speed proportional to straight speed
-        //Speed and turn proportional so arc remains the same when the speed changes
-        // if(quickTurn.get() == true)
-        // {
-        //     left = realTimeSpeed - realTimeTurn;
-        //     right = realTimeSpeed + realTimeTurn;
-        // }
-        if(Math.abs(realTimeSpeed) <= Constants.XboxConstants.FORWARD_DEADBAND && realTimeTurn != 0)
+        if(m_debouncer.calculate(Math.abs(realTimeSpeed) <= Constants.XboxConstants.FORWARD_DEADBAND) && realTimeTurn != 0)
         {
-            timer.start();
-            System.out.println(timer.get());
-            //feed the watchdog borkborkborkborkborkborkborkbork
-            if (m_debouncer.calculate(Math.abs(realTimeSpeed) <= Constants.XboxConstants.FORWARD_DEADBAND)) {
-                // Do something now that the DI is True.
-                left = realTimeSpeed - realTimeTurn;
-                right = realTimeSpeed + realTimeTurn;
-            }
-            else {
-                left = realTimeSpeed - realTimeTurn * Math.abs(realTimeSpeed);
-                right = realTimeSpeed + realTimeTurn * Math.abs(realTimeSpeed);
-            }
-            // while(timer.get() < 0.1)
-            // {
-            //     //curvature drive deadband
-            //     left = realTimeSpeed - realTimeTurn * Math.abs(realTimeSpeed);
-            //     right = realTimeSpeed + realTimeTurn * Math.abs(realTimeSpeed);
-            //     //System.out.println("Curvature drive deadband!");
-            // }
-            //arcade drive to turn in place
+            // Do something now that the DI is True.
             left = realTimeSpeed - realTimeTurn;
             right = realTimeSpeed + realTimeTurn;
-            //System.out.println("arcade drive!");
+            System.out.println("Arcade Drive!");
         }
         else
         {
-            timer.reset();
-            timer.stop();
-            //curvature drive
+            //Multiplied by realTimeSpeed to make turn speed proportional to straight speed
+            //Speed and turn proportional so arc remains the same when the speed changes
             left = realTimeSpeed - realTimeTurn * Math.abs(realTimeSpeed);
             right = realTimeSpeed + realTimeTurn * Math.abs(realTimeSpeed);
             //System.out.println("Curvature drive!");
