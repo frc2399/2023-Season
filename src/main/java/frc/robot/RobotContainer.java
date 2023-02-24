@@ -120,34 +120,40 @@ public class RobotContainer {
         // new JoystickButton(xbox, Button.kB.value).onTrue(new InstantCommand(() -> {coneMode = false;}));
         
         // temp arm testing commands, comment out as needed
-        new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
-        new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        new JoystickButton(joystick,7).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        new JoystickButton(joystick,8).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
         new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
 
-        // // temp elevator testing commands, comment out as needed
-        // new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2));
-        // new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.2));
+        // temp elevator testing commands, comment out as needed
+        new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2));
+        new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.2));
         // new JoystickButton(xbox, Button.kY.value).onTrue(placePieceTop);
         // new JoystickButton(xbox, Button.kX.value).onTrue(placePieceMid);
         // new JoystickButton(xbox, Button.kB.value).onTrue(placePieceLow);
+
+        // Move the arm up: radians above horizontal when the 1 button is pressed.
+        new JoystickButton(joystick, 1).onTrue(makeSetPositionCommand(elevator, 0.6));
+        
+        // Move the arm down: radians below horizontal when the 5 is pressed
+        new JoystickButton(joystick, 5).onTrue(makeSetPositionCommand(elevator, 0.1));
 
         //TODO make proper kill command :O
         // new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // new JoystickButton(joystick,6).whileTrue(new InstantCommand(() -> intake.drop(), intake));
         // new JoystickButton(joystick,7).whileTrue(new CollectPieceCmd(intake));        
 
-        // new JoystickButton(joystick,7).whileTrue(collectPiece);
-        new JoystickButton(joystick,8).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake));
-        new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
+        // // new JoystickButton(joystick,7).whileTrue(collectPiece);
+        // new JoystickButton(joystick,8).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED), intake));
+        // new JoystickButton(joystick,9).whileTrue(new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED), intake));
         
          // Move the arm halfway: radians above horizontal when the 'B' button is pressed.
          new JoystickButton(xbox, Button.kB.value).onTrue(makeSetPositionCommand(arm, -Math.PI/4));
     
-        // Move the arm up: radians above horizontal when the 1 button is pressed.
-        new JoystickButton(joystick, 1).onTrue(makeSetPositionCommand(arm, Units.degreesToRadians(30)));
+        // // Move the arm up: radians above horizontal when the 1 button is pressed.
+        // new JoystickButton(joystick, 1).onTrue(makeSetPositionCommand(arm, Units.degreesToRadians(30)));
         
-        // Move the arm down: radians below horizontal when the 5 is pressed
-        new JoystickButton(joystick, 5).onTrue(makeSetPositionCommand(arm, Units.degreesToRadians(-20)));
+        // // Move the arm down: radians below horizontal when the 5 is pressed
+        // new JoystickButton(joystick, 5).onTrue(makeSetPositionCommand(arm, Units.degreesToRadians(-20)));
 
         new JoystickButton(joystick, 2).onTrue(new InstantCommand(() -> {ArcadeDriveCmd.isSlow = !ArcadeDriveCmd.isSlow;}));
 
@@ -160,7 +166,7 @@ public class RobotContainer {
                 () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
 
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
-        elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
+        //elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         
     }
     
