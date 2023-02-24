@@ -66,6 +66,9 @@ public class Constants {
             new Transform3d(new Translation3d(Units.inchesToMeters(14), Units.inchesToMeters(34), Units.inchesToMeters(0)), 
             new Rotation3d(Units.degreesToRadians(-90.0), 0, Units.degreesToRadians(-90.0))); 
         public static final Transform3d APRILTAG_ROBOT_TO_CAMERA = APRILTAG_CAMERA_TO_ROBOT.inverse();
+        public static final double CAMERA_PITCH_RADIANS = 0;
+        public static final double CAMERA_HEIGHT_METERS = 1;
+        public static final double TARGET_HEIGHT_METERS = 1;
     }
 
     public static final class ArmConstants {

@@ -28,7 +28,6 @@ public class SimArm implements ArmIO{
         ArmConstants.ARM_LENGTH,
         ArmConstants.MIN_ARM_ANGLE,
         ArmConstants.MAX_ARM_ANGLE,
-        ArmConstants.ARM_MASS,
         true
       ); 
     }
