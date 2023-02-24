@@ -5,13 +5,11 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.util.PIDUtil;
@@ -20,7 +18,7 @@ public class Arm extends ProfiledPIDSubsystem {
   /** Creates a new Arm. */
   private ArmIO armIO;
   private double targetAngle = - Math.PI/2; 
-  private static final double feedForward = 0.1/6 * 1.17;
+  private static final double feedForward = 0.133;
 
   // TODO: find actual values (took from setArmAngleCmd)
   private static final double kpPos = 0.8;
@@ -29,7 +27,7 @@ public class Arm extends ProfiledPIDSubsystem {
   private static final double max_vel = 1.0;  // rad/s
   private static final double max_accel = 1.8;  // rad/s/s
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
-  private static double gravityCompensation = 0.11;
+  private static double gravityCompensation = 0.075;
 
   public Arm(ArmIO io) {
     super(new ProfiledPIDController(kpPos, 0, 0, constraints));
@@ -44,8 +42,8 @@ public class Arm extends ProfiledPIDSubsystem {
 
     SmartDashboard.putNumber("arm goal position", getGoal());
 
-    SmartDashboard.putNumber("Arm Velocity", getEncoderSpeed()); 
-    SmartDashboard.putNumber("Arm Postion", getEncoderPosition()); 
+    SmartDashboard.putNumber("arm velocity", getEncoderSpeed()); 
+    SmartDashboard.putNumber("arm postion", getEncoderPosition()); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);
   
   }
@@ -69,6 +67,10 @@ public class Arm extends ProfiledPIDSubsystem {
   public void setTargetAngle(double angle) {
     System.out.println("Set target to " + angle);
     targetAngle = angle; 
+  }
+
+  public void setSpeedGravityCompensation(double speed) {
+    armIO.setSpeed(speed + gravityCompensation * Math.cos(getEncoderPosition()));
   }
 
   @Override
@@ -99,4 +101,7 @@ public class Arm extends ProfiledPIDSubsystem {
       return (PIDUtil.checkWithinRange(getGoal(), getMeasurement(), ArmConstants.ANGLE_TOLERANCE));
     }
   
+  public void setPosition(double position) {
+    armIO.setPosition(position);
+  }
 }
