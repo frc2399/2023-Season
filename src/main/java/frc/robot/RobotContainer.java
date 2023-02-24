@@ -31,6 +31,7 @@ import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
@@ -49,6 +50,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
+import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 
 
 /**
@@ -102,14 +104,14 @@ public class RobotContainer {
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
-
+        
         setUpSubsystems();
         setUpAutonChooser();
         setUpConeCubeCommands();
         configureButtonBindings();
         setDefaultCommands();
         simulationMechanisms();
-
+        setUpDriveCommands();
     }
 
     private void configureButtonBindings() {
@@ -161,7 +163,7 @@ public class RobotContainer {
 
     private void setDefaultCommands() {
         driveTrain.setDefaultCommand(
-            new ArcadeDriveCmd(driveTrain,
+            new CurvatureDriveCmd(driveTrain,
                 () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
                 () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
 
@@ -264,6 +266,15 @@ public class RobotContainer {
             new InstantCommand(() -> e.disable()), 
             new RunCommand(() -> e.setSpeedGravityCompensation(target), e)
         );
+    }
+
+    private void setUpDriveCommands() {
+        SmartDashboard.putData("ArcadeDrive",  new ArcadeDriveCmd(driveTrain,
+        () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));
+        SmartDashboard.putData("CurvatureDrive",  new CurvatureDriveCmd(driveTrain,
+        () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));
     }
 
 }
