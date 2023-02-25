@@ -2,6 +2,7 @@ package frc.robot.commands.drivetrain;
 
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.drivetrain.DriveTrain;
@@ -47,16 +48,19 @@ public class CurvatureDriveCmd extends CommandBase {
         double left;
 
 
-        realTimeSpeed = speedFunction.get();
+        realTimeSpeed = -speedFunction.get();
         realTimeTurn = -turnFunction.get();
 
+        SmartDashboard.putNumber("Raw Joystick Value: ", realTimeSpeed);
+        //realTimeSpeed = realTimeSpeed * realTimeSpeed * Math.signum(realTimeSpeed);
+        realTimeSpeed = realTimeSpeed * realTimeSpeed * realTimeSpeed;
+        SmartDashboard.putNumber("Transformed Joystick Value: ", realTimeSpeed);
 
         if(m_debouncer.calculate(Math.abs(realTimeSpeed) <= Constants.XboxConstants.FORWARD_DEADBAND) && realTimeTurn != 0)
         {
             // Do something now that the DI is True.
             left = realTimeSpeed - realTimeTurn;
             right = realTimeSpeed + realTimeTurn;
-            System.out.println("Arcade Drive!");
         }
         else
         {
