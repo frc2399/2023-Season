@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
@@ -151,13 +153,13 @@ public class RobotContainer {
         //positions to intake upright cone from ground
         new JoystickButton(joystick,1).onTrue(makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT));
         // new JoystickButton(joystick,1).onTrue(intakeUprightPosition);
-        // new JoystickButton(joystick, 7).onTrue(coneTipIntakePosition);
-        // new JoystickButton(joystick, 8).onTrue(conePhalangeIntakePosition);
+        // new JoystickButton(xbox, Button.kRightBumper.value).onTrue(conePhalangeIntakePosition);
+        // new JoystickButton(xbox, Button.kLeftBumper.value).onTrue(coneTipIntakePosition);
         
         //intake commands
-        new JoystickButton(xbox, Button.kRightBumper.value).whileTrue(intakePiece);
-        new JoystickButton(xbox, Button.kLeftBumper.value).whileTrue(outakePiece);
-        
+        new Trigger(() -> Axis.kLeftTrigger.value > 0.1).whileTrue(intakePiece);
+        new Trigger(() -> Axis.kRightTrigger.value > 0.1).whileTrue(outakePiece);
+
         //TODO make proper kill command :O
         // new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
     }
