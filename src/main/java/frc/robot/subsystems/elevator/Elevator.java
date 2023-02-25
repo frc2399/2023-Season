@@ -87,4 +87,8 @@ public class Elevator extends ProfiledPIDSubsystem {
       return (PIDUtil.checkWithinRange(getGoal(), getMeasurement(), ElevatorConstants.HEIGHT_TOLERANCE));
     }
   
+    public void setPosition(double position) {
+      elevatorIO.setPosition(position);
+    }
+
 }

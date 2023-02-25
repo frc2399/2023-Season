@@ -73,6 +73,11 @@ public class SimElevator implements ElevatorIO {
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
     }
+    @Override
+    public void setPosition(double position) {
+        elevatorSimEncoder.setDistance(position);
+        
+    }
 }
 
 

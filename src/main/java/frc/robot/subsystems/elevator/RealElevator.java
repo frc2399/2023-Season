@@ -67,4 +67,10 @@ public class RealElevator implements ElevatorIO {
         SmartDashboard.putBoolean("Bottom Limit Pressed", bottomLimitSwitch.isPressed());    
     }
 
+    @Override
+    public void setPosition(double position) {
+        elevatorEncoderLeft.setPosition(position);
+        
+    }
+
 }

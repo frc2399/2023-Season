@@ -51,7 +51,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("LeftCommunity", new PrintCommand("Left community"));
-    eventMap.put("Intake", new IntakeForGivenTime(intake, IntakeConstants.INTAKE_IN_SPEED, 2));
+    eventMap.put("Intake", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
         
     Command eventTesting = 
       new SequentialCommandGroup(
@@ -86,9 +86,9 @@ public class TwoPieceAuton extends SequentialCommandGroup {
         );
 
     addCommands(
-      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_NODE_HEIGHT),
+      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT),
       twoPieceAuton,
-      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_NODE_HEIGHT)
+      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT)
       );
 
   }

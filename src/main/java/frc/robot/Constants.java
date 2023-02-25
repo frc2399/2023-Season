@@ -62,12 +62,18 @@ public class Constants {
         public static final double MIN_ELEVATOR_HEIGHT = 0.05;
         public static final double MAX_ELEVATOR_HEIGHT = 0.75;
 
-        public static final double CONE_TOP_NODE_HEIGHT = Units.inchesToMeters(47);
-        public static final double CUBE_TOP_NODE_HEIGHT = Units.inchesToMeters(36);
-        public static final double CONE_MID_NODE_HEIGHT = Units.inchesToMeters(35);
-        public static final double CUBE_MID_NODE_HEIGHT = Units.inchesToMeters(24);
-        public static final double CONE_LOW_NODE_HEIGHT = Units.inchesToMeters(2);
-        public static final double CUBE_LOW_NODE_HEIGHT = Units.inchesToMeters(2);
+        public static final double CONE_TOP_HEIGHT = 0.69;
+        public static final double CUBE_TOP_HEIGHT = 0.58;
+        public static final double CONE_MID_HEIGHT = 0.34;
+        public static final double CUBE_MID_HEIGHT = 0.25;
+        public static final double CONE_LOW_HEIGHT = 0.08;
+        public static final double CUBE_LOW_HEIGHT = 0.08;
+
+        public static final double CONE_UP_INTAKE_HEIGHT = 0.08;
+        // public static final double CONE_TIP_INTAKE_HEIGHT= xx;
+        // public static final double CONE_PHALANGE_INTAKE_HEIGHT = xx;
+        // public static final double CUBE_INTAKE_HEGHT = xx;
+
         // 27 inches, 41.951946 encoder counts
         public static final double ENCODER_CALIBRATION_METERS = Units.inchesToMeters(27) / 41.951946;
 
@@ -84,6 +90,19 @@ public class Constants {
         public static final double ARM_LENGTH = 0.3;
 
         public static final int ARM_MOTOR_ID = 8;
+
+        public static final double CONE_TOP_ANGLE = 0.09;
+        public static final double CUBE_TOP_ANGLE = 0.06;
+        public static final double CONE_MID_ANGLE = 0.29;
+        public static final double CUBE_MID_ANGLE = 0.46;
+        public static final double CONE_LOW_ANGLE = 0.03;
+        public static final double CUBE_LOW_ANGLE = 0.03;
+
+        public static final double CONE_UP_INTAKE_ANGLE = -0.24;
+        // public static final double CONE_TIP_INTAKE_ANGLE = xx;
+        // public static final double CONE_PHALANGE_INTAKE_ANGLE = xx;
+        // public static final double CUBE_INTAKE_ANGLE = xx;
+
         public static final double RADIANS_PER_REVOLUTION = 0.0837;
         public static final double INITIAL_OFFSET = 0.711;
 
@@ -102,8 +121,10 @@ public class Constants {
         //public static final int REVERSE_CHANNEL_SOLENOID_ID = 3;
         public static final int EXTEND_INTAKE_ARM_RIGHT = 2;
         public static final double INTAKE_SLEW_RATE = 10;
-        public static final double INTAKE_IN_SPEED = 1.0;
-        public static final double INTAKE_OUT_SPEED = -1.0;
+        public static final double CONE_IN_SPEED = 1.0;
+        public static final double CONE_OUT_SPEED = -1.0;
+        public static final double CUBE_IN_SPEED = -1.0;
+        public static final double CUBE_OUT_SPEED = 1.0;
     }
 
     public static final class LEDConstants {
