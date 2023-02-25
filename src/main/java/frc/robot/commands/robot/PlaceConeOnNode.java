@@ -14,11 +14,11 @@ import frc.robot.subsystems.intake.Intake;
 
 public class PlaceConeOnNode extends SequentialCommandGroup {
 
-    public PlaceConeOnNode(Intake intake, Elevator elevator, Arm arm, double height) {
+    public PlaceConeOnNode(Intake intake, Elevator elevator, Arm arm, double height, double armAngle) {
 
         addCommands(
             RobotContainer.makeSetPositionCommand(elevator, height),
-            RobotContainer.makeSetPositionCommand(arm, 0),
+            RobotContainer.makeSetPositionCommand(arm, armAngle),
             new WaitUntilCommand(() -> arm.atGoal()),
             new WaitUntilCommand(() -> elevator.atGoal()),
             new PrintCommand("arm angle: " + arm.getGoal()),
