@@ -24,7 +24,7 @@ public class CollectPieceCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.closeRight();
+    //intake.closeRight();
     // intake.closeLeft();
   }
 
@@ -32,13 +32,13 @@ public class CollectPieceCmd extends CommandBase {
   @Override
   public void execute() {
     //speed = filter.calculate(targetSpeed);
-    intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
+    intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.openRight();
+    //intake.openRight();
     // intake.openLeft();
     intake.setMotor(0);
     System.out.println("speed set to 0");

@@ -2,62 +2,74 @@ package frc.robot.subsystems.elevator;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import frc.robot.Constants.ElevatorConstants; 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.util.MotorUtil; 
 
 public class RealElevator implements ElevatorIO {
 
-    public static CANSparkMax elevatorMotorControllerRight;
-    public static CANSparkMax elevatorMotorControllerLeft;
+    public static CANSparkMax elevatorMotorControllerRight, elevatorMotorControllerLeft;
     public static RelativeEncoder elevatorEncoderRight;
     public static RelativeEncoder elevatorEncoderLeft;
+    private SparkMaxLimitSwitch topLimitSwitch;
+    private SparkMaxLimitSwitch bottomLimitSwitch;
 
     public RealElevator()
     {
-        elevatorMotorControllerRight = new CANSparkMax(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
-        elevatorMotorControllerLeft = new CANSparkMax(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+        elevatorMotorControllerRight = MotorUtil.createSparkMAX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
+            Constants.NEO_CURRENT_LIMIT, true, true, 0.1);
+        elevatorMotorControllerLeft = MotorUtil.createSparkMAX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
+            Constants.NEO_CURRENT_LIMIT, false, true, 0.1);
+        
+        topLimitSwitch = elevatorMotorControllerLeft.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        bottomLimitSwitch = elevatorMotorControllerLeft.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
 
+        // initialize motor encoder
+        elevatorEncoderRight = elevatorMotorControllerRight.getEncoder();
+        elevatorEncoderLeft = elevatorMotorControllerLeft.getEncoder();
 
-    // restore factory settings to reset to a known state
-    elevatorMotorControllerRight.restoreFactoryDefaults();
-    elevatorMotorControllerLeft.restoreFactoryDefaults();
+        elevatorEncoderRight.setPosition(0); 
+        elevatorEncoderLeft.setPosition(0); 
 
-    // set climber motors to coast mode
-    elevatorMotorControllerRight.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    elevatorMotorControllerLeft.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        elevatorEncoderRight.setPositionConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS);
+        elevatorEncoderLeft.setPositionConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS);
 
-    // initialize motor encoder
-    elevatorEncoderRight = elevatorMotorControllerRight.getEncoder();
-    elevatorEncoderLeft = elevatorMotorControllerLeft.getEncoder();
+        // dividng by 60 to convert meters per miniute to meters per seconds
+        elevatorEncoderRight.setVelocityConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS / 60);
+        elevatorEncoderLeft.setVelocityConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS / 60);
 
-    // invert the motor controllers so climber climbs right
-    elevatorMotorControllerRight.setInverted(false);
-    elevatorMotorControllerLeft.setInverted(true);
+        elevatorMotorControllerRight.follow(elevatorMotorControllerLeft);
 
-    elevatorEncoderRight.setPosition(0); 
-    elevatorEncoderLeft.setPosition(0); 
-
-    elevatorMotorControllerLeft.follow(elevatorMotorControllerRight);
+        topLimitSwitch.enableLimitSwitch(true);
+        bottomLimitSwitch.enableLimitSwitch(true);
     }
 
     @Override
     public double getEncoderPosition() {
-        return elevatorEncoderRight.getPosition();
+        return elevatorEncoderLeft.getPosition();
     }
     @Override
     public double getEncoderSpeed() {
-        return elevatorEncoderRight.getVelocity();
+        return elevatorEncoderLeft.getVelocity();
     }
     @Override
     public void setSpeed(double speed) {
-        elevatorMotorControllerRight.set(speed);
-        
+        elevatorMotorControllerLeft.set(speed);
     }
 
     @Override
     public void updateForSim() {
-        // TODO Auto-generated method stub
+        SmartDashboard.putBoolean("Top Limit Pressed", topLimitSwitch.isPressed());
+        SmartDashboard.putBoolean("Bottom Limit Pressed", bottomLimitSwitch.isPressed());    
+    }
+
+    @Override
+    public void setPosition(double position) {
+        elevatorEncoderLeft.setPosition(position);
         
     }
 

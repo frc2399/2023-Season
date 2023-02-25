@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
           // Log path following error
           //TODO what is this?
       }
-);
+    );
   }
 
   @Override
@@ -77,6 +77,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 
     CommandScheduler.getInstance().run();
+    SmartDashboard.putBoolean("cone mode", RobotContainer.coneMode);
   }
 
   @Override

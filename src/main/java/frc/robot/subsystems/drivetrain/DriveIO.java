@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public interface DriveIO {
 
     public Rotation2d getGyroAngle();
+    public double getGyroPitch();
     public double getRightEncoderMeters();
     public double getLeftEncoderMeters();
     public double getRightEncoderMetersPerSecond();
@@ -13,4 +14,6 @@ public interface DriveIO {
     public void setMotorVoltage(double leftVolt, double rightVolt);
 
     public void updateForSim();
+    //if this breaks delete 17
+    public void updateForReal();
 }

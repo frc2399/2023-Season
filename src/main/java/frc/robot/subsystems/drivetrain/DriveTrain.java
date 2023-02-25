@@ -64,12 +64,16 @@ public class DriveTrain extends SubsystemBase {
 
         // runs sim periodic code in simDrive
         driveIO.updateForSim();
+        driveIO.updateForReal();
 
         odometry.update(
             // we want CCW positive, CW negative
             getGyroAngle(),
             getLeftEncoderMeters(),
             getRightEncoderMeters()
+
+        
+        
         );
 
         field.setRobotPose(odometry.getPoseMeters());
@@ -82,6 +86,7 @@ public class DriveTrain extends SubsystemBase {
         SmartDashboard.putNumber("odometry x", getPoseMeters().getX());
         SmartDashboard.putNumber("odometry y", getPoseMeters().getY());
         SmartDashboard.putNumber("odometry angle", getPoseMeters().getRotation().getDegrees());
+        SmartDashboard.putNumber("pitch", getGyroPitch());
 
     }
 
@@ -137,10 +142,12 @@ public class DriveTrain extends SubsystemBase {
     //     return -gyroSim.get;
     // }
 
+    public double getGyroPitch() {
+        return driveIO.getGyroPitch();
+    }
     public Rotation2d getGyroAngle() {
         return driveIO.getGyroAngle(); 
     }
-
     public double getRightEncoderMeters() {
         return driveIO.getRightEncoderMeters();
     }
