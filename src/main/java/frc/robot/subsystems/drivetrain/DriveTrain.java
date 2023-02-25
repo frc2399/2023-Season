@@ -28,11 +28,6 @@ public class DriveTrain extends SubsystemBase {
     public AHRS ahrs;
     public static PIDController turnController;
 
-    public static final double kP = 0;
-    static final double kI = 0;
-    static final double kD = 0;
-    static final double kF = 0;
-
     public static double outputSpeed;
 
     // simulation

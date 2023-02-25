@@ -33,13 +33,17 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.ChaseTagCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.drivetrain.CameraAimCmd;
+import frc.robot.subsystems.Limelight.Camera;
 import frc.robot.subsystems.Limelight.PoseEstimator;
+import frc.robot.subsystems.Limelight.SimLimelight;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
+import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -76,6 +80,8 @@ public class RobotContainer {
     public static DriveTrain driveTrain;
     public static LED led = new LED();
     public static Arm arm;
+    public static SimLimelight limelight;
+    public static Camera camera;
     
     public static Intake intake;
     public static Elevator elevator;
@@ -127,12 +133,14 @@ public class RobotContainer {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
-        photonCamera = new PhotonCamera ("OV5647");
+        photonCamera = new PhotonCamera ("photonvision");
 
-        poseEstimator = new PoseEstimator(photonCamera, driveTrain);
         // Configure the button bindings
         
         setUpSubsystems();
+
+        poseEstimator = new PoseEstimator(photonCamera, driveTrain);
+
         setUpAutonChooser();
         setUpConeCubeCommands();
         configureButtonBindings();
@@ -161,6 +169,9 @@ public class RobotContainer {
         new JoystickButton(xbox, Button.kY.value).onTrue(placePieceTop);
         new JoystickButton(xbox, Button.kX.value).onTrue(placePieceMid);
         new JoystickButton(xbox, Button.kB.value).onTrue(placePieceLow);
+
+        new JoystickButton(joystick,13).whileTrue(new TurnToNAngleCmd(0, driveTrain));
+        new JoystickButton(joystick,14).whileTrue(new CameraAimCmd(driveTrain, photonCamera));
 
         chaseTagCmd = new ChaseTagCommand(photonCamera, driveTrain, () -> poseEstimator.getCurrentPose());
 
@@ -265,6 +276,8 @@ public class RobotContainer {
         elevator = new Elevator(elevatorIO);
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
+        limelight = new SimLimelight(driveTrain);
+        camera = new Camera(photonCamera);
 
     }
 

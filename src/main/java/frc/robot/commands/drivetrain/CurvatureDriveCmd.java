@@ -56,7 +56,7 @@ public class CurvatureDriveCmd extends CommandBase {
             // Do something now that the DI is True.
             left = realTimeSpeed - realTimeTurn;
             right = realTimeSpeed + realTimeTurn;
-            System.out.println("Arcade Drive!");
+            //System.out.println("Arcade Drive!");
         }
         else
         {
