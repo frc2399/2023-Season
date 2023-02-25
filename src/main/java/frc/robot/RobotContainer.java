@@ -35,6 +35,7 @@ import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.robot.PlaceConeOnNode;
 import frc.robot.subsystems.LED;
@@ -54,6 +55,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
+import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 
 
 /**
@@ -119,14 +121,14 @@ public class RobotContainer {
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
-
+        
         setUpSubsystems();
         setUpAutonChooser();
         setUpConeCubeCommands();
         configureButtonBindings();
         setDefaultCommands();
         simulationMechanisms();
-
+        setUpDriveCommands();
     }
 
     private void configureButtonBindings() {
@@ -157,8 +159,8 @@ public class RobotContainer {
         // new JoystickButton(xbox, Button.kLeftBumper.value).onTrue(coneTipIntakePosition);
         
         //intake commands
-        new Trigger(() -> Axis.kLeftTrigger.value > 0.1).whileTrue(intakePiece);
-        new Trigger(() -> Axis.kRightTrigger.value > 0.1).whileTrue(outakePiece);
+        new Trigger(() -> xbox.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(intakePiece);
+        new Trigger(() -> xbox.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(outakePiece);
 
         //TODO make proper kill command :O
         // new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
@@ -166,7 +168,7 @@ public class RobotContainer {
 
     private void setDefaultCommands() {
         driveTrain.setDefaultCommand(
-            new ArcadeDriveCmd(driveTrain,
+            new CurvatureDriveCmd(driveTrain,
                 () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
                 () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
 
@@ -288,6 +290,15 @@ public class RobotContainer {
             makeSetPositionCommand(arm, angle),
             makeSetPositionCommand(elevator, height)
         );
+    }
+
+    private void setUpDriveCommands() {
+        SmartDashboard.putData("ArcadeDrive",  new ArcadeDriveCmd(driveTrain,
+        () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));
+        SmartDashboard.putData("CurvatureDrive",  new CurvatureDriveCmd(driveTrain,
+        () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));
     }
 
 }
