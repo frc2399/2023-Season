@@ -44,8 +44,8 @@ public class RealElevator implements ElevatorIO {
 
         elevatorMotorControllerRight.follow(elevatorMotorControllerLeft);
 
-        topLimitSwitch.enableLimitSwitch(true);
-        bottomLimitSwitch.enableLimitSwitch(true);
+         topLimitSwitch.enableLimitSwitch(true);
+         //bottomLimitSwitch.enableLimitSwitch(true);
     }
 
     @Override

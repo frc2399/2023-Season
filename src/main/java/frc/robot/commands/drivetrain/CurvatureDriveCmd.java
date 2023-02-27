@@ -6,6 +6,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.util.DriveUtil;
 
@@ -20,9 +22,12 @@ public class CurvatureDriveCmd extends CommandBase {
     Debouncer m_debouncer;
     private SlewRateLimiter driveLimiter;
 
-    private final double percentTurningSpeed = 0.4;
+    private final double percentTurningSpeed = 0.6;
     private final double driveDeadband = 0.05;
     private final double turnDeadband = 0.05;
+
+    public static boolean isSlow = false;
+
 
     /* This command does this (fill in)... */
     public CurvatureDriveCmd(DriveTrain driveSubsystem,
@@ -45,11 +50,13 @@ public class CurvatureDriveCmd extends CommandBase {
     @Override
     public void initialize() {
         System.out.println("CurvatureDriveCmd started!");
+        isSlow = false;
     }
 
 
     @Override
     public void execute() {
+
         double realTimeSpeed;
         double realTimeTurn;
         double right;
@@ -96,7 +103,14 @@ public class CurvatureDriveCmd extends CommandBase {
         double maxValue = Math.max(Math.max(Math.abs(left), Math.abs(right)), 1);
         left /= maxValue;
         right /= maxValue;
-        this.driveSubsystem.setMotors(left, right);  
+
+        if (isSlow) {        
+            this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
+        }
+        else {
+            this.driveSubsystem.setMotors(left, right);
+        }
+        SmartDashboard.putBoolean("isSlow", isSlow);
     }
 
 
