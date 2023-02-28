@@ -159,6 +159,7 @@ public class RobotContainer {
         //new JoystickButton(joystick,8).whileTrue(new InstantCommand(() -> elevator.setPosition(0)));
         // temp
         new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));
+        
         new JoystickButton(xboxOperator, Button.kY.value).onTrue(setPieceTop);
         new JoystickButton(xboxOperator, Button.kX.value).onTrue(setPieceMid);
         new JoystickButton(xboxOperator, Button.kA.value).onTrue(setPieceLow);
