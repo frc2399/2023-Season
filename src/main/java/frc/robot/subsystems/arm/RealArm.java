@@ -48,5 +48,10 @@ public class RealArm implements ArmIO {
     public void updateForSim(){
         
     }
+
+    @Override
+    public double getArmCurrent() {
+        return armMotorController.getOutputCurrent();
+    }
     
 }

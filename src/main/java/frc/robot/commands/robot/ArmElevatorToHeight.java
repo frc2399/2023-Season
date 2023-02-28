@@ -5,12 +5,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.RobotContainer;
-import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.intake.Intake;
 
 public class ArmElevatorToHeight extends SequentialCommandGroup {
 

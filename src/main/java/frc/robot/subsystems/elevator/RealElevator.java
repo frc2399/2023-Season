@@ -73,4 +73,9 @@ public class RealElevator implements ElevatorIO {
         
     }
 
+    @Override
+    public double getElevatorCurrent() {
+        return elevatorMotorControllerLeft.getOutputCurrent();
+    }
+
 }

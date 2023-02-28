@@ -59,5 +59,10 @@ public class SimArm implements ArmIO{
 
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    }
+
+    @Override
+    public double getArmCurrent() {
+        return armSim.getCurrentDrawAmps();
     } 
 }

@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -28,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
@@ -37,7 +35,6 @@ import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
-import frc.robot.commands.robot.PlaceConeOnNode;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -55,7 +52,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
-import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 
 
 /**
@@ -84,8 +80,9 @@ public class RobotContainer {
     public static MechanismLigament2d LEDMechanism;
 
     // Joysticks
-    public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
-    public static final Joystick xbox = new Joystick(XboxConstants.XBOX_PORT);
+    //public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
+    public static final Joystick xboxDriver = new Joystick(XboxConstants.XBOX_DRIVER_PORT);
+    public static final Joystick xboxOperator = new Joystick(XboxConstants.XBOX_OPERATOR_PORT);
 
     public static boolean coneMode = true;
 
@@ -108,15 +105,18 @@ public class RobotContainer {
     
     private Command changeMode;
 
-    private Command placePieceTop;
-    private Command placePieceMid;
-    private Command placePieceLow;
+    private Command setPieceTop;
+    private Command setPieceMid;
+    private Command setPieceLow;
     private Command intakeUprightPosition;
     private Command intakePiece;
     private Command outakePiece;
     private Command intakePieceShelf; 
 
     private Command turtleMode;
+
+    private double armAngle;
+    private double elevatorPosition;
     
      // A chooser for autonomous commands
      final SendableChooser < Command > chooser = new SendableChooser < > ();
@@ -138,48 +138,51 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
        
-        new JoystickButton(xbox, Button.kB.value).onTrue(changeMode);
-        // new JoystickButton(xbox, Button.kA.value).onTrue(new InstantCommand(() -> {coneMode = true;}));
-        // new JoystickButton(xbox, Button.kB.value).onTrue(new InstantCommand(() -> {coneMode = false;}));
+        new JoystickButton(xboxOperator, Button.kLeftBumper.value).onTrue(changeMode);
 
-        new JoystickButton(xbox, 9).onTrue(new InstantCommand(() -> {CurvatureDriveCmd.isSlow = !CurvatureDriveCmd.isSlow;}));
+        new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {CurvatureDriveCmd.isSlow = !CurvatureDriveCmd.isSlow;}));
         
-        // arm up, arm down, reset encoder position to 0 (move the arm all the way up then hit)
-        new JoystickButton(joystick,2).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
-        new JoystickButton(joystick,1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
-        new JoystickButton(joystick,7).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
+        // arm up, arm down, reset encoder position to 0
+        //new JoystickButton(joystick,2).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        //new JoystickButton(joystick,1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        //new JoystickButton(joystick,7).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
+        // temp
+        new JoystickButton(xboxDriver, Button.kA.value).onTrue(resetArmEncoderCommand(arm));
+        
+        // elevator up, elevator down, reset encoder position to 0, top preset, mid preset, low preset
+        //new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
+        //new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.4)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) < 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.4)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
+        //new JoystickButton(joystick,8).whileTrue(new InstantCommand(() -> elevator.setPosition(0)));
+        // temp
+        new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));
+        new JoystickButton(xboxOperator, Button.kY.value).onTrue(setPieceTop);
+        new JoystickButton(xboxOperator, Button.kX.value).onTrue(setPieceMid);
+        new JoystickButton(xboxOperator, Button.kA.value).onTrue(setPieceLow);
+        
+        //intake positions
+        //new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakeUprightPosition);
+        new JoystickButton(xboxOperator, Button.kB.value).onTrue(intakePieceShelf);
 
-        // elevator up, elevator down, reset encoder position to 0 (move elevator all the way down then hit), top preset, mid preset, low preset
-        new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
-        new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.4)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
-        new JoystickButton(joystick,8).whileTrue(new InstantCommand(() -> elevator.setPosition(0)));
-        new JoystickButton(xbox, Button.kY.value).onTrue(placePieceTop);
-        new JoystickButton(xbox, Button.kX.value).onTrue(placePieceMid);
-        new JoystickButton(xbox, Button.kA.value).onTrue(placePieceLow);
-        
-        //positions to intake upright cone from ground
-        new JoystickButton(joystick,6).onTrue(makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT));
-        // new JoystickButton(joystick,1).onTrue(intakeUprightPosition);
-        // new JoystickButton(xbox, Button.kRightBumper.value).onTrue(conePhalangeIntakePosition);
-        // new JoystickButton(xbox, Button.kLeftBumper.value).onTrue(coneTipIntakePosition);
-        
         //intake commands
-        new Trigger(() -> xbox.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(intakePiece);
-        new Trigger(() -> xbox.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(outakePiece);
-        new JoystickButton(xbox, Button.kRightBumper.value).onTrue(intakePieceShelf);
+        new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakePiece);
+        new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outakePiece);
+        new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(makeSetPositionArmAndElevatorCommand(armAngle, elevatorPosition));
+
+        new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
 
         //TODO make proper kill command :O
         // new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
-
-        //turtle mode!! (whole robot id compact)
-        new JoystickButton(xbox, 8 ).onTrue(turtleMode);
     }
 
     private void setDefaultCommands() {
         driveTrain.setDefaultCommand(
             new CurvatureDriveCmd(driveTrain,
-                () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
-                () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));        
+                () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
+                () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value)));        
 
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
@@ -211,15 +214,15 @@ public class RobotContainer {
 
     private void setUpConeCubeCommands () {
 
-        coneTopNode = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TOP_ANGLE, ElevatorConstants.CONE_TOP_HEIGHT);
-        cubeTopNode = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_TOP_ANGLE, ElevatorConstants.CUBE_TOP_HEIGHT);
-        coneMidNode = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_MID_ANGLE, ElevatorConstants.CONE_MID_HEIGHT);
-        cubeMidNode = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_MID_ANGLE, ElevatorConstants.CUBE_MID_HEIGHT);
-        coneLowNode = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_LOW_ANGLE, ElevatorConstants.CONE_LOW_HEIGHT);
-        cubeLowNode = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_LOW_ANGLE, ElevatorConstants.CUBE_LOW_HEIGHT);
+        coneTopNode = setArmAndElevatorConeTopPosition();
+        cubeTopNode = setArmAndElevatorCubeTopPosition();
+        coneMidNode = setArmAndElevatorConeMidPosition();
+        cubeMidNode = setArmAndElevatorCubeMidPosition();
+        coneLowNode = setArmAndElevatorConeLowPosition();
+        cubeLowNode = setArmAndElevatorCubeLowPosition();
 
-        coneIntakeShelf = makeSetPositionArmAndElevatorCommand(-0.1598, 0.7048);
-        cubeIntakeShelf = makeSetPositionArmAndElevatorCommand(0.3084, 0.5079);
+        coneIntakeShelf = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_SHELF_INTAKE_ANGLE, ElevatorConstants.CONE_SHELF_INTAKE_HEIGHT);
+        cubeIntakeShelf = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_SHELF_INTAKE_ANGLE, ElevatorConstants.CUBE_SHELF_INTAKE_HEIGHT);
 
         turtleMode = makeSetPositionArmAndElevatorCommand(0.71, 0.0);
 
@@ -235,9 +238,9 @@ public class RobotContainer {
 
         changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
 
-        placePieceTop = new ConditionalCommand(coneTopNode, cubeTopNode, () -> coneMode);
-        placePieceMid = new ConditionalCommand(coneMidNode, cubeMidNode, () -> coneMode);
-        placePieceLow = new ConditionalCommand(coneLowNode, cubeLowNode, () -> coneMode);
+        setPieceTop = new ConditionalCommand(coneTopNode, cubeTopNode, () -> coneMode);
+        setPieceMid = new ConditionalCommand(coneMidNode, cubeMidNode, () -> coneMode);
+        setPieceLow = new ConditionalCommand(coneLowNode, cubeLowNode, () -> coneMode);
         // intakeUprightPosition = new ConditionalCommand(coneUprightIntakePosition, cubeIntakePosition, () -> coneMode);
         intakePiece = new ConditionalCommand(coneIntake, cubeOutake, () -> coneMode);
         outakePiece = new ConditionalCommand(coneOutake, cubeIntake, () -> coneMode);
@@ -301,6 +304,20 @@ public class RobotContainer {
         );
     }
 
+    private Command resetArmEncoderCommand(Arm a) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> a.setSpeed(0.15)).until(() -> a.getArmCurrent() > Constants.NEO_CURRENT_LIMIT),
+            new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET))
+        );
+    }
+    
+    private Command resetElevatorEncoderCommand(Elevator e) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> e.setSpeed(0.15)).until(() -> e.getElevatorCurrent() > Constants.NEO_CURRENT_LIMIT),
+            new InstantCommand(() -> e.setPosition(0))
+        );
+    }
+
     private Command makeSetPositionArmAndElevatorCommand(double angle, double height) {
         return new ParallelCommandGroup(
             makeSetPositionCommand(arm, angle),
@@ -308,13 +325,49 @@ public class RobotContainer {
         );
     }
 
+    private Command setArmAndElevatorConeTopPosition() {
+        armAngle = ArmConstants.CONE_TOP_ANGLE;
+        elevatorPosition = ElevatorConstants.CONE_TOP_HEIGHT;
+        return new PrintCommand("Cone top position");
+    }
+
+    private Command setArmAndElevatorConeMidPosition() {
+        armAngle = ArmConstants.CONE_MID_ANGLE;
+        elevatorPosition = ElevatorConstants.CONE_MID_HEIGHT;
+        return new PrintCommand("Cone mid position");
+    }
+
+    private Command setArmAndElevatorConeLowPosition() {
+        armAngle = ArmConstants.CONE_LOW_ANGLE;
+        elevatorPosition = ElevatorConstants.CONE_LOW_HEIGHT;
+        return new PrintCommand("Cone low position");
+    }
+
+    private Command setArmAndElevatorCubeTopPosition() {
+        armAngle = ArmConstants.CUBE_TOP_ANGLE;
+        elevatorPosition = ElevatorConstants.CUBE_TOP_HEIGHT;
+        return new PrintCommand("Cube top position");
+    }
+
+    private Command setArmAndElevatorCubeMidPosition() {
+        armAngle = ArmConstants.CUBE_MID_ANGLE;
+        elevatorPosition = ElevatorConstants.CUBE_MID_HEIGHT;
+        return new PrintCommand("Cube mid position");
+    }
+
+    private Command setArmAndElevatorCubeLowPosition() {
+        armAngle = ArmConstants.CUBE_LOW_ANGLE;
+        elevatorPosition = ElevatorConstants.CUBE_LOW_HEIGHT;
+        return new PrintCommand("Cube low position");
+    }
+
     private void setUpDriveCommands() {
         SmartDashboard.putData("ArcadeDrive",  new ArcadeDriveCmd(driveTrain,
-        () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
-        () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));
+        () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value)));
         SmartDashboard.putData("CurvatureDrive",  new CurvatureDriveCmd(driveTrain,
-        () -> xbox.getRawAxis(XboxController.Axis.kLeftY.value),
-        () -> xbox.getRawAxis(XboxController.Axis.kRightX.value)));
+        () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value)));
     }
 
 }

@@ -75,6 +75,10 @@ public class Arm extends ProfiledPIDSubsystem {
     armIO.setSpeed(speed + gravityCompensation * Math.cos(getEncoderPosition()));
   }
 
+  public double getArmCurrent() {
+    return armIO.getArmCurrent();
+  }
+
   @Override
   protected void useOutput(double output, State setpoint) {
     SmartDashboard.putNumber("arm setpoint pos", setpoint.position);
