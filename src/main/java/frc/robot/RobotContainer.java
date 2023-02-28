@@ -171,11 +171,12 @@ public class RobotContainer {
         //intake commands
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakePiece);
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outakePiece);
+        
         new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(makeSetPositionArmAndElevatorCommand(armAngle, elevatorPosition));
 
         new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
 
-        //TODO make proper kill command :O
+        // TODO make proper kill command :O
         // new JoystickButton(joystick,5).whileTrue(new InstantCommand(() -> elevator.setSpeed(0), elevator));
     }
 
