@@ -244,8 +244,8 @@ public class RobotContainer {
         setPieceMid = new ConditionalCommand(coneMidNode, cubeMidNode, () -> coneMode);
         setPieceLow = new ConditionalCommand(coneLowNode, cubeLowNode, () -> coneMode);
         // intakeUprightPosition = new ConditionalCommand(coneUprightIntakePosition, cubeIntakePosition, () -> coneMode);
-        intakePiece = new ConditionalCommand(coneIntake, cubeOutake, () -> coneMode);
-        outakePiece = new ConditionalCommand(coneOutake, cubeIntake, () -> coneMode);
+        intakePiece = new ConditionalCommand(coneIntake, cubeIntake, () -> coneMode);
+        outakePiece = new ConditionalCommand(coneOutake, cubeOutake, () -> coneMode);
 
         intakePieceShelf = new ConditionalCommand(coneIntakeShelf, cubeIntakeShelf, () -> coneMode);
     }
