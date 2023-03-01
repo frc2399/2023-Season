@@ -105,9 +105,9 @@ public class RobotContainer {
     
     private Command changeMode;
 
-    private Command setPieceTop;
-    private Command setPieceMid;
-    private Command setPieceLow;
+    private Command setTopPieceSetpoint;
+    private Command setMidPieceSetpoint;
+    private Command setLowPieceSetpoint;
     private Command intakeUprightPosition;
     private Command intakePiece;
     private Command outakePiece;
@@ -115,8 +115,8 @@ public class RobotContainer {
 
     private Command turtleMode;
 
-    private double armAngle;
-    private double elevatorPosition;
+    private double armAngle = 0;
+    private double elevatorPosition = 0;
     
      // A chooser for autonomous commands
      final SendableChooser < Command > chooser = new SendableChooser < > ();
@@ -160,9 +160,9 @@ public class RobotContainer {
         // temp
         new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));
         
-        new JoystickButton(xboxOperator, Button.kY.value).onTrue(setPieceTop);
-        new JoystickButton(xboxOperator, Button.kX.value).onTrue(setPieceMid);
-        new JoystickButton(xboxOperator, Button.kA.value).onTrue(setPieceLow);
+        new JoystickButton(xboxOperator, Button.kY.value).onTrue(setTopPieceSetpoint);
+        new JoystickButton(xboxOperator, Button.kX.value).onTrue(setMidPieceSetpoint);
+        new JoystickButton(xboxOperator, Button.kA.value).onTrue(setLowPieceSetpoint);
         
         //intake positions
         //new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakeUprightPosition);
@@ -172,7 +172,10 @@ public class RobotContainer {
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakePiece);
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outakePiece);
         
-        new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(makeSetPositionArmAndElevatorCommand(armAngle, elevatorPosition));
+        new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(
+            new SequentialCommandGroup(
+                makeSetPositionArmAndElevatorCommand(armAngle, elevatorPosition),
+                new PrintCommand(armAngle + " " + elevatorPosition)));
 
         new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
 
@@ -240,9 +243,9 @@ public class RobotContainer {
 
         changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
 
-        setPieceTop = new ConditionalCommand(coneTopNode, cubeTopNode, () -> coneMode);
-        setPieceMid = new ConditionalCommand(coneMidNode, cubeMidNode, () -> coneMode);
-        setPieceLow = new ConditionalCommand(coneLowNode, cubeLowNode, () -> coneMode);
+        setTopPieceSetpoint = new ConditionalCommand(coneTopNode, cubeTopNode, () -> coneMode);
+        setMidPieceSetpoint = new ConditionalCommand(coneMidNode, cubeMidNode, () -> coneMode);
+        setLowPieceSetpoint = new ConditionalCommand(coneLowNode, cubeLowNode, () -> coneMode);
         // intakeUprightPosition = new ConditionalCommand(coneUprightIntakePosition, cubeIntakePosition, () -> coneMode);
         intakePiece = new ConditionalCommand(coneIntake, cubeIntake, () -> coneMode);
         outakePiece = new ConditionalCommand(coneOutake, cubeOutake, () -> coneMode);
@@ -328,39 +331,52 @@ public class RobotContainer {
     }
 
     private Command setArmAndElevatorConeTopPosition() {
-        armAngle = ArmConstants.CONE_TOP_ANGLE;
-        elevatorPosition = ElevatorConstants.CONE_TOP_HEIGHT;
-        return new PrintCommand("Cone top position" + " " + armAngle + " " + elevatorPosition);
+        return new InstantCommand(() -> {
+            armAngle = ArmConstants.CONE_TOP_ANGLE;
+            elevatorPosition = ElevatorConstants.CONE_TOP_HEIGHT;
+            System.out.println("cone top position");
+        });
+        //return new PrintCommand("Cone top position" + " " + armAngle + " " + elevatorPosition);
     }
 
     private Command setArmAndElevatorConeMidPosition() {
-        armAngle = ArmConstants.CONE_MID_ANGLE;
-        elevatorPosition = ElevatorConstants.CONE_MID_HEIGHT;
-        return new PrintCommand("Cone mid position" + " " + armAngle + " " + elevatorPosition);
+        return new InstantCommand(() -> {
+            armAngle = ArmConstants.CONE_MID_ANGLE;
+            elevatorPosition = ElevatorConstants.CONE_MID_HEIGHT;
+            System.out.println("cone mid position");
+        });
     }
 
     private Command setArmAndElevatorConeLowPosition() {
-        armAngle = ArmConstants.CONE_LOW_ANGLE;
-        elevatorPosition = ElevatorConstants.CONE_LOW_HEIGHT;
-        return new PrintCommand("Cone low position" + " " + armAngle + " " + elevatorPosition);
+        return new InstantCommand(() -> {
+            armAngle = ArmConstants.CONE_LOW_ANGLE;
+            elevatorPosition = ElevatorConstants.CONE_LOW_HEIGHT;
+            System.out.println("cone low position");
+        });
     }
 
     private Command setArmAndElevatorCubeTopPosition() {
-        armAngle = ArmConstants.CUBE_TOP_ANGLE;
-        elevatorPosition = ElevatorConstants.CUBE_TOP_HEIGHT;
-        return new PrintCommand("Cube top position" + " " + armAngle + " " + elevatorPosition);
+        return new InstantCommand(() -> {
+            armAngle = ArmConstants.CUBE_TOP_ANGLE;
+            elevatorPosition = ElevatorConstants.CUBE_TOP_HEIGHT;
+            System.out.println("cube top position");
+        });
     }
 
     private Command setArmAndElevatorCubeMidPosition() {
-        armAngle = ArmConstants.CUBE_MID_ANGLE;
-        elevatorPosition = ElevatorConstants.CUBE_MID_HEIGHT;
-        return new PrintCommand("Cube mid position" + " " + armAngle + " " + elevatorPosition);
+        return new InstantCommand(() -> {
+            armAngle = ArmConstants.CUBE_MID_ANGLE;
+            elevatorPosition = ElevatorConstants.CUBE_MID_HEIGHT;
+            System.out.println("cube mid position");
+        });
     }
 
     private Command setArmAndElevatorCubeLowPosition() {
-        armAngle = ArmConstants.CUBE_LOW_ANGLE;
-        elevatorPosition = ElevatorConstants.CUBE_LOW_HEIGHT;
-        return new PrintCommand("Cube low position" + " " + armAngle + " " + elevatorPosition);
+        return new InstantCommand(() -> {
+            armAngle = ArmConstants.CUBE_LOW_ANGLE;
+            elevatorPosition = ElevatorConstants.CUBE_LOW_HEIGHT;
+            System.out.println("cube low position");
+        });
         
     }
 
