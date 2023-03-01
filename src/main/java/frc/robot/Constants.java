@@ -149,7 +149,7 @@ public class Constants {
 
     public static final class XboxConstants {
         public static final int XBOX_DRIVER_PORT = 0;
-        public static final int XBOX_OPERATOR_PORT = 0;
+        public static final int XBOX_OPERATOR_PORT = 1;
 
         public static final int FORWARD_JOYSTICK_INVERT = 1;
         public static final int TURN_JOYSTICK_INVERT = -1;
