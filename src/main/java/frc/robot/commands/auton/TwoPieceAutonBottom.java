@@ -35,28 +35,28 @@ import frc.robot.subsystems.intake.Intake;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TwoPieceAuton extends SequentialCommandGroup {
+public class TwoPieceAutonBottom extends SequentialCommandGroup {
   /** Creates a new TwoPieceAuton. */
 
    //mirror if on red alliance
    boolean useAllianceColor = true;
         
-  public TwoPieceAuton(DriveTrain driveTrain, Elevator elevator, Intake intake, Arm arm) {
+  public TwoPieceAutonBottom(DriveTrain driveTrain, Elevator elevator, Intake intake, Arm arm) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     
-    PathPlannerTrajectory twoPiecePath = PathPlanner.loadPath("Two-Cone Auton", 
+    PathPlannerTrajectory twoPiecePathBottom = PathPlanner.loadPath("Two-Cone Auton Bottom", 
       new PathConstraints(1, 1), true);
-    driveTrain.field.getObject("traj").setTrajectory(twoPiecePath);
+    driveTrain.field.getObject("traj").setTrajectory(twoPiecePathBottom);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("LeftCommunity", new PrintCommand("Left community"));
-    eventMap.put("Intake", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
+    eventMap.put("left community", new PrintCommand("Left community"));
+    eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
         
     Command eventTesting = 
       new SequentialCommandGroup(
         new PPRamseteCommand(
-          twoPiecePath,
+          twoPiecePathBottom,
           () -> driveTrain.getPoseMeters(), // Pose supplier
           new RamseteController(),
           new SimpleMotorFeedforward(
@@ -75,14 +75,14 @@ public class TwoPieceAuton extends SequentialCommandGroup {
 
         FollowPathWithEvents twoPieceAuton = new FollowPathWithEvents(
             eventTesting,
-            twoPiecePath.getMarkers(),
+            twoPiecePathBottom.getMarkers(),
             eventMap
         );
 
     addCommands(
       new InstantCommand(() -> {
         // Reset odometry for the first path you run during auto
-          driveTrain.resetOdometry(twoPiecePath.getInitialPose());
+          driveTrain.resetOdometry(twoPiecePathBottom.getInitialPose());
             }, driveTrain),
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
       twoPieceAuton,

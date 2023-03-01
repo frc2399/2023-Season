@@ -28,7 +28,7 @@ public class OnePieceEngage extends SequentialCommandGroup {
             // RobotContainer.makeSetPositionCommand(arm, 0),
             // new PrintCommand("arm angle: " + arm.getGoal()),
             // new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
-            new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT),
+            new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new DriveForwardGivenDistance(0.3, 4, driveTrain),
             new DriveForwardGivenDistance(-0.3, 2, driveTrain),
             new EngageCmd()

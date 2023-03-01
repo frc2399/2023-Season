@@ -34,6 +34,7 @@ import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
+import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
@@ -262,6 +263,7 @@ public class RobotContainer {
         chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
         chooser.addOption("leave community", new DriveForwardGivenDistance(-1, 5, driveTrain));
+        chooser.addOption("two cone auton bottom", new TwoPieceAutonBottom(driveTrain, elevator, intake, arm));
     }  
     
     public static Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
