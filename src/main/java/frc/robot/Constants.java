@@ -85,9 +85,9 @@ public class Constants {
         public static final double MAX_ARM_ANGLE = Math.PI/4;
         public static final double MIN_ARM_ANGLE = -Math.PI/4 * 3;
         //arm Mass in kg
-        public static final double ARM_MASS = 2;
+        public static final double ARM_MASS = 2.72155;
         //arm length in meters
-        public static final double ARM_LENGTH = 0.3;
+        public static final double ARM_LENGTH = 0.72;
 
         public static final int ARM_MOTOR_ID = 8;
 

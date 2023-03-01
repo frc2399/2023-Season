@@ -46,7 +46,7 @@ public class TwoPieceAutonBottom extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     
     PathPlannerTrajectory twoPiecePathBottom = PathPlanner.loadPath("Two-Cone Auton Bottom", 
-      new PathConstraints(1, 1));
+      new PathConstraints(1, 1), true);
     driveTrain.field.getObject("traj").setTrajectory(twoPiecePathBottom);
 
     HashMap<String, Command> eventMap = new HashMap<>();
