@@ -2,9 +2,15 @@ package frc.robot.commands.drivetrain;
 
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drivetrain.DriveTrain;
+import frc.robot.util.DriveUtil;
+
 import java.util.function.Supplier;
 
 
@@ -14,6 +20,13 @@ public class CurvatureDriveCmd extends CommandBase {
     private final DriveTrain driveSubsystem;
     private final Supplier<Double> speedFunction, turnFunction;
     Debouncer m_debouncer;
+    private SlewRateLimiter driveLimiter;
+
+    private final double percentTurningSpeed = 0.6;
+    private final double driveDeadband = 0.05;
+    private final double turnDeadband = 0.05;
+
+    public static boolean isSlow = false;
 
 
     /* This command does this (fill in)... */
@@ -23,6 +36,7 @@ public class CurvatureDriveCmd extends CommandBase {
         this.turnFunction = turnFunction;
         this.driveSubsystem = driveSubsystem;
         addRequirements(driveSubsystem);
+        this.driveLimiter = new SlewRateLimiter(4.0);
         // Creates a Debouncer in "both" mode.
         m_debouncer = new Debouncer(0.1, Debouncer.DebounceType.kRising);
 
@@ -36,27 +50,44 @@ public class CurvatureDriveCmd extends CommandBase {
     @Override
     public void initialize() {
         System.out.println("CurvatureDriveCmd started!");
+        isSlow = false;
     }
 
 
     @Override
     public void execute() {
+
         double realTimeSpeed;
         double realTimeTurn;
         double right;
         double left;
 
 
-        realTimeSpeed = speedFunction.get();
+        realTimeSpeed = -speedFunction.get();
         realTimeTurn = -turnFunction.get();
+    
+        //transforming the drive value
+        SmartDashboard.putNumber("Raw Joystick Value", realTimeSpeed);
 
+        realTimeSpeed = realTimeSpeed * realTimeSpeed * Math.signum(realTimeSpeed);
+        //realTimeSpeed = realTimeSpeed * realTimeSpeed * realTimeSpeed;
+        //realTimeSpeed = 0.9 * realTimeSpeed * realTimeSpeed * realTimeSpeed + 0.1 * Math.signum(realTimeSpeed);
+        realTimeSpeed  = driveLimiter.calculate(realTimeSpeed);
+        realTimeSpeed = DriveUtil.computeDeadband(realTimeSpeed, driveDeadband);
+        SmartDashboard.putNumber("Transformed Joystick Value", realTimeSpeed);
+
+
+        //transforming the turn value
+        SmartDashboard.putNumber("Raw Turn Value", realTimeTurn);
+        realTimeTurn = DriveUtil.computeDeadband(realTimeTurn, turnDeadband);
+        realTimeTurn = realTimeTurn * realTimeTurn * Math.signum(realTimeTurn);
+        SmartDashboard.putNumber("Transformed Turn Value", realTimeTurn);
 
         if(m_debouncer.calculate(Math.abs(realTimeSpeed) <= Constants.XboxConstants.FORWARD_DEADBAND) && realTimeTurn != 0)
         {
             // Do something now that the DI is True.
-            left = realTimeSpeed - realTimeTurn;
-            right = realTimeSpeed + realTimeTurn;
-            System.out.println("Arcade Drive!");
+            left = realTimeSpeed - realTimeTurn * percentTurningSpeed;
+            right = realTimeSpeed + realTimeTurn * percentTurningSpeed;
         }
         else
         {
@@ -72,7 +103,14 @@ public class CurvatureDriveCmd extends CommandBase {
         double maxValue = Math.max(Math.max(Math.abs(left), Math.abs(right)), 1);
         left /= maxValue;
         right /= maxValue;
-        this.driveSubsystem.setMotors(left, right);  
+
+        if (isSlow) {        
+            this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
+        }
+        else {
+            this.driveSubsystem.setMotors(left, right);
+        }
+        SmartDashboard.putBoolean("isSlow", isSlow);
     }
 
 

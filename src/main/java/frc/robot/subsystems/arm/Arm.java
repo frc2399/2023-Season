@@ -24,8 +24,8 @@ public class Arm extends ProfiledPIDSubsystem {
   private static final double kpPos = 0.8;
 
   // Trapezoidal profile constants and variables
-  private static final double max_vel = 1.0;  // rad/s
-  private static final double max_accel = 1.8;  // rad/s/s
+  private static final double max_vel = 1.5;  // rad/s
+  private static final double max_accel = 2.7;  // rad/s/s
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
   private static double gravityCompensation = 0.075;
 
@@ -58,6 +58,8 @@ public class Arm extends ProfiledPIDSubsystem {
 
   public void setSpeed(double speed) {
     armIO.setSpeed(speed);
+    SmartDashboard.putNumber("arm speed", speed);
+    System.out.println("arm speed" + speed);
   }
 
   public double getTargetAngle() {
