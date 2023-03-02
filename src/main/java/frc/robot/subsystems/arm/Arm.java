@@ -41,11 +41,16 @@ public class Arm extends ProfiledPIDSubsystem {
     armIO.updateForSim();
 
     SmartDashboard.putNumber("arm goal position", getGoal());
-
+    SmartDashboard.putNumber("arm absolute position", getAbsoluteEncoderPosition());
     SmartDashboard.putNumber("arm velocity", getEncoderSpeed()); 
     SmartDashboard.putNumber("arm postion", getEncoderPosition()); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);
   
+  }
+
+  public double getAbsoluteEncoderPosition(){
+    System.out.println("returning the absolute encoder position");
+    return armIO.getAbsoluteEncoderPosition();
   }
   
   public double getEncoderPosition() {

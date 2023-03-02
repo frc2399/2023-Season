@@ -28,6 +28,11 @@ public class SimArm implements ArmIO{
     }
 
     @Override
+    public double getAbsoluteEncoderPosition(){
+        return 1; 
+    }
+
+    @Override
     public double getEncoderPosition() {
         return armEncoderSim.getDistance();
     }
