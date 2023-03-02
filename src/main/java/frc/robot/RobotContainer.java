@@ -219,10 +219,10 @@ public class RobotContainer {
         coneLowNode = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_LOW_ANGLE, ElevatorConstants.CONE_LOW_HEIGHT);
         cubeLowNode = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_LOW_ANGLE, ElevatorConstants.CUBE_LOW_HEIGHT);
 
-        coneIntakeShelf = makeSetPositionArmAndElevatorCommand(-0.1598, 0.7048);
-        cubeIntakeShelf = makeSetPositionArmAndElevatorCommand(0.3084, 0.5079);
+        coneIntakeShelf = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_INTAKE_SHELF_ANGLE, ElevatorConstants.CONE_INTAKE_SHELF_HEIGHT);
+        cubeIntakeShelf = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_SHELF_ANGLE, ElevatorConstants.CUBE_INTAKE_SHELF_HEIGHT);
 
-        turtleMode = makeSetPositionArmAndElevatorCommand(0.71, 0.0);
+        turtleMode = makeSetPositionArmAndElevatorCommand(ArmConstants.INITIAL_OFFSET, ElevatorConstants.MIN_ELEVATOR_HEIGHT);
 
         coneUprightIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT);
         // cubeIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT);
