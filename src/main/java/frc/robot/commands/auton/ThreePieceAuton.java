@@ -46,19 +46,42 @@ public class ThreePieceAuton extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     
-    PathPlannerTrajectory threePiecePath = PathPlanner.loadPath("Three-piece Auton", 
+    PathPlannerTrajectory twoPiecePath = PathPlanner.loadPath("Two-Cone Auton", 
       new PathConstraints(1, 1), true);
-    driveTrain.field.getObject("traj").setTrajectory(threePiecePath);
+    driveTrain.field.getObject("traj").setTrajectory(twoPiecePath);
+
+    PathPlannerTrajectory additionalAutonPiece = PathPlanner.loadPath("additional auton piece", 
+    new PathConstraints(1, 1), true);
+  driveTrain.field.getObject("traj").setTrajectory(additionalAutonPiece);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intake cube", new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2));
-    eventMap.put("outake cube", new IntakeForGivenTime(intake, IntakeConstants.CUBE_OUT_SPEED, 2));
-    eventMap.put("intake cone", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
+    eventMap.put("LeftCommunity", new PrintCommand("Left community"));
+    eventMap.put("Intake", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
         
     Command eventTesting = 
       new SequentialCommandGroup(
         new PPRamseteCommand(
-          threePiecePath,
+          twoPiecePath,
+          () -> driveTrain.getPoseMeters(), // Pose supplier
+          new RamseteController(),
+          new SimpleMotorFeedforward(
+            Constants.DriveConstants.ks,
+            Constants.DriveConstants.kv,
+            Constants.DriveConstants.ka
+          ),
+          Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
+          () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
+          new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
+            // will only use feedforwards.
+          new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
+          (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
+          driveTrain // Requires this drive subsystem
+        ));
+      
+      Command event = 
+      new SequentialCommandGroup(
+        new PPRamseteCommand(
+          additionalAutonPiece,
           () -> driveTrain.getPoseMeters(), // Pose supplier
           new RamseteController(),
           new SimpleMotorFeedforward(
@@ -75,19 +98,27 @@ public class ThreePieceAuton extends SequentialCommandGroup {
           driveTrain // Requires this drive subsystem
         ));
 
-        FollowPathWithEvents threePieceAuton = new FollowPathWithEvents(
+        FollowPathWithEvents twoPieceAuton = new FollowPathWithEvents(
+            event,
+            twoPiecePath.getMarkers(),
+            eventMap
+        );
+
+        FollowPathWithEvents addOnAuton = new FollowPathWithEvents(
             eventTesting,
-            threePiecePath.getMarkers(),
+            additionalAutonPiece.getMarkers(),
             eventMap
         );
 
     addCommands(
       new InstantCommand(() -> {
         // Reset odometry for the first path you run during auto
-          driveTrain.resetOdometry(threePiecePath.getInitialPose());
+          driveTrain.resetOdometry(twoPiecePath.getInitialPose());
             }, driveTrain),
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
-      threePieceAuton,
+      twoPieceAuton,
+      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
+      addOnAuton,
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE)
       );
 
