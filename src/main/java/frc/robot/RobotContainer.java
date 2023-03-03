@@ -303,7 +303,7 @@ public class RobotContainer {
         );
     }
 
-    private Command makeSetPositionArmAndElevatorCommand(double angle, double height) {
+    public static Command makeSetPositionArmAndElevatorCommand(double angle, double height) {
         return new ParallelCommandGroup(
             makeSetPositionCommand(arm, angle),
             makeSetPositionCommand(elevator, height)

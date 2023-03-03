@@ -50,7 +50,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
     driveTrain.field.getObject("traj").setTrajectory(twoPiecePath);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("LeftCommunity", new PrintCommand("Left community"));
+    eventMap.put("lower arm", RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.MIN_ELEVATOR_HEIGHT));
     eventMap.put("Intake", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
         
     Command eventTesting = 
