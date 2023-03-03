@@ -34,7 +34,7 @@ public class DriveTrain extends SubsystemBase {
     private DifferentialDriveOdometry odometry;
 
     
-    public Field2d field = new Field2d();
+    public static Field2d field = new Field2d();
 
     public DriveTrain(DriveIO io) {
         driveIO = io;
@@ -45,8 +45,6 @@ public class DriveTrain extends SubsystemBase {
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
         
         odometry = new DifferentialDriveOdometry(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
-
-        field = new Field2d();
 
         SmartDashboard.putData("Field", field);
 

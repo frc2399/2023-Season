@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Limelight;
+package frc.robot.subsystems.limelight;
 
 import org.photonvision.SimVisionSystem;
 import org.photonvision.SimVisionTarget;
@@ -57,6 +57,7 @@ public class SimLimelight extends SubsystemBase{
     {
         this.driveTrain = driveTrain;
         simVision.addSimVisionTarget(new SimVisionTarget(farTargetPose, targetWidth, targetHeight, 0));
+        DriveTrain.field.getObject("target").setPose(farTargetPose.toPose2d());
     }
     @Override
     public void periodic() {

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.Limelight;
+package frc.robot.subsystems.limelight;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -24,7 +24,7 @@ public class Camera extends SubsystemBase {
 
     if(pipelineResult.hasTargets())
     {
-      System.out.println(pipelineResult.getBestTarget().getYaw());
+      //System.out.println(pipelineResult.getBestTarget().getYaw());
     }
   }
 }
