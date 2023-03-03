@@ -38,10 +38,9 @@ public class Arm extends ProfiledPIDSubsystem {
   public void periodic() {
     // Call periodic method in profile pid subsystem to prevent overriding
     super.periodic();
-    armIO.updateForSim();
+    armIO.periodicUpdate();
 
     SmartDashboard.putNumber("arm goal position", getGoal());
-
     SmartDashboard.putNumber("arm velocity", getEncoderSpeed()); 
     SmartDashboard.putNumber("arm postion", getEncoderPosition()); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);
