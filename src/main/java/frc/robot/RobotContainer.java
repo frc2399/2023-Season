@@ -1,5 +1,6 @@
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -32,10 +33,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.XboxConstants;
+import frc.robot.commands.ChaseTagCommand;
+import frc.robot.commands.drivetrain.ArcadeDriveCmd;
+import frc.robot.commands.drivetrain.CameraAimCmd;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
+import frc.robot.commands.drivetrain.CurvatureDriveCmd;
+import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
+import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
@@ -57,6 +64,9 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
+import frc.robot.subsystems.limelight.Camera;
+import frc.robot.subsystems.limelight.PoseEstimator;
+import frc.robot.subsystems.limelight.SimLimelight;
 
 
 /**
@@ -76,10 +86,14 @@ public class RobotContainer {
     public static DriveTrain driveTrain;
     public static LED led = new LED();
     public static Arm arm;
+    public static SimLimelight limelight;
+    public static Camera camera;
     
     public static Intake intake;
     public static Elevator elevator;
-    
+    public static PoseEstimator poseEstimator;
+    public static PhotonCamera photonCamera;
+     
     public static MechanismLigament2d elevatorMechanism;
     public static MechanismLigament2d armMechanism;
     public static MechanismLigament2d LEDMechanism;
@@ -104,6 +118,8 @@ public class RobotContainer {
     
     private Command changeMode;
 
+    private Command chaseTagCmd;
+
     private Command setTopPieceSetpoint;
     private Command setMidPieceSetpoint;
     private Command setLowPieceSetpoint;
@@ -126,8 +142,15 @@ public class RobotContainer {
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
+
+        photonCamera = new PhotonCamera ("photonvision");
+
+        // Configure the button bindings
         
         setUpSubsystems();
+
+        poseEstimator = new PoseEstimator(photonCamera, driveTrain);
+
         setUpAutonChooser();
         setUpConeCubeCommands();
         configureButtonBindings();
@@ -277,6 +300,8 @@ public class RobotContainer {
         elevator = new Elevator(elevatorIO);
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
+        limelight = new SimLimelight(driveTrain);
+        camera = new Camera(photonCamera);
 
     }
 
