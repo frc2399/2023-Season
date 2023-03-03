@@ -17,11 +17,11 @@ public class SimElevator implements ElevatorIO {
     public static ElevatorSim elevatorSim;
     public double elevatorPower;
     public static CANSparkMax elevatorMotorControllerRight;
-    public final static DCMotor elevatorGearbox = DCMotor.getNEO(1);
+    public final static DCMotor elevatorGearbox = DCMotor.getNEO(2);
     // Simulated elevator constants and gearbox
-    public static final double elevatorGearRatio = 50.0;
-    public static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
-    public static final double elevatorCarriageMass = 4.0; // kg
+    public static final double elevatorGearRatio = 9.0;
+    public static final double elevatorDrumRadius = Units.inchesToMeters(1.0);
+    public static final double elevatorCarriageMass = 5.5; // kg
     // The simulated encoder will return
     public static final double elevatorEncoderDistPerPulse = 2.0 * Math.PI * elevatorDrumRadius / 4096;
 

@@ -20,7 +20,6 @@ public class Arm extends ProfiledPIDSubsystem {
   private double targetAngle = - Math.PI/2; 
   private static final double feedForward = 0.133;
 
-  // TODO: find actual values (took from setArmAngleCmd)
   private static final double kpPos = 0.8;
 
   // Trapezoidal profile constants and variables
@@ -38,10 +37,9 @@ public class Arm extends ProfiledPIDSubsystem {
   public void periodic() {
     // Call periodic method in profile pid subsystem to prevent overriding
     super.periodic();
-    armIO.updateForSim();
+    armIO.periodicUpdate();
 
     SmartDashboard.putNumber("arm goal position", getGoal());
-
     SmartDashboard.putNumber("arm velocity", getEncoderSpeed()); 
     SmartDashboard.putNumber("arm postion", getEncoderPosition()); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);

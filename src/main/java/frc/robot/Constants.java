@@ -87,9 +87,9 @@ public class Constants {
         public static final double MAX_ARM_ANGLE = Math.PI/4;
         public static final double MIN_ARM_ANGLE = -Math.PI/4 * 3;
         //arm Mass in kg
-        public static final double ARM_MASS = 2;
+        public static final double ARM_MASS = 2.72155;
         //arm length in meters
-        public static final double ARM_LENGTH = 0.3;
+        public static final double ARM_LENGTH = 0.72;
 
         public static final int ARM_MOTOR_ID = 8;
 
@@ -132,9 +132,9 @@ public class Constants {
     }
 
     public static final class LEDConstants {
-        public static final int RED_CHANNEL = 0;
-        public static final int GREEN_CHANNEL = 1;
-        public static final int BLUE_CHANNEL = 2;
+        public static final int RED_CHANNEL = 4;
+        public static final int GREEN_CHANNEL = 5;
+        public static final int BLUE_CHANNEL = 6;
         public static final int[] blue2399 = {0, 100, 255};
         public static final int[] pink2399 = {255, 50, 200};
         public static final double WAIT_TIME = 1.0;
