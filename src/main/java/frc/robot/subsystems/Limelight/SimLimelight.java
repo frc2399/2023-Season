@@ -1,5 +1,7 @@
 package frc.robot.subsystems.limelight;
 
+import java.io.IOException;
+
 import org.photonvision.SimVisionSystem;
 import org.photonvision.SimVisionTarget;
 
@@ -11,6 +13,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.drivetrain.DriveTrain;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+
 
 public class SimLimelight extends SubsystemBase{
     // Simulated Vision System.
@@ -24,6 +29,7 @@ public class SimLimelight extends SubsystemBase{
     int camResolutionHeight = 480; // pixels
     double minTargetArea = 10; // square pixels
     private DriveTrain driveTrain;
+    AprilTagFieldLayout fieldLayout;
 
     SimVisionSystem simVision =
             new SimVisionSystem(
@@ -55,9 +61,20 @@ public class SimLimelight extends SubsystemBase{
 
     public SimLimelight(DriveTrain driveTrain)
     {
+        try {
+            fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         this.driveTrain = driveTrain;
         simVision.addSimVisionTarget(new SimVisionTarget(farTargetPose, targetWidth, targetHeight, 0));
-        DriveTrain.field.getObject("target").setPose(farTargetPose.toPose2d());
+        for(int i = 1; i <= 8; i++)
+        {
+            
+            DriveTrain.field.getObject("target" + i).setPose(fieldLayout.getTagPose(i).get().toPose2d());
+
+        }
     }
     @Override
     public void periodic() {
