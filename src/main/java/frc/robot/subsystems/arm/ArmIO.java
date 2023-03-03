@@ -5,6 +5,5 @@ public interface ArmIO {
     public double getEncoderSpeed();
     public void setSpeed(double speed);
     public void setPosition(double position);
-    public void updateForSim();
-    public double getAbsoluteEncoderPosition();
+    public void periodicUpdate();
 }
