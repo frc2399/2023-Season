@@ -193,7 +193,8 @@ public class RobotContainer {
         driveTrain.setDefaultCommand(
             new CurvatureDriveCmd(driveTrain,
                 () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
-                () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value)));        
+                () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value), () -> elevator.getEncoderPosition()));        
+
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));
@@ -337,7 +338,7 @@ public class RobotContainer {
         () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value)));
         SmartDashboard.putData("CurvatureDrive",  new CurvatureDriveCmd(driveTrain,
         () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
-        () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value)));
+        () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value), () -> elevator.getEncoderPosition()));
     }
 
     private enum CommandSelector {
