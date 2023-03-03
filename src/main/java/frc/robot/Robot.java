@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 
     CommandScheduler.getInstance().run();
-    SmartDashboard.putBoolean("cone mode", RobotContainer.coneMode);
+    SmartDashboard.putBoolean("cone/cube mode🐀", RobotContainer.coneMode);
   }
 
   @Override

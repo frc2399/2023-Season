@@ -47,7 +47,7 @@ public class SimArm implements ArmIO{
     }
 
     @Override
-    public void updateForSim(){
+    public void periodicUpdate(){
         // sets input for elevator motor in simulation
         armSim.setInput(armPower * RobotController.getBatteryVoltage());
         // Next, we update it. The standard loop time is 20ms.
@@ -59,5 +59,10 @@ public class SimArm implements ArmIO{
 
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    }
+
+    @Override
+    public double getArmCurrent() {
+        return armSim.getCurrentDrawAmps();
     } 
 }

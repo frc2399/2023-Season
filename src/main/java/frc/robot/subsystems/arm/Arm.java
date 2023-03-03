@@ -20,12 +20,11 @@ public class Arm extends ProfiledPIDSubsystem {
   private double targetAngle = - Math.PI/2; 
   private static final double feedForward = 0.133;
 
-  // TODO: find actual values (took from setArmAngleCmd)
   private static final double kpPos = 0.8;
 
   // Trapezoidal profile constants and variables
-  private static final double max_vel = 1.0;  // rad/s
-  private static final double max_accel = 1.8;  // rad/s/s
+  private static final double max_vel = 1.5;  // rad/s
+  private static final double max_accel = 2.7;  // rad/s/s
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
   private static double gravityCompensation = 0.075;
 
@@ -38,10 +37,9 @@ public class Arm extends ProfiledPIDSubsystem {
   public void periodic() {
     // Call periodic method in profile pid subsystem to prevent overriding
     super.periodic();
-    armIO.updateForSim();
+    armIO.periodicUpdate();
 
     SmartDashboard.putNumber("arm goal position", getGoal());
-
     SmartDashboard.putNumber("arm velocity", getEncoderSpeed()); 
     SmartDashboard.putNumber("arm postion", getEncoderPosition()); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);
@@ -58,6 +56,8 @@ public class Arm extends ProfiledPIDSubsystem {
 
   public void setSpeed(double speed) {
     armIO.setSpeed(speed);
+    SmartDashboard.putNumber("arm speed", speed);
+    System.out.println("arm speed" + speed);
   }
 
   public double getTargetAngle() {
@@ -71,6 +71,10 @@ public class Arm extends ProfiledPIDSubsystem {
 
   public void setSpeedGravityCompensation(double speed) {
     armIO.setSpeed(speed + gravityCompensation * Math.cos(getEncoderPosition()));
+  }
+
+  public double getArmCurrent() {
+    return armIO.getArmCurrent();
   }
 
   @Override
