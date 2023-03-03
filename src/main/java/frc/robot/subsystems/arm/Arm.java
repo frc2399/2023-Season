@@ -49,7 +49,6 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public double getAbsoluteEncoderPosition(){
-    System.out.println("returning the absolute encoder position");
     return armIO.getAbsoluteEncoderPosition();
   }
   

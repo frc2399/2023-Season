@@ -3,8 +3,8 @@ package frc.robot.subsystems.arm;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.wpilibj.AnalogEncoder; 
-
+import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.util.MotorUtil;
@@ -12,10 +12,10 @@ import frc.robot.util.MotorUtil;
 public class RealArm implements ArmIO {
     private static CANSparkMax armMotorController;
     public static RelativeEncoder armEncoder;
-    public static AnalogEncoder armAbsoluteEncoder;
+    public static DutyCycleEncoder armAbsoluteEncoder;
 
     public RealArm() {
-        armAbsoluteEncoder = new AnalogEncoder(0);
+        armAbsoluteEncoder = new DutyCycleEncoder(0);
         armMotorController = MotorUtil.createSparkMAX(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless, Constants.NEO_CURRENT_LIMIT, 
             true, true, 0);
         armEncoder = armMotorController.getEncoder();
@@ -28,8 +28,7 @@ public class RealArm implements ArmIO {
 
     @Override
     public double getAbsoluteEncoderPosition() {
-        System.out.println("creating absolute encoder position in real arm file");
-        return armAbsoluteEncoder.getAbsolutePosition();
+        return -(armAbsoluteEncoder.getAbsolutePosition() - 0.88) * 2 * Math.PI / 3;
     }
 
     @Override
