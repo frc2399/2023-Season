@@ -3,7 +3,6 @@ package frc.robot.subsystems.arm;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -55,4 +54,10 @@ public class RealArm implements ArmIO {
     public void setPosition(double position) {
         armEncoder.setPosition(position);
     }
+
+    @Override
+    public double getArmCurrent() {
+        return armMotorController.getOutputCurrent();
+    }
+    
 }

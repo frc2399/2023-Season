@@ -24,7 +24,6 @@ public class SimArm implements ArmIO{
                 ArmConstants.MIN_ARM_ANGLE,
                 ArmConstants.MAX_ARM_ANGLE,
                 true);
-            //TODO: fix arm length and mass; plot setpoint pos, pos, setpoint vel, vel
     }
 
     @Override
@@ -60,5 +59,10 @@ public class SimArm implements ArmIO{
 
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    }
+
+    @Override
+    public double getArmCurrent() {
+        return armSim.getCurrentDrawAmps();
     } 
 }

@@ -73,6 +73,8 @@ public class Constants {
         // public static final double CONE_TIP_INTAKE_HEIGHT= xx;
         // public static final double CONE_PHALANGE_INTAKE_HEIGHT = xx;
         // public static final double CUBE_INTAKE_HEGHT = xx;
+        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.705;
+        public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
 
         // 27 inches, 41.951946 encoder counts
         public static final double ENCODER_CALIBRATION_METERS = Units.inchesToMeters(27) / 41.951946;
@@ -102,6 +104,8 @@ public class Constants {
         // public static final double CONE_TIP_INTAKE_ANGLE = xx;
         // public static final double CONE_PHALANGE_INTAKE_ANGLE = xx;
         // public static final double CUBE_INTAKE_ANGLE = xx;
+        public static final double CONE_SHELF_INTAKE_ANGLE = -0.160;
+        public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
 
         public static final double RADIANS_PER_REVOLUTION = 0.0837;
         public static final double INITIAL_OFFSET = 0.711;
@@ -140,11 +144,12 @@ public class Constants {
 
     public static final class JoystickConstants {
         // joystick ports
-        public static final int JOYSTICK_PORT = 1;
+        //public static final int JOYSTICK_PORT = 1;
     } 
 
     public static final class XboxConstants {
-        public static final int XBOX_PORT = 0;
+        public static final int XBOX_DRIVER_PORT = 0;
+        public static final int XBOX_OPERATOR_PORT = 1;
 
         public static final int FORWARD_JOYSTICK_INVERT = 1;
         public static final int TURN_JOYSTICK_INVERT = -1;

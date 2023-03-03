@@ -20,7 +20,6 @@ public class Arm extends ProfiledPIDSubsystem {
   private double targetAngle = - Math.PI/2; 
   private static final double feedForward = 0.133;
 
-  // TODO: find actual values (took from setArmAngleCmd)
   private static final double kpPos = 0.8;
 
   // Trapezoidal profile constants and variables
@@ -72,6 +71,10 @@ public class Arm extends ProfiledPIDSubsystem {
 
   public void setSpeedGravityCompensation(double speed) {
     armIO.setSpeed(speed + gravityCompensation * Math.cos(getEncoderPosition()));
+  }
+
+  public double getArmCurrent() {
+    return armIO.getArmCurrent();
   }
 
   @Override
