@@ -27,6 +27,7 @@ public class CameraAimCmd extends CommandBase {
   private double currentAngle;
   private double range = Units.degreesToRadians(5);
   private double kP = .2;
+  double outputSpeed;
   
 
   public CameraAimCmd(DriveTrain subsystem, PhotonCamera camera) {
@@ -47,7 +48,6 @@ public class CameraAimCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double outputSpeed;
     
     currentAngle = m_driveTrain.getGyroAngle().getRadians();
     currentAngle = modAngle(currentAngle);
@@ -65,6 +65,7 @@ public class CameraAimCmd extends CommandBase {
     }
     else{
       outputSpeed = 0;
+      System.out.println("Target not found! Command ending.");
     }
 
     m_driveTrain.setMotors(-outputSpeed, outputSpeed);
@@ -75,13 +76,17 @@ public class CameraAimCmd extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_driveTrain.setMotors(0, 0);
-    System.out.println("TurnToNangle ended");
+    System.out.println("CameraAimCmd ended");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return PIDUtil.checkWithinRange(0, currentAngle, range);
+    if(outputSpeed == 0 || PIDUtil.checkWithinRange(0, currentAngle, range))
+    {
+      return true;
+    }
+    return false;
   }
 
   public double modAngle(double value) {

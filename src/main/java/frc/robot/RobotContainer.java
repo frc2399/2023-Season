@@ -184,6 +184,9 @@ public class RobotContainer {
         new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));
         
         new JoystickButton(xboxOperator, Button.kY.value).onTrue(setTopPieceSetpoint);
+
+        //TODO make this work pls lol
+        //new JoystickButton(xboxOperator, Button.kY.value).onTrue(CameraAimCmd(driveTrain, photonCamera));
         
         new JoystickButton(xboxOperator, Button.kX.value).onTrue(setMidPieceSetpoint);
         new JoystickButton(xboxOperator, Button.kA.value).onTrue(setLowPieceSetpoint);
