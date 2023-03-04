@@ -71,7 +71,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
   public void setSpeedGravityCompensation(double speed) {
     //armIO.setSpeed(speed + gravityCompensation * Math.cos(getEncoderPosition()));
-    armIO.setSpeed(speed + gravityCompensation);
+    armIO.setSpeed(speed);
   }
 
   public double getArmCurrent() {

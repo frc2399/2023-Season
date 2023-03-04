@@ -22,12 +22,14 @@ public class RealArm implements ArmIO {
         
         armEncoder.setPositionConversionFactor(ArmConstants.RADIANS_PER_REVOLUTION);
         armEncoder.setVelocityConversionFactor(ArmConstants.RADIANS_PER_REVOLUTION / 60);
-
+        
         armEncoder.setPosition(ArmConstants.INITIAL_OFFSET);
     }
 
     public double getAbsoluteEncoderPosition() {
-        return -(armAbsoluteEncoder.getAbsolutePosition() - 0.88) * 2 * Math.PI / 3;
+        //return -(armAbsoluteEncoder.getAbsolutePosition() - 0.88) * 2 * Math.PI / 3;
+        return -(armEncoder.getPosition()) * 2 * Math.PI / 3;
+
     }
 
     @Override
