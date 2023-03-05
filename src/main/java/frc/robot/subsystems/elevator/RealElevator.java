@@ -35,12 +35,12 @@ public class RealElevator implements ElevatorIO {
         elevatorEncoderRight.setPosition(0); 
         elevatorEncoderLeft.setPosition(0); 
 
-        elevatorEncoderRight.setPositionConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS);
-        elevatorEncoderLeft.setPositionConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS);
+        elevatorEncoderRight.setPositionConversionFactor(ElevatorConstants.METERS_PER_REVOLUTION);
+        elevatorEncoderLeft.setPositionConversionFactor(ElevatorConstants.METERS_PER_REVOLUTION);
 
         // dividng by 60 to convert meters per miniute to meters per seconds
-        elevatorEncoderRight.setVelocityConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS / 60);
-        elevatorEncoderLeft.setVelocityConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS / 60);
+        elevatorEncoderRight.setVelocityConversionFactor(ElevatorConstants.METERS_PER_REVOLUTION / 60);
+        elevatorEncoderLeft.setVelocityConversionFactor(ElevatorConstants.METERS_PER_REVOLUTION / 60);
 
         elevatorMotorControllerRight.follow(elevatorMotorControllerLeft);
 
