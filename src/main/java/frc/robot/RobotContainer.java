@@ -319,7 +319,7 @@ public class RobotContainer {
         chooser.addOption("leave and engage", new LeaveEngage(driveTrain));
         chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
-        chooser.addOption("leave community", new DriveForwardGivenDistance(-1, 5, driveTrain));
+        chooser.addOption("leave community", new DriveForwardGivenDistance(5, driveTrain));
         chooser.addOption("two cone auton bottom", new TwoPieceAutonBottom(driveTrain, elevator, intake, arm));
     }  
     
