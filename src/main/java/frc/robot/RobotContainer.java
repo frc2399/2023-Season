@@ -3,6 +3,7 @@ package frc.robot;
 import org.photonvision.PhotonCamera;
 import java.util.Map;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -138,14 +139,17 @@ public class RobotContainer {
      final SendableChooser < Command > chooser = new SendableChooser < > ();
      final ComplexWidget autonChooser = Shuffleboard.getTab("Driver")
      .add("Choose Auton", chooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withPosition(4, 4).withSize(9, 1);
-
+    
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
         photonCamera = new PhotonCamera ("photonvision");
 
-        // Configure the button bindings
+        // camera not in simulator to make it not crash
+        if (RobotBase.isReal()) {
+            CameraServer.startAutomaticCapture();
+        }
         
         setUpSubsystems();
 
