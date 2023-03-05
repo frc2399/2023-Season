@@ -52,24 +52,23 @@ public class TwoPieceAuton extends SequentialCommandGroup {
     eventMap.put("Intake", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
         
     Command eventTesting = 
-      new SequentialCommandGroup(
-        new PPRamseteCommand(
-          twoPiecePath,
-          () -> driveTrain.getPoseMeters(), // Pose supplier
-          new RamseteController(),
-          new SimpleMotorFeedforward(
-            Constants.DriveConstants.ks,
-            Constants.DriveConstants.kv,
-            Constants.DriveConstants.ka
-          ),
-          Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
-          () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
-          new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
-            // will only use feedforwards.
-          new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
-          (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
-          driveTrain // Requires this drive subsystem
-        ));
+      new PPRamseteCommand(
+        twoPiecePath,
+        () -> driveTrain.getPoseMeters(), // Pose supplier
+        new RamseteController(),
+        new SimpleMotorFeedforward(
+          Constants.DriveConstants.ks,
+          Constants.DriveConstants.kv,
+          Constants.DriveConstants.ka
+        ),
+        Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
+        () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
+        new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
+          // will only use feedforwards.
+        new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
+        (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
+        driveTrain // Requires this drive subsystem
+      );
 
         FollowPathWithEvents twoPieceAuton = new FollowPathWithEvents(
             eventTesting,
