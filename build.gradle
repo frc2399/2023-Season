@@ -1,6 +1,22 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2023.4.1"
+    id "com.peterabeles.gversion" version "1.10.2"
+}
+
+gversion {
+  srcDir       = "src/main/java/"           // path is relative to the sub-project by default
+                                            // Gradle variables can also be used
+                                            // E.g. "${project.rootDir}/module/src/main/java"
+  classPackage = "frc.robot"
+  className    = "MyVersion"                // optional. If not specified GVersion is used
+  dateFormat   = "yyyy-MM-dd'T'HH:mm:ss'Z'" // optional. This is the default
+  timeZone     = "UTC"                      // optional. UTC is default
+  debug        = false                      // optional. print out extra debug information
+  language     = "java"                     // optional. Can be Java, Kotlin, YAML, or Properties. Case insensitive.
+  explicitType = false                      // optional. Force types to be explicitly printed
+  indent       = "\t"                       // optional. Change how code is indented. 1 tab is default.
+  annotate     = false                      // optional. Java only. Adds @Generated annotation
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -97,3 +113,5 @@ wpi.java.configureTestTasks(test)
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
+
+project.compileJava.dependsOn(createVersionFile)
