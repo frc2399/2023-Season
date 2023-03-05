@@ -83,6 +83,7 @@ public class Constants {
         //27 inches per 41.951946 encoder counts
         public static final double METERS_PER_REVOLUTION = Units.inchesToMeters(27) / 41.951946;
 
+        //can be 1 inch off from goal setpoints and still considered at goal
         public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(1);
 
     }
@@ -129,6 +130,7 @@ public class Constants {
         public static final double RADIANS_PER_REVOLUTION = 0.0837;
         public static final double INITIAL_OFFSET = 0.711;
 
+        //can be 2 degrees off from goal setpoints and still considered at goal
         public static final double ANGLE_TOLERANCE = Units.degreesToRadians(2);
     }
 
