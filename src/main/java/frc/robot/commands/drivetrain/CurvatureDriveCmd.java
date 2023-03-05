@@ -108,11 +108,13 @@ public class CurvatureDriveCmd extends CommandBase {
 
         if (isSlow || elevatorHeight.get() > ElevatorConstants.MAX_ELEVATOR_HEIGHT / 2) {        
             this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
+            SmartDashboard.putBoolean("isSlow", true);
         }
         else {
             this.driveSubsystem.setMotors(left, right);
+            SmartDashboard.putBoolean("isSlow", false);
         }
-        SmartDashboard.putBoolean("isSlow", isSlow);
+        
     }
 
 
