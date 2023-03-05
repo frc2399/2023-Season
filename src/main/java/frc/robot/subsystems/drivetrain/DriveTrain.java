@@ -28,6 +28,9 @@ public class DriveTrain extends SubsystemBase {
     public AHRS ahrs;
     public static PIDController turnController;
 
+    private double lastPitch = 0;
+    private double pitchRate;
+
     public static double outputSpeed;
 
     // simulation
@@ -69,6 +72,9 @@ public class DriveTrain extends SubsystemBase {
         
         );
 
+        pitchRate = (getGyroPitch() - lastPitch) / 0.02;
+        lastPitch = getGyroPitch();
+
         field.setRobotPose(odometry.getPoseMeters());
 
         SmartDashboard.putNumber("gyro angle", getGyroAngle().getDegrees());
@@ -80,6 +86,7 @@ public class DriveTrain extends SubsystemBase {
         SmartDashboard.putNumber("odometry y", getPoseMeters().getY());
         SmartDashboard.putNumber("odometry angle", getPoseMeters().getRotation().getDegrees());
         SmartDashboard.putNumber("pitch", getGyroPitch());
+        SmartDashboard.putNumber("pitch rate", getGyroPitchRate());
 
     }
 
@@ -137,6 +144,10 @@ public class DriveTrain extends SubsystemBase {
 
     public double getGyroPitch() {
         return driveIO.getGyroPitch();
+    }
+    public double getGyroPitchRate()
+    {
+        return pitchRate;
     }
     public Rotation2d getGyroAngle() {
         return driveIO.getGyroAngle(); 

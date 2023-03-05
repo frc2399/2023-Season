@@ -42,6 +42,7 @@ import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
+import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
@@ -131,6 +132,7 @@ public class RobotContainer {
 
     private Command turtleMode;
 
+
     CommandSelector angleHeight = CommandSelector.CONE_TOP;
     
      // A chooser for autonomous commands
@@ -172,6 +174,9 @@ public class RobotContainer {
         //new JoystickButton(xboxDriver,Button.kA.value).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
         // temp
         new JoystickButton(xboxDriver, Button.kA.value).onTrue(resetArmEncoderCommand(arm));
+
+        new JoystickButton(xboxDriver, Button.kX.value).onTrue(new EngageCmd(driveTrain));
+
         
         new JoystickButton(xboxOperator, Button.kA.value).onTrue(makeSetPositionCommand(arm, 0.8));
         new JoystickButton(xboxOperator, Button.kB.value).onTrue(makeSetPositionCommand(arm, -0.3));

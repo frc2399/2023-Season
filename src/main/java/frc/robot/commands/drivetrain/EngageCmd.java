@@ -4,6 +4,8 @@
 
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -14,13 +16,15 @@ public class EngageCmd extends CommandBase {
 
   private DriveTrain drivetrain;
 
+  private Debouncer debouncer = new Debouncer(0.4, DebounceType.kFalling);
+
   private double error;
   private double currentAngle;
   private double drivePower;
 
   /** Command to use Gyro data to resist the tip angle from the beam - to stabalize and balanace */
-  public EngageCmd() {
-    this.drivetrain = RobotContainer.driveTrain;
+  public EngageCmd(DriveTrain drivetrain) {
+    this.drivetrain = drivetrain;
     addRequirements(drivetrain);
   }
 
@@ -46,6 +50,13 @@ public class EngageCmd extends CommandBase {
     // Limit the max power
     if (Math.abs(drivePower) > 0.2) {
       drivePower = Math.copySign(0.2, drivePower);
+    }
+
+    //If it starts tilting, drive in the other direction
+    if (debouncer.calculate(Math.abs(drivetrain.getGyroPitchRate()) > 20))
+    {
+      //TODO: this only works when driving backwards
+      drivePower = -.07;
     }
 
     drivetrain.setMotors(-drivePower, -drivePower);

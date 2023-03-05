@@ -90,7 +90,7 @@ public class TwoPieceAutonEngage extends SequentialCommandGroup {
       twoPieceAuton,
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
       //TODO: Fix, add turning cmd or figure out pathplanner
-      new EngageCmd()
+      new EngageCmd(driveTrain)
       );
 
   }

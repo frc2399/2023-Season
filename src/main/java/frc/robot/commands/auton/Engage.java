@@ -20,7 +20,7 @@ public class Engage extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new DriveForwardGivenDistance(0.3, 2, driveTrain),
-      new EngageCmd()
+      new EngageCmd(driveTrain)
     );
   }
 }
