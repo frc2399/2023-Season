@@ -1,24 +1,25 @@
 package frc.robot.commands.drivetrain;
 
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.drivetrain.DriveTrain;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.util.DriveUtil;
-
-import java.util.function.Supplier;
 
 
 public class CurvatureDriveCmd extends CommandBase {
 
 
     private final DriveTrain driveSubsystem;
-    private final Supplier<Double> speedFunction, turnFunction;
+    private final Supplier<Double> speedFunction, turnFunction, elevatorHeight;
     Debouncer m_debouncer;
     private SlewRateLimiter driveLimiter;
 
@@ -31,10 +32,11 @@ public class CurvatureDriveCmd extends CommandBase {
 
     /* This command does this (fill in)... */
     public CurvatureDriveCmd(DriveTrain driveSubsystem,
-            Supplier<Double> speedFunction, Supplier<Double> turnFunction) {
+            Supplier<Double> speedFunction, Supplier<Double> turnFunction, Supplier<Double> elevatorHeight) {
         this.speedFunction = speedFunction;
         this.turnFunction = turnFunction;
         this.driveSubsystem = driveSubsystem;
+        this.elevatorHeight = elevatorHeight;
         addRequirements(driveSubsystem);
         this.driveLimiter = new SlewRateLimiter(4.0);
         // Creates a Debouncer in "both" mode.
@@ -104,7 +106,7 @@ public class CurvatureDriveCmd extends CommandBase {
         left /= maxValue;
         right /= maxValue;
 
-        if (isSlow) {        
+        if (isSlow || elevatorHeight.get() > ElevatorConstants.MAX_ELEVATOR_HEIGHT / 2) {        
             this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
         }
         else {

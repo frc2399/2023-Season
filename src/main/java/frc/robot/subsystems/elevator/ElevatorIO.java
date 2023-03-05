@@ -7,5 +7,5 @@ public interface ElevatorIO {
     public void setSpeed(double speed);
     public void setPosition(double position);
     public void updateForSim();
-
+    public double getElevatorCurrent();
 }

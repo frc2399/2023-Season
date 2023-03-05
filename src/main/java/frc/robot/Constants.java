@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
@@ -73,6 +76,8 @@ public class Constants {
         // public static final double CONE_TIP_INTAKE_HEIGHT= xx;
         // public static final double CONE_PHALANGE_INTAKE_HEIGHT = xx;
         // public static final double CUBE_INTAKE_HEGHT = xx;
+        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.705;
+        public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
 
         public static final double CUBE_INTAKE_SHELF_HEIGHT = 0.5079;
         public static final double CONE_INTAKE_SHELF_HEIGHT = 0.7048;
@@ -83,6 +88,18 @@ public class Constants {
         public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(1);
 
     }
+
+    //TODO add real coordinates
+    public static final class LimelightConstants {
+        public static final Transform3d APRILTAG_CAMERA_TO_ROBOT =
+            new Transform3d(new Translation3d(Units.inchesToMeters(14), Units.inchesToMeters(34), Units.inchesToMeters(0)), 
+            new Rotation3d(Units.degreesToRadians(-90.0), 0, Units.degreesToRadians(-90.0))); 
+        public static final Transform3d APRILTAG_ROBOT_TO_CAMERA = APRILTAG_CAMERA_TO_ROBOT.inverse();
+        public static final double CAMERA_PITCH_RADIANS = 0;
+        public static final double CAMERA_HEIGHT_METERS = 1;
+        public static final double TARGET_HEIGHT_METERS = 1;
+    }
+
     public static final class ArmConstants {
         //Arm angle in radians
         public static final double MAX_ARM_ANGLE = Math.PI/4;
@@ -105,9 +122,11 @@ public class Constants {
         // public static final double CONE_TIP_INTAKE_ANGLE = xx;
         // public static final double CONE_PHALANGE_INTAKE_ANGLE = xx;
         // public static final double CUBE_INTAKE_ANGLE = xx;
+        public static final double CONE_SHELF_INTAKE_ANGLE = -0.160;
+        public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
 
         public static final double RADIANS_PER_REVOLUTION = 0.0837;
-        public static final double INITIAL_OFFSET = 0.711;
+        public static final double INITIAL_OFFSET = 0.711 + (0.287);
 
         public static final double ANGLE_TOLERANCE = Units.degreesToRadians(2);
         
@@ -133,9 +152,9 @@ public class Constants {
     }
 
     public static final class LEDConstants {
-        public static final int RED_CHANNEL = 0;
-        public static final int GREEN_CHANNEL = 1;
-        public static final int BLUE_CHANNEL = 2;
+        public static final int RED_CHANNEL = 4;
+        public static final int GREEN_CHANNEL = 5;
+        public static final int BLUE_CHANNEL = 6;
         public static final int[] blue2399 = {0, 100, 255};
         public static final int[] pink2399 = {255, 50, 200};
         public static final double WAIT_TIME = 1.0;
@@ -145,11 +164,12 @@ public class Constants {
 
     public static final class JoystickConstants {
         // joystick ports
-        public static final int JOYSTICK_PORT = 1;
+        //public static final int JOYSTICK_PORT = 1;
     } 
 
     public static final class XboxConstants {
-        public static final int XBOX_PORT = 0;
+        public static final int XBOX_DRIVER_PORT = 0;
+        public static final int XBOX_OPERATOR_PORT = 1;
 
         public static final int FORWARD_JOYSTICK_INVERT = 1;
         public static final int TURN_JOYSTICK_INVERT = -1;
