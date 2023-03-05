@@ -79,6 +79,9 @@ public class Constants {
         public static final double CONE_SHELF_INTAKE_HEIGHT = 0.705;
         public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
 
+        public static final double CUBE_INTAKE_SHELF_HEIGHT = 0.5079;
+        public static final double CONE_INTAKE_SHELF_HEIGHT = 0.7048;
+
         // 27 inches, 41.951946 encoder counts
         public static final double ENCODER_CALIBRATION_METERS = Units.inchesToMeters(27) / 41.951946;
 
@@ -126,7 +129,9 @@ public class Constants {
         public static final double INITIAL_OFFSET = 0.711 + (0.287);
 
         public static final double ANGLE_TOLERANCE = Units.degreesToRadians(2);
-        // Arm PID constants
+        
+        public static final double CUBE_INTAKE_SHELF_ANGLE = 0.3084;
+        public static final double CONE_INTAKE_SHELF_ANGLE = -0.1598;
         
 
     }

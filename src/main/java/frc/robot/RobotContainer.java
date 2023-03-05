@@ -251,7 +251,7 @@ public class RobotContainer {
         coneIntakeShelf = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_SHELF_INTAKE_ANGLE, ElevatorConstants.CONE_SHELF_INTAKE_HEIGHT);
         cubeIntakeShelf = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_SHELF_INTAKE_ANGLE, ElevatorConstants.CUBE_SHELF_INTAKE_HEIGHT);
 
-        turtleMode = makeSetPositionArmAndElevatorCommand(0.71, 0.0);
+        turtleMode = makeSetPositionArmAndElevatorCommand(ArmConstants.INITIAL_OFFSET, ElevatorConstants.MIN_ELEVATOR_HEIGHT);
 
         coneUprightIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT);
         // cubeIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT);
@@ -350,7 +350,7 @@ public class RobotContainer {
         );
     }
 
-    private Command makeSetPositionArmAndElevatorCommand(double angle, double height) {
+    public static Command makeSetPositionArmAndElevatorCommand(double angle, double height) {
         return new ParallelCommandGroup(
             makeSetPositionCommand(arm, angle),
             makeSetPositionCommand(elevator, height)
