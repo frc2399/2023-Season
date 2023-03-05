@@ -18,10 +18,11 @@ public class PlaceConeOnNode extends SequentialCommandGroup {
 
         addCommands(
             RobotContainer.makeSetPositionCommand(elevator, height),
+            new WaitUntilCommand(() -> elevator.atGoal()),
+            new PrintCommand("elevator at goal"),
             RobotContainer.makeSetPositionCommand(arm, armAngle),
             new WaitUntilCommand(() -> arm.atGoal()),
-            new WaitUntilCommand(() -> elevator.atGoal()),
-            new PrintCommand("arm angle: " + arm.getGoal()),
+            new PrintCommand("arm at goal"),
             new IntakeForGivenTime(intake, IntakeConstants.CONE_OUT_SPEED, 1),
             RobotContainer.makeSetPositionCommand(arm, ArmConstants.MAX_ARM_ANGLE),
             RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.MIN_ELEVATOR_HEIGHT),

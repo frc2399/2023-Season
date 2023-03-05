@@ -22,7 +22,7 @@ public class Elevator extends ProfiledPIDSubsystem {
   // private static final double max_vel = 0.2;  // m/s
   // private static final double max_accel = 0.4;  // m/s/s
 
-  private static final double max_vel = 0.2 / 2;  // m/s
+  private static final double max_vel = 0.2 / 3;  // m/s
   private static final double max_accel = 0.4 / 2;  // m/s/s
 
   private static final Constraints constraints = new Constraints(max_vel, max_accel);

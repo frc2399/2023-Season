@@ -128,7 +128,7 @@ public class Constants {
         public static final double RADIANS_PER_REVOLUTION = 0.0837;
         public static final double INITIAL_OFFSET = 0.711 + (0.287);
 
-        public static final double ANGLE_TOLERANCE = Units.degreesToRadians(2);
+        public static final double ANGLE_TOLERANCE = Units.degreesToRadians(4);
         
         public static final double CUBE_INTAKE_SHELF_ANGLE = 0.3084;
         public static final double CONE_INTAKE_SHELF_ANGLE = -0.1598;
