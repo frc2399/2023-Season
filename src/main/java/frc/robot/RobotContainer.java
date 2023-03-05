@@ -134,7 +134,7 @@ public class RobotContainer {
     CommandSelector angleHeight = CommandSelector.CONE_TOP;
     
      // A chooser for autonomous commands
-     final SendableChooser < Command > chooser = new SendableChooser < > ();
+     final SendableChooser<Command> chooser = new SendableChooser<>();
      final ComplexWidget autonChooser = Shuffleboard.getTab("Driver")
      .add("Choose Auton", chooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withPosition(4, 4).withSize(9, 1);
 
@@ -178,7 +178,7 @@ public class RobotContainer {
 
         // elevator up, elevator down, reset encoder position to 0, top preset, mid preset, low preset
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.4)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
         //new JoystickButton(xboxDriver,Button.kB.value).whileTrue(new InstantCommand(() -> elevator.setPosition(0)));
         // temp
         new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));

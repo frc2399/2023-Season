@@ -98,4 +98,14 @@ public class Robot extends TimedRobot {
     //Elevator.motorController.set(0.0);
     // robotContainer.elevator.setSpeed(0);
   }
+
+  @Override
+  public void disabledInit()
+  {
+    //Disables arm and elevator PID loops so it won't remember/try to get to the last setpoint
+    //Otherwise, if the arm fell after disabling, it would go up really quickly on enabling
+    //Also disables gravity compensation b/c no command with gravity compensation running after disable
+    RobotContainer.arm.disable();
+    RobotContainer.elevator.disable();
+  }
 }
