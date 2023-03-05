@@ -10,8 +10,8 @@ gversion {
                                             // E.g. "${project.rootDir}/module/src/main/java"
   classPackage = "frc.robot"
   className    = "MyVersion"                // optional. If not specified GVersion is used
-  dateFormat   = "yyyy-MM-dd'T'HH:mm:ss'Z'" // optional. This is the default
-  timeZone     = "UTC"                      // optional. UTC is default
+  dateFormat   = "yyyy-MM-dd' 'HH:mm" // optional. This is the default
+  timeZone     = "EST"                      // optional. EST
   debug        = false                      // optional. print out extra debug information
   language     = "java"                     // optional. Can be Java, Kotlin, YAML, or Properties. Case insensitive.
   explicitType = false                      // optional. Force types to be explicitly printed
