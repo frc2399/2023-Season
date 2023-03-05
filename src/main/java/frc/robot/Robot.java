@@ -61,6 +61,8 @@ public class Robot extends TimedRobot {
           //TODO what is this?
       }
     );
+    SmartDashboard.putString("branch and date", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE);
+  
   }
 
   @Override

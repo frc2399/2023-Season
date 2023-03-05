@@ -162,3 +162,6 @@ bin/
 *-window.json
 simgui-ds.json
 simgui.json
+
+# git version updating file
+MyVersion.java
