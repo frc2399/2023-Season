@@ -30,8 +30,11 @@ public class OnePieceEngage extends SequentialCommandGroup {
             // new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             // leaves community then drives back on charging station
-            new DriveForwardGivenDistance(0.3, 4, driveTrain),
-            new DriveForwardGivenDistance(-0.3, 2, driveTrain),
+            // new DriveForwardGivenDistance(0.3, 4, driveTrain),
+            new DriveForwardGivenDistance(0.3, 2, driveTrain),
+            // new DriveForwardGivenDistance(-0.3, 2, driveTrain),
+
+            // balances robot when it's on charging station
             new EngageCmd()
           );
     }

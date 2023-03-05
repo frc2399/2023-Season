@@ -54,8 +54,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
     eventMap.put("Intake", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
         
     Command eventTesting = 
-      new SequentialCommandGroup(
-        new PPRamseteCommand(
+      new PPRamseteCommand(
           twoPiecePath,
           () -> driveTrain.getPoseMeters(), // Pose supplier
           new RamseteController(),
@@ -71,7 +70,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
           new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
           (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
           driveTrain // Requires this drive subsystem
-        ));
+      );
 
         FollowPathWithEvents twoPieceAuton = new FollowPathWithEvents(
             eventTesting,
@@ -84,7 +83,9 @@ public class TwoPieceAuton extends SequentialCommandGroup {
         // Reset odometry for the first path you run during auto
           driveTrain.resetOdometry(twoPiecePath.getInitialPose());
             }, driveTrain),
+        // scores cone to top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
+      // runs pathplanner two piece auton 
       twoPieceAuton,
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE)
       );
