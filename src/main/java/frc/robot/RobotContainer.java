@@ -132,7 +132,7 @@ public class RobotContainer {
 
     private Command turtleMode;
 
-    CommandSelector angleHeight = CommandSelector.CONE_TOP;
+    private CommandSelector angleHeight;
     
      // A chooser for autonomous commands
      final SendableChooser < Command > chooser = new SendableChooser < > ();
