@@ -51,12 +51,21 @@ public class Elevator extends ProfiledPIDSubsystem {
     return elevatorIO.getEncoderSpeed();
   }
 
+  //use this method instead of elevatorIO.setSpeed because need to go through limit switches
   public void setSpeed(double speed) {
+    if (elevatorIO.isAtUpperLimit()) {
+      //+0.005 so the elevator doesnt fall down
+      speed = Math.min(speed, gravityCompensation + 0.005);
+    }
+    if (elevatorIO.isAtLowerLimit()) {
+      speed = Math.max(speed, 0);
+    }
     elevatorIO.setSpeed(speed);
   }
 
   public void setSpeedGravityCompensation(double speed) {
-    elevatorIO.setSpeed(speed + gravityCompensation);
+    //use setSpeed instead of elevatorIO.setSpeed because need to go through limit switches
+    setSpeed(speed + gravityCompensation);
   }
 
   public double getElevatorCurrent() {
@@ -74,7 +83,8 @@ public class Elevator extends ProfiledPIDSubsystem {
     speed += gravityCompensation; 
     // Add PID output to speed to account for error in elevator
     speed += output;
-    elevatorIO.setSpeed(speed);
+    //use setSpeed instead of elevatorIO.setSpeed because need to go through limit switches
+    setSpeed(speed);
   }
 
   @Override
