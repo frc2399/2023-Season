@@ -123,7 +123,7 @@ public class Constants {
         public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
 
         public static final double RADIANS_PER_REVOLUTION = 0.0837;
-        public static final double INITIAL_OFFSET = 0.711;
+        public static final double INITIAL_OFFSET = 0.711 + (0.287);
 
         public static final double ANGLE_TOLERANCE = Units.degreesToRadians(2);
         // Arm PID constants

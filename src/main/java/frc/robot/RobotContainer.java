@@ -99,7 +99,6 @@ public class RobotContainer {
     public static MechanismLigament2d LEDMechanism;
 
     // Joysticks
-    //public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
     public static final Joystick xboxDriver = new Joystick(XboxConstants.XBOX_DRIVER_PORT);
     public static final Joystick xboxOperator = new Joystick(XboxConstants.XBOX_OPERATOR_PORT);
 
@@ -166,45 +165,43 @@ public class RobotContainer {
         new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {CurvatureDriveCmd.isSlow = !CurvatureDriveCmd.isSlow;}));
         
         // arm up, arm down, reset encoder position to 0
-        //new JoystickButton(joystick,2).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
-        //new JoystickButton(joystick,1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        // new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        // new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.05)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.05)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
         //new JoystickButton(xboxDriver,Button.kA.value).whileTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
         // temp
         new JoystickButton(xboxDriver, Button.kA.value).onTrue(resetArmEncoderCommand(arm));
         
+        new JoystickButton(xboxOperator, Button.kA.value).onTrue(makeSetPositionCommand(arm, 0.8));
+        new JoystickButton(xboxOperator, Button.kB.value).onTrue(makeSetPositionCommand(arm, -0.3));
+
         // elevator up, elevator down, reset encoder position to 0, top preset, mid preset, low preset
-        //new JoystickButton(joystick,4).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
-        //new JoystickButton(joystick,3).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.4)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.4)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
         //new JoystickButton(xboxDriver,Button.kB.value).whileTrue(new InstantCommand(() -> elevator.setPosition(0)));
         // temp
         new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));
         
-        new JoystickButton(xboxOperator, Button.kY.value).onTrue(setTopPieceSetpoint);
+        // new JoystickButton(xboxOperator, Button.kY.value).onTrue(setTopPieceSetpoint);
 
         //TODO make this work pls lol
         //new JoystickButton(xboxOperator, Button.kY.value).onTrue(CameraAimCmd(driveTrain, photonCamera));
         
-        new JoystickButton(xboxOperator, Button.kX.value).onTrue(setMidPieceSetpoint);
-        new JoystickButton(xboxOperator, Button.kA.value).onTrue(setLowPieceSetpoint);
+        // new JoystickButton(xboxOperator, Button.kX.value).onTrue(setMidPieceSetpoint);
+        // new JoystickButton(xboxOperator, Button.kA.value).onTrue(setLowPieceSetpoint);
         
         //intake positions
         //new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakeUprightPosition);
-        new JoystickButton(xboxOperator, Button.kB.value).onTrue(intakePieceShelf);
+        // new JoystickButton(xboxOperator, Button.kB.value).onTrue(intakePieceShelf);
 
         //intake commands
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakePiece);
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outakePiece);
         
-        new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(selectScoringPositionCommand);
+        // new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(selectScoringPositionCommand);
 
-        new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
-
-        // TODO make proper kill command :O
-        //new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
+        // new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
 
         //Kill command - sets speeds of subsystems to 0
         new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
@@ -341,14 +338,14 @@ public class RobotContainer {
 
     private Command resetArmEncoderCommand(Arm a) {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> a.setSpeed(0.15)).until(() -> a.getArmCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
+            //new InstantCommand(() -> a.setSpeed(0.15)).until(() -> a.getArmCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
             new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET))
         );
     }
     
     private Command resetElevatorEncoderCommand(Elevator e) {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> e.setSpeed(0.15)).until(() -> e.getElevatorCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
+            //new InstantCommand(() -> e.setSpeed(0.15)).until(() -> e.getElevatorCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
             new InstantCommand(() -> e.setPosition(0))
         );
     }

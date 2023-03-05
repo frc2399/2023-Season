@@ -37,7 +37,8 @@ public class RealArm implements ArmIO {
 
     @Override
     public double getEncoderPosition() {
-        return getAbsoluteEncoderPosition();
+       //return getAbsoluteEncoderPosition();
+        return armEncoder.getPosition();
     }
 
     @Override
