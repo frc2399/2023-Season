@@ -115,11 +115,16 @@ public class ThreePieceAuton extends SequentialCommandGroup {
         // Reset odometry for the first path you run during auto
           driveTrain.resetOdometry(twoPiecePath.getInitialPose());
             }, driveTrain),
+      // scores pre-loaded cone
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
+      // runs two piece auton path 
       twoPieceAuton,
+      // scores second cone
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
+      // runs additional path that intakes another cone
       addOnAuton,
-      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE)
+      // scores final cone on mid rung
+      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_MID_HEIGHT, ArmConstants.CONE_MID_ANGLE)
       );
 
   }

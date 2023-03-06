@@ -83,8 +83,11 @@ public class TwoPieceAutonBottom extends SequentialCommandGroup {
         // Reset odometry for the first path you run during auto
           driveTrain.resetOdometry(twoPiecePathBottom.getInitialPose());
             }, driveTrain),
+      // scores pre-loaded cone on top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
+      // runs two piece auton path that picks up second cone
       twoPieceAuton,
+      // scores second cone on top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE)
       );
 

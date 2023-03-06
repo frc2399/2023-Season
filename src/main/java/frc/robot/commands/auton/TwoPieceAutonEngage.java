@@ -86,8 +86,11 @@ public class TwoPieceAutonEngage extends SequentialCommandGroup {
         // Reset odometry for the first path you run during auto
           driveTrain.resetOdometry(twoPiecePath.getInitialPose());
             }, driveTrain),
+      // scores pre-loaded cone on top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
+      // runs two piece auton path that picks up second cone
       twoPieceAuton,
+      // scores second cone on top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
       //TODO: Fix, add turning cmd or figure out pathplanner
       new EngageCmd(driveTrain)
