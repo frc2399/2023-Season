@@ -21,10 +21,9 @@ public class DriveForwardGivenDistance extends CommandBase {
     DriveTrain m_driveTrain;
     
  
-	public DriveForwardGivenDistance(double speed, double targetDistanceMeters, DriveTrain subsystem) {
+	public DriveForwardGivenDistance(double targetDistanceMeters, DriveTrain subsystem) {
         
         //initialize variables
-        this.speed = speed;
         this.targetDistanceMeters = targetDistanceMeters;
         m_driveTrain = subsystem;
         addRequirements(m_driveTrain);

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -48,7 +49,7 @@ public class TwoPieceAutonBottom extends SequentialCommandGroup {
     driveTrain.field.getObject("traj").setTrajectory(twoPiecePathBottom);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("left community", new PrintCommand("Left community"));
+    eventMap.put("lower arm", RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.MIN_ELEVATOR_HEIGHT));
     eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
         
     Command eventTesting = 

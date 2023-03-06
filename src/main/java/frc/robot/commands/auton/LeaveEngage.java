@@ -10,8 +10,8 @@ public class LeaveEngage extends SequentialCommandGroup {
     public LeaveEngage(DriveTrain driveTrain) {
 
         addCommands(
-            new DriveForwardGivenDistance(0.3, 4, driveTrain),
-            new DriveForwardGivenDistance(-0.3, 2, driveTrain),
+            new DriveForwardGivenDistance(-4, driveTrain),
+            new DriveForwardGivenDistance(2, driveTrain),
             new EngageCmd(driveTrain)
           );
 
