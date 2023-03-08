@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().run();
     SmartDashboard.putBoolean("cone/cube mode🐀", RobotContainer.coneMode);
+    SmartDashboard.putString("node height", RobotContainer.angleHeight.toString());
   }
 
   @Override
