@@ -32,7 +32,7 @@ public class CollectPieceCmd extends CommandBase {
   @Override
   public void execute() {
     //speed = filter.calculate(targetSpeed);
-    intake.setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
+    intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED);
   }
 
   // Called once the command ends or is interrupted.

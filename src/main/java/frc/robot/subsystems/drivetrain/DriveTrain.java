@@ -28,18 +28,13 @@ public class DriveTrain extends SubsystemBase {
     public AHRS ahrs;
     public static PIDController turnController;
 
-    public static final double kP = 0;
-    static final double kI = 0;
-    static final double kD = 0;
-    static final double kF = 0;
-
     public static double outputSpeed;
 
     // simulation
     private DifferentialDriveOdometry odometry;
 
     
-    public Field2d field = new Field2d();
+    public static Field2d field = new Field2d();
 
     public DriveTrain(DriveIO io) {
         driveIO = io;
@@ -50,8 +45,6 @@ public class DriveTrain extends SubsystemBase {
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
         
         odometry = new DifferentialDriveOdometry(getGyroAngle(), getLeftEncoderMeters(), getRightEncoderMeters(), new Pose2d(9, 6.5, new Rotation2d(3.14/2)));
-
-        field = new Field2d();
 
         SmartDashboard.putData("Field", field);
 

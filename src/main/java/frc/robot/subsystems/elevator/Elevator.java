@@ -7,20 +7,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.util.PIDUtil;
 
 public class Elevator extends ProfiledPIDSubsystem {
 
   private ElevatorIO elevatorIO;
 
   // tuned values:
-  private static final double feedForward = 1.666666666666667;
-  private static final double kpPos = 6;
+  private static final double feedForward = 0.8;
+  private static final double kpPos = 1;
 
   // Trapezoidal profile constants and variables
-  private static final double max_vel = 1.0;  // m/s
-  private static final double max_accel = 1.0;  // m/s/s
+  private static final double max_vel = 0.2;  // m/s
+  private static final double max_accel = 0.4;  // m/s/s
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
-  private static double gravityCompensation = 0.075;
+  private static double gravityCompensation = 0.025;
 
   public Elevator(ElevatorIO io) {
     super(new ProfiledPIDController(kpPos, 0, 0, constraints));
@@ -33,6 +35,7 @@ public class Elevator extends ProfiledPIDSubsystem {
     elevatorIO.updateForSim();
     double currentPos = getEncoderPosition();
     double currentVel = getEncoderSpeed();
+    SmartDashboard.putNumber("elevator goal position", getGoal());
     SmartDashboard.putNumber("elevator position", currentPos); 
     SmartDashboard.putNumber("elevator velocity", currentVel); 
     RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
@@ -48,8 +51,25 @@ public class Elevator extends ProfiledPIDSubsystem {
     return elevatorIO.getEncoderSpeed();
   }
 
+  //use this method instead of elevatorIO.setSpeed because need to go through limit switches
   public void setSpeed(double speed) {
+    if (elevatorIO.isAtUpperLimit()) {
+      //+0.005 so the elevator doesnt fall down
+      speed = Math.min(speed, gravityCompensation + 0.005);
+    }
+    if (elevatorIO.isAtLowerLimit()) {
+      speed = Math.max(speed, 0);
+    }
     elevatorIO.setSpeed(speed);
+  }
+
+  public void setSpeedGravityCompensation(double speed) {
+    //use setSpeed instead of elevatorIO.setSpeed because need to go through limit switches
+    setSpeed(speed + gravityCompensation);
+  }
+
+  public double getElevatorCurrent() {
+    return elevatorIO.getElevatorCurrent();
   }
 
   @Override
@@ -63,13 +83,26 @@ public class Elevator extends ProfiledPIDSubsystem {
     speed += gravityCompensation; 
     // Add PID output to speed to account for error in elevator
     speed += output;
-    elevatorIO.setSpeed(speed);
-    
+    //use setSpeed instead of elevatorIO.setSpeed because need to go through limit switches
+    setSpeed(speed);
   }
 
   @Override
   protected double getMeasurement() {
     return elevatorIO.getEncoderPosition();
   }
+
+  public double getGoal() {
+    return m_controller.getGoal().position;
+  }
+
+    // Checks to see if elevators are within range of the setpoints
+    public boolean atGoal() {
+      return (PIDUtil.checkWithinRange(getGoal(), getMeasurement(), ElevatorConstants.HEIGHT_TOLERANCE));
+    }
   
+    public void setPosition(double position) {
+      elevatorIO.setPosition(position);
+    }
+
 }

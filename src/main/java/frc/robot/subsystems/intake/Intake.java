@@ -4,8 +4,8 @@
 
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 
@@ -21,36 +21,8 @@ public class Intake extends SubsystemBase {
   public void setMotor(double intakeSpeed) {
   
     intakeIO.setMotor(intakeSpeed);
+    SmartDashboard.putNumber("intake speed", intakeSpeed);
 }
-
-  //Intake methods (different combos of spinny spin and pneumatics)
-  public void intakeBothArms() {
-
-    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
-
-  }
-
-  public void intakeRight() {
-
-    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
-
-  }
-
-  public void intakeLeft() {
-
-    setMotor(Constants.IntakeConstants.INTAKE_IN_SPEED);
-
-  }
-
-  public void outtake() {
-
-    setMotor(Constants.IntakeConstants.INTAKE_OUT_SPEED);
-    
-  }
-
-  public void drop() {
-
-  }
 
   @Override
   public void periodic() {
