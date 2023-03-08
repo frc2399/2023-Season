@@ -20,10 +20,11 @@ public class RealElevator implements ElevatorIO {
 
     public RealElevator()
     {
+        //Higher slew rate of .75 seconds from 0 to 100% (sparkmax thinks we use this) translates to .2 seconds from 0 to 20% (what we actually use)
         elevatorMotorControllerRight = MotorUtil.createSparkMAX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
-            Constants.NEO_CURRENT_LIMIT, true, true, 0.1);
+            Constants.NEO_CURRENT_LIMIT, true, true, 0.75);
         elevatorMotorControllerLeft = MotorUtil.createSparkMAX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
-            Constants.NEO_CURRENT_LIMIT, false, true, 0.1);
+            Constants.NEO_CURRENT_LIMIT, false, true, 0.75);
         
         topLimitSwitch = elevatorMotorControllerLeft.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
         bottomLimitSwitch = elevatorMotorControllerLeft.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);

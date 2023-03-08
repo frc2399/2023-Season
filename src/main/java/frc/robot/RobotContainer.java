@@ -43,6 +43,7 @@ import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
+import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
@@ -100,7 +101,6 @@ public class RobotContainer {
     public static MechanismLigament2d LEDMechanism;
 
     // Joysticks
-    //public static final Joystick joystick = new Joystick(JoystickConstants.JOYSTICK_PORT);
     public static final Joystick xboxDriver = new Joystick(XboxConstants.XBOX_DRIVER_PORT);
     public static final Joystick xboxOperator = new Joystick(XboxConstants.XBOX_OPERATOR_PORT);
 
@@ -136,7 +136,7 @@ public class RobotContainer {
     public static CommandSelector angleHeight = CommandSelector.CONE_TOP;
     
      // A chooser for autonomous commands
-     final SendableChooser < Command > chooser = new SendableChooser < > ();
+     final SendableChooser<Command> chooser = new SendableChooser<>();
      final ComplexWidget autonChooser = Shuffleboard.getTab("Driver")
      .add("Choose Auton", chooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withPosition(4, 4).withSize(9, 1);
     
@@ -202,11 +202,7 @@ public class RobotContainer {
         // Operator Button B (2) - sends the arm and elevator to the positions for intaking pieces from the shelf
         //new JoystickButton(xboxOperator, Button.kB.value).onTrue(intakePieceShelf);
 
-        // Driver Left Trigger Axis (2) - outtakes piece
-        new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outtakePiece);
-
-        // Driver Right Trigger Axis (3) - intakes piece
-        new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakePiece);
+        //Kill command - sets speeds of subsystems to 0
 
         // Driver Right Bumper (6) - robot goes into turtle mode (arm all the  way up, elevator all the way down)
         new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
@@ -216,7 +212,6 @@ public class RobotContainer {
             makeSetSpeedGravityCompensationCommand(elevator, 0);
             makeSetSpeedGravityCompensationCommand(arm, 0);
             intake.setMotor(0);
-            driveTrain.setMotors(0, 0);
         }, elevator, arm, intake, driveTrain));
 
         //Unused Buttons
@@ -347,7 +342,7 @@ public class RobotContainer {
     //TODO make this work :( - it should automatically send the arm to the top position then reset the encoder to the correct initial offset
     private Command resetArmEncoderCommand(Arm a) {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> a.setSpeed(0.15)).until(() -> a.getArmCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
+            //new InstantCommand(() -> a.setSpeed(0.15)).until(() -> a.getArmCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
             new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET))
         );
     }
@@ -355,12 +350,12 @@ public class RobotContainer {
     //TODO make this work :( - it should automatically send the elevator to the bottom position then reset the encoder to the correct initial offset
     private Command resetElevatorEncoderCommand(Elevator e) {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> e.setSpeed(0.15)).until(() -> e.getElevatorCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
+            //new InstantCommand(() -> e.setSpeed(0.15)).until(() -> e.getElevatorCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
             new InstantCommand(() -> e.setPosition(0))
         );
     }
 
-    private Command makeSetPositionArmAndElevatorCommand(double angle, double height) {
+    public static Command makeSetPositionArmAndElevatorCommand(double angle, double height) {
         return new ParallelCommandGroup(
             makeSetPositionCommand(arm, angle),
             makeSetPositionCommand(elevator, height)

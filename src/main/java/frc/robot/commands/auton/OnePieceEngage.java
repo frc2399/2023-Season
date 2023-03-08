@@ -1,5 +1,6 @@
 package frc.robot.commands.auton;
 
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
@@ -23,7 +24,7 @@ public class OnePieceEngage extends SequentialCommandGroup {
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new DriveForwardGivenDistance(4, driveTrain),
             new DriveForwardGivenDistance(2, driveTrain),
-            new EngageCmd()
+            new EngageCmd(driveTrain)
           );
     }
 

@@ -12,7 +12,7 @@ public class LeaveEngage extends SequentialCommandGroup {
         addCommands(
             new DriveForwardGivenDistance(4, driveTrain),
             new DriveForwardGivenDistance(2, driveTrain),
-            new EngageCmd()
+            new EngageCmd(driveTrain)
           );
 
     }
