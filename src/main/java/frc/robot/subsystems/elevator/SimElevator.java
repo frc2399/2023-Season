@@ -76,12 +76,19 @@ public class SimElevator implements ElevatorIO {
     @Override
     public void setPosition(double position) {
         elevatorSimEncoder.setDistance(position);
-        
     }
 
     @Override
     public double getElevatorCurrent() {
         return elevatorSim.getCurrentDrawAmps();
+    }
+    @Override
+    public boolean isAtUpperLimit() {
+        return elevatorSim.hasHitUpperLimit();
+    }
+    @Override
+    public boolean isAtLowerLimit() {
+        return elevatorSim.hasHitLowerLimit();
     } 
 }
 

@@ -36,17 +36,18 @@ public class RealElevator implements ElevatorIO {
         elevatorEncoderRight.setPosition(0); 
         elevatorEncoderLeft.setPosition(0); 
 
-        elevatorEncoderRight.setPositionConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS);
-        elevatorEncoderLeft.setPositionConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS);
+        elevatorEncoderRight.setPositionConversionFactor(ElevatorConstants.METERS_PER_REVOLUTION);
+        elevatorEncoderLeft.setPositionConversionFactor(ElevatorConstants.METERS_PER_REVOLUTION);
 
         // dividng by 60 to convert meters per miniute to meters per seconds
-        elevatorEncoderRight.setVelocityConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS / 60);
-        elevatorEncoderLeft.setVelocityConversionFactor(ElevatorConstants.ENCODER_CALIBRATION_METERS / 60);
+        elevatorEncoderRight.setVelocityConversionFactor(ElevatorConstants.METERS_PER_REVOLUTION / 60);
+        elevatorEncoderLeft.setVelocityConversionFactor(ElevatorConstants.METERS_PER_REVOLUTION / 60);
 
         elevatorMotorControllerRight.follow(elevatorMotorControllerLeft);
 
-         topLimitSwitch.enableLimitSwitch(true);
-         //bottomLimitSwitch.enableLimitSwitch(true);
+        //set to false b/c manually do limit switch things so elevator doesn't go crazy, check Elevator.java
+        topLimitSwitch.enableLimitSwitch(false);
+        bottomLimitSwitch.enableLimitSwitch(true);
     }
 
     @Override
@@ -57,6 +58,7 @@ public class RealElevator implements ElevatorIO {
     public double getEncoderSpeed() {
         return elevatorEncoderLeft.getVelocity();
     }
+    
     @Override
     public void setSpeed(double speed) {
         elevatorMotorControllerLeft.set(speed);
@@ -71,12 +73,21 @@ public class RealElevator implements ElevatorIO {
     @Override
     public void setPosition(double position) {
         elevatorEncoderLeft.setPosition(position);
-        
     }
 
     @Override
     public double getElevatorCurrent() {
         return elevatorMotorControllerLeft.getOutputCurrent();
+    }
+
+    @Override
+    public boolean isAtUpperLimit() {
+        return topLimitSwitch.isPressed();
+    }
+
+    @Override
+    public boolean isAtLowerLimit() {
+        return bottomLimitSwitch.isPressed();
     }
 
 }

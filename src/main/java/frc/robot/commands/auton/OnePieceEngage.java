@@ -22,17 +22,8 @@ public class OnePieceEngage extends SequentialCommandGroup {
             // new PrintCommand("arm angle: " + arm.getGoal()),
             // new IntakeForGivenTime(intake, IntakeConstants.INTAKE_OUT_SPEED, 1),
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
-            new PrintCommand("place cone on node finished"),
-            // leaves community then drives back on charging station
-            // new DriveForwardGivenDistance(0.3, 4, driveTrain),
-            
-            // distance not speed needs to be negative
-            new DriveForwardGivenDistance(0.3, -2, driveTrain),
-            new PrintCommand("drive forward given distance finished "),
-
-            // new DriveForwardGivenDistance(-0.3, -2, driveTrain),
-
-            // balances robot when it's on charging station
+            new DriveForwardGivenDistance(4, driveTrain),
+            new DriveForwardGivenDistance(2, driveTrain),
             new EngageCmd(driveTrain)
           );
     }

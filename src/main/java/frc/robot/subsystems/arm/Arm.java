@@ -29,8 +29,7 @@ public class Arm extends ProfiledPIDSubsystem {
   // private static final double max_accel = 2.7;  // rad/s/s
   private static final double max_accel = 0.7;  // rad/s/s
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
-  //private static double gravityCompensation = 0.075;
-  private static double gravityCompensation = 0.005;
+  private static double gravityCompensation = 0.04;
 
   public Arm(ArmIO io) {
     super(new ProfiledPIDController(kpPos, 0, 0, constraints));

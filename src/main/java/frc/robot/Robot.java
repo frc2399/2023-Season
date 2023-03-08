@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPRamseteCommand;
 
+import deploy.MyVersion;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -61,6 +62,8 @@ public class Robot extends TimedRobot {
           //TODO what is this?
       }
     );
+    SmartDashboard.putString("branch and date", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE);
+  
   }
 
   @Override
@@ -78,6 +81,7 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().run();
     SmartDashboard.putBoolean("cone/cube mode🐀", RobotContainer.coneMode);
+    SmartDashboard.putString("node height", RobotContainer.angleHeight.toString());
   }
 
   @Override
