@@ -133,7 +133,7 @@ public class RobotContainer {
 
     private Command turtleMode;
 
-    CommandSelector angleHeight;
+    public static CommandSelector angleHeight = CommandSelector.CONE_TOP;
     
      // A chooser for autonomous commands
      final SendableChooser < Command > chooser = new SendableChooser < > ();
@@ -367,7 +367,7 @@ public class RobotContainer {
         );
     }
 
-    private enum CommandSelector {
+    public enum CommandSelector {
         CONE_TOP,
         CONE_MID,
         CONE_LOW,
@@ -379,7 +379,11 @@ public class RobotContainer {
     private CommandSelector select() {
         return angleHeight;
     }
-        
+    
+    public static String toString(CommandSelector node) {
+        return "Node: " + node;
+    }
+
     private Command selectScoringPositionCommand() {
         return new SelectCommand(
             Map.ofEntries(
