@@ -170,9 +170,9 @@ public class RobotContainer {
         // Driver Left Stick (9) - change from normal to slow mode
         new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {CurvatureDriveCmd.isSlow = !CurvatureDriveCmd.isSlow;}));
         
-        // Operator Right Y Axis (5) - moves arm up at 0.15 speed, moves arm down at 0.15 speed
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.15)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        // Operator Right Y Axis (5) - moves arm up at 0.1 speed, moves arm down at 0.1 speed
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.1)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.1)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
 
         // Driver Button A (1) - resets arm encoder position to intial offset (at the top)
         new JoystickButton(xboxDriver, Button.kA.value).onTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
@@ -200,7 +200,7 @@ public class RobotContainer {
         //new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakeUprightPosition);
 
         // Operator Button B (2) - sends the arm and elevator to the positions for intaking pieces from the shelf
-        new JoystickButton(xboxOperator, Button.kB.value).onTrue(intakePieceShelf);
+        //new JoystickButton(xboxOperator, Button.kB.value).onTrue(intakePieceShelf);
 
         // Driver Left Trigger Axis (2) - outtakes piece
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outtakePiece);
