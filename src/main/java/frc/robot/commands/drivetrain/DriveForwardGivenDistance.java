@@ -14,7 +14,6 @@ import frc.robot.subsystems.drivetrain.DriveTrain;
 public class DriveForwardGivenDistance extends CommandBase {
 
     //insantiate global variables
-    double speed;
     double currentPosition;
     double targetDistanceMeters;
     double newTargetDistance;
