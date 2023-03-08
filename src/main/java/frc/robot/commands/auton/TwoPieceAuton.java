@@ -84,8 +84,9 @@ public class TwoPieceAuton extends SequentialCommandGroup {
             }, driveTrain),
         // scores cone to top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
-      // runs pathplanner two piece auton 
+      // runs two piece auton path that picks up second cone
       twoPieceAuton,
+      // scores second cone on top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE)
       );
 

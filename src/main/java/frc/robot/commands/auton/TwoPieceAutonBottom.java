@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -48,7 +49,7 @@ public class TwoPieceAutonBottom extends SequentialCommandGroup {
     driveTrain.field.getObject("traj").setTrajectory(twoPiecePathBottom);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("left community", new PrintCommand("Left community"));
+    eventMap.put("lower arm", RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.MIN_ELEVATOR_HEIGHT));
     eventMap.put("intake", new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2));
         
     Command eventTesting = 
@@ -81,8 +82,11 @@ public class TwoPieceAutonBottom extends SequentialCommandGroup {
         // Reset odometry for the first path you run during auto
           driveTrain.resetOdometry(twoPiecePathBottom.getInitialPose());
             }, driveTrain),
+      // scores pre-loaded cone on top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
+      // runs two piece auton path that picks up second cone
       twoPieceAuton,
+      // scores second cone on top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE)
       );
 
