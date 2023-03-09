@@ -5,7 +5,9 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -16,11 +18,11 @@ public class EngageCmd extends CommandBase {
 
   private DriveTrain drivetrain;
 
-  private Debouncer debouncer = new Debouncer(0.4, DebounceType.kFalling);
-
   private double error;
   private double currentAngle;
   private double drivePower;
+  private double derivative;
+  private LinearFilter derivativeCalculator = LinearFilter.backwardFiniteDifference(1, 5, 0.02);
 
   /** Command to use Gyro data to resist the tip angle from the beam - to stabalize and balanace */
   public EngageCmd(DriveTrain drivetrain) {
@@ -38,6 +40,7 @@ public class EngageCmd extends CommandBase {
     // Uncomment the line below this to simulate the gyroscope axis with a controller joystick
     // Double currentAngle = -1 * Robot.controller.getRawAxis(Constants.LEFT_VERTICAL_JOYSTICK_AXIS) * 45;
     this.currentAngle = drivetrain.getGyroPitch();
+    derivative = derivativeCalculator.calculate(currentAngle);
 
     error = Constants.DriveConstants.BEAM_BALANCED_GOAL_DEGREES - currentAngle;
     drivePower = -Math.min(1/180. * error, 1);
@@ -52,14 +55,10 @@ public class EngageCmd extends CommandBase {
       drivePower = Math.copySign(0.2, drivePower);
     }
 
-    //If it starts tilting, drive in the other direction
-    if (debouncer.calculate(Math.abs(drivetrain.getGyroPitchRate()) > 20))
-    {
-      //TODO: this only works when driving backwards
-      drivePower = -.07;
-    }
 
     drivetrain.setMotors(-drivePower, -drivePower);
+
+    SmartDashboard.putNumber("derivative", derivative);
     
     // // Debugging Print Statments
     // System.out.println("Current Angle: " + currentAngle);
@@ -77,6 +76,6 @@ public class EngageCmd extends CommandBase {
   @Override
   public boolean isFinished() {
    // return Math.abs(error) < Constants.DriveConstants.BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES; // End the command when we are within the specified threshold of being 'flat' (gyroscope pitch of 0 degrees)
-    return false;
+    return derivative < -0.05;
   }
 }
