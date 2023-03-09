@@ -18,7 +18,6 @@ public class EngageCmd extends CommandBase {
 
   private DriveTrain drivetrain;
 
-  private double error;
   private double currentAngle;
   private double drivePower;
   private double derivative;
@@ -30,49 +29,25 @@ public class EngageCmd extends CommandBase {
     addRequirements(drivetrain);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Uncomment the line below this to simulate the gyroscope axis with a controller joystick
-    // Double currentAngle = -1 * Robot.controller.getRawAxis(Constants.LEFT_VERTICAL_JOYSTICK_AXIS) * 45;
-    this.currentAngle = drivetrain.getGyroPitch();
     derivative = derivativeCalculator.calculate(currentAngle);
-
-    error = Constants.DriveConstants.BEAM_BALANCED_GOAL_DEGREES - currentAngle;
-    drivePower = -Math.min(1/180. * error, 1);
-
-    // Our robot needed an extra push to drive up in reverse, probably due to weight imbalances
-    if (drivePower < 0) {
-      drivePower *= Constants.DriveConstants.BACKWARDS_BALANCING_EXTRA_POWER_MULTIPLIER;
-    }
-
-    // Limit the max power
-    if (Math.abs(drivePower) > 0.2) {
-      drivePower = Math.copySign(0.2, drivePower);
-    }
-
-
-    drivetrain.setMotors(-drivePower, -drivePower);
+    drivePower = 1/180. * drivetrain.getGyroPitch();
+    drivePower = Math.max(Math.min(drivePower, 0.2), -0.2);
+  
+    drivetrain.setMotors(drivePower, drivePower);
 
     SmartDashboard.putNumber("derivative", derivative);
-    
-    // // Debugging Print Statments
-    // System.out.println("Current Angle: " + currentAngle);
-    // System.out.println("Error " + error);
-    // System.out.println("Drive Power: " + drivePower);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     drivetrain.setMotors(0, 0);
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
    // return Math.abs(error) < Constants.DriveConstants.BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES; // End the command when we are within the specified threshold of being 'flat' (gyroscope pitch of 0 degrees)
