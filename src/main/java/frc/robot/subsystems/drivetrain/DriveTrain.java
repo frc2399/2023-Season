@@ -24,13 +24,8 @@ public class DriveTrain extends SubsystemBase {
 
     private DriveIO driveIO;
 
-    public AHRS ahrs;
-    public static PIDController turnController;
-
     private double lastPitch = 0;
     private double pitchRate;
-
-    public static double outputSpeed;
 
     // simulation
     private DifferentialDriveOdometry odometry;
@@ -40,9 +35,6 @@ public class DriveTrain extends SubsystemBase {
 
     public DriveTrain(DriveIO io) {
         driveIO = io;
-
-        ahrs = new AHRS(SPI.Port.kMXP);
-        ahrs.reset();
 
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
         
