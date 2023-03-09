@@ -24,6 +24,7 @@ public class Elevator extends ProfiledPIDSubsystem {
 
   private static final double max_vel = 0.2 / 2;  // m/s
   private static final double max_accel = 0.4 / 2;  // m/s/s
+  public boolean ignoreLimitSwitches = false;
 
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
   //private static double gravityCompensation = 0.025;
@@ -43,6 +44,7 @@ public class Elevator extends ProfiledPIDSubsystem {
     SmartDashboard.putNumber("elevator goal position", getGoal());
     SmartDashboard.putNumber("elevator position", currentPos); 
     SmartDashboard.putNumber("elevator velocity", currentVel); 
+    SmartDashboard.putBoolean("ignoring limit switched?", ignoreLimitSwitches);
     RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
   }
 
@@ -58,15 +60,25 @@ public class Elevator extends ProfiledPIDSubsystem {
 
   //use this method instead of elevatorIO.setSpeed because need to go through limit switches
   public void setSpeed(double speed) {
-    if (elevatorIO.isAtUpperLimit()) {
-      //+0.005 so the elevator doesnt fall down
-      speed = Math.min(speed, gravityCompensation + 0.005);
+    if (ignoreLimitSwitches)
+    {
+      elevatorIO.setSpeed(speed);
     }
-    if (elevatorIO.isAtLowerLimit()) {
-      speed = Math.max(speed, 0);
+    else{
+      if (elevatorIO.isAtUpperLimit()) {
+        //+0.005 so the elevator doesnt fall down
+        speed = Math.min(speed, gravityCompensation + 0.005);
+        System.out.println("Upper limit reached!");
+      }
+      if (elevatorIO.isAtLowerLimit()) {
+        speed = Math.max(speed, 0);
+      }
+      //caps the elevator speed at 0.5 rather than 1
+      speed = Math.min(speed, 0.1);
+      elevatorIO.setSpeed(speed);
     }
-    elevatorIO.setSpeed(speed);
   }
+
 
   public void setSpeedGravityCompensation(double speed) {
     //use setSpeed instead of elevatorIO.setSpeed because need to go through limit switches
