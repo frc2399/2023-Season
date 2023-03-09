@@ -9,8 +9,6 @@
 
 package frc.robot.subsystems.drivetrain;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,18 +18,14 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.NavX.AHRS;
 
 public class DriveTrain extends SubsystemBase {
 
     private DriveIO driveIO;
 
-    public AHRS ahrs;
-    public static PIDController turnController;
-
     private double lastPitch = 0;
     private double pitchRate;
-
-    public static double outputSpeed;
 
     // simulation
     private DifferentialDriveOdometry odometry;
@@ -41,9 +35,6 @@ public class DriveTrain extends SubsystemBase {
 
     public DriveTrain(DriveIO io) {
         driveIO = io;
-
-        ahrs = new AHRS(SPI.Port.kMXP);
-        ahrs.reset();
 
         // this code is instantiating the simulated sensors and actuators when the robot is in simulation
         
