@@ -1,7 +1,5 @@
 package frc.robot.subsystems.drivetrain;
 
-
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
@@ -15,6 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.MotorUtil;
+import frc.robot.util.NavX.AHRS;
 
 
 public class RealDrive implements DriveIO {
