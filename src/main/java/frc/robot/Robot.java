@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.drivetrain.DriveTrain;
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
     PPRamseteCommand.setLoggingCallbacks(
       (PathPlannerTrajectory activeTrajectory) -> {
           // Log current trajectory
+          DriveTrain.field.getObject("traj").setTrajectory(activeTrajectory);
       },
       (Pose2d targetPose) -> {
           // Log target pose

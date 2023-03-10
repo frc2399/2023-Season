@@ -47,7 +47,6 @@ public class TwoPieceAuton extends SequentialCommandGroup {
     
     PathPlannerTrajectory twoPiecePath = PathPlanner.loadPath("Two-Cone Auton", 
       new PathConstraints(1, 1), true);
-    driveTrain.field.getObject("traj").setTrajectory(twoPiecePath);
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("lower arm", RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.MIN_ELEVATOR_HEIGHT));
@@ -69,6 +68,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
           // will only use feedforwards.
         new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
         (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
+        useAllianceColor, //uses alliance color to determine starting position
         driveTrain // Requires this drive subsystem
       );
 

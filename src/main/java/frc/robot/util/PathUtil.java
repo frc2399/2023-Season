@@ -15,19 +15,19 @@ public class PathUtil {
     }
 
     public static Pose2d getInitialPoseForAlliance(PathPlannerTrajectory trajectory) {
-        Pose2d state = trajectory.getInitialPose();
+        Pose2d pose = trajectory.getInitialPose();
         if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
-            Rotation2d rotation = state.getRotation();
-            Translation2d translation = state.getTranslation();
+            Rotation2d rotation = pose.getRotation();
+            Translation2d translation = pose.getTranslation();
 
             Translation2d transformedTranslation =
-            new Translation2d(translation.getX(), Constants.FieldConstants.FIELD_WIDTH_METERS - state.getY());
+            new Translation2d(translation.getX(), Constants.FieldConstants.FIELD_WIDTH_METERS - pose.getY());
             Rotation2d transformedHeading = rotation.times(-1);
 
             return new Pose2d(transformedTranslation, transformedHeading);
         }
         else {
-            return state;
+            return pose;
         }
     }
     
