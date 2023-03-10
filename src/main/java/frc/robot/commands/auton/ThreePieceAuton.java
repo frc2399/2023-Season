@@ -32,6 +32,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.util.PathUtil;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -48,11 +49,9 @@ public class ThreePieceAuton extends SequentialCommandGroup {
     
     PathPlannerTrajectory twoPiecePath = PathPlanner.loadPath("Two-Cone Auton", 
       new PathConstraints(1, 1), true);
-    driveTrain.field.getObject("traj").setTrajectory(twoPiecePath);
 
     PathPlannerTrajectory additionalAutonPiece = PathPlanner.loadPath("additional auton piece", 
     new PathConstraints(1, 1), true);
-  driveTrain.field.getObject("traj").setTrajectory(additionalAutonPiece);
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("LeftCommunity", new PrintCommand("Left community"));
@@ -75,6 +74,7 @@ public class ThreePieceAuton extends SequentialCommandGroup {
             // will only use feedforwards.
           new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
           (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
+          useAllianceColor, //uses alliance color to determine starting position
           driveTrain // Requires this drive subsystem
         ));
       
@@ -113,7 +113,7 @@ public class ThreePieceAuton extends SequentialCommandGroup {
     addCommands(
       new InstantCommand(() -> {
         // Reset odometry for the first path you run during auto
-          driveTrain.resetOdometry(twoPiecePath.getInitialPose());
+          driveTrain.resetOdometry(PathUtil.getInitialPoseForAlliance(twoPiecePath));
             }, driveTrain),
       // scores pre-loaded cone
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
