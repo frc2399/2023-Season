@@ -29,12 +29,11 @@ public class DriveTrain extends SubsystemBase {
     public AHRS ahrs;
     public static PIDController turnController;
 
-    private double lastPitch = 0;
     private double pitchRate;
 
     public static double outputSpeed;
 
-    private LinearFilter derivativeCalculator = LinearFilter.backwardFiniteDifference(1, 5, 0.02);
+    private LinearFilter derivativeCalculator = LinearFilter.backwardFiniteDifference(1, 2, 0.02);
 
 
     // simulation
@@ -75,8 +74,7 @@ public class DriveTrain extends SubsystemBase {
         );
 
 
-        pitchRate = (getGyroPitch() - lastPitch) / 0.02;
-        lastPitch = getGyroPitch();
+        pitchRate = derivativeCalculator.calculate(getGyroPitch());
 
         field.setRobotPose(odometry.getPoseMeters());
 
@@ -141,20 +139,20 @@ public class DriveTrain extends SubsystemBase {
      *
      * @return The turn rate of the robot, in degrees per second
      */
-    // public double getTurnRate() {
-    //     return -gyroSim.get;
-    // }
 
     public double getGyroPitch() {
         return driveIO.getGyroPitch();
     }
+
     public double getGyroPitchRate()
     {
-        return derivativeCalculator.calculate(pitchRate);
+        return pitchRate;
     }
+
     public Rotation2d getGyroAngle() {
         return driveIO.getGyroAngle(); 
     }
+
     public double getRightEncoderMeters() {
         return driveIO.getRightEncoderMeters();
     }

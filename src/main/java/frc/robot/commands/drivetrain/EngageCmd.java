@@ -35,6 +35,11 @@ public class EngageCmd extends CommandBase {
   public void execute() {
     drivePower = 1/180. * drivetrain.getGyroPitch();
     drivePower = Math.max(Math.min(drivePower, 0.2), -0.2);
+    drivePower = -drivePower;
+
+    if (Math.abs(drivetrain.getGyroPitchRate()) > 15) {
+      drivePower = 0;
+    }
   
     drivetrain.setMotors(drivePower, drivePower);
 
@@ -48,6 +53,6 @@ public class EngageCmd extends CommandBase {
   @Override
   public boolean isFinished() {
    // return Math.abs(error) < Constants.DriveConstants.BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES; // End the command when we are within the specified threshold of being 'flat' (gyroscope pitch of 0 degrees)
-    return drivetrain.getGyroPitchRate() < -15;
+    return false;
   }
 }

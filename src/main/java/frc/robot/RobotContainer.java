@@ -134,6 +134,7 @@ public class RobotContainer {
 
     private Command turtleMode;
 
+
     public static CommandSelector angleHeight = CommandSelector.CONE_TOP;
     
      // A chooser for autonomous commands
@@ -218,6 +219,8 @@ public class RobotContainer {
         //Unused Buttons
             //Driver - X(3), Y(4), Right Stick(10)
             //Operator - Left Trigger Axis (2)
+        // Driver X(3) - engage command
+        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
     }
 
     private void setDefaultCommands() {
