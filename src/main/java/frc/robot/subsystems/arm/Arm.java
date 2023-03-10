@@ -58,10 +58,10 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public void setSpeed(double speed) {
-    speed = Math.min(speed, 0.5);
+    speed = Math.max(Math.min(speed, 0.5), -0.5);
     armIO.setSpeed(speed);
+
     SmartDashboard.putNumber("arm speed", speed);
-    System.out.println("arm speed" + speed);
   }
 
   public double getTargetAngle() {
@@ -74,7 +74,8 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public void setSpeedGravityCompensation(double speed) {
-    armIO.setSpeed(speed + gravityCompensation * Math.cos(getEncoderPosition()));
+    // calls set speed function in the file that does armIO.setSpeed after capping speed
+    setSpeed(speed + gravityCompensation * Math.cos(getEncoderPosition()));
   }
 
   public double getArmCurrent() {
@@ -92,7 +93,8 @@ public class Arm extends ProfiledPIDSubsystem {
     speed += gravityCompensation * Math.cos(getEncoderPosition()); 
     // Add PID output to speed to account for error in arm
     speed += output;
-    armIO.setSpeed(speed);
+    // calls set speed function in the file that does armIO.setSpeed after capping speed
+    setSpeed(speed);
   }
 
   @Override
