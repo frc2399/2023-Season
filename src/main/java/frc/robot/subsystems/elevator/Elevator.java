@@ -60,11 +60,7 @@ public class Elevator extends ProfiledPIDSubsystem {
 
   //use this method instead of elevatorIO.setSpeed because need to go through limit switches
   public void setSpeed(double speed) {
-    if (ignoreLimitSwitches)
-    {
-      elevatorIO.setSpeed(speed);
-    }
-    else{
+    if (!ignoreLimitSwitches) {
       if (elevatorIO.isAtUpperLimit()) {
         //+0.005 so the elevator doesnt fall down
         speed = Math.min(speed, gravityCompensation + 0.005);
@@ -73,10 +69,11 @@ public class Elevator extends ProfiledPIDSubsystem {
       if (elevatorIO.isAtLowerLimit()) {
         speed = Math.max(speed, 0);
       }
-      //caps the elevator speed at 0.5 rather than 1
-      speed = Math.min(speed, 0.1);
-      elevatorIO.setSpeed(speed);
     }
+    
+    //caps the elevator speed at 0.5 rather than 1
+    speed = Math.max(Math.min(speed, 0.5), -0.5);
+    elevatorIO.setSpeed(speed);
   }
 
 
