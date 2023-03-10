@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.photonvision.SimVisionSystem;
 import org.photonvision.SimVisionTarget;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -69,12 +70,14 @@ public class SimLimelight extends SubsystemBase{
         }
         this.driveTrain = driveTrain;
         simVision.addSimVisionTarget(new SimVisionTarget(farTargetPose, targetWidth, targetHeight, 0));
-        for(int i = 1; i <= 8; i++)
+        
+        // HERB WANTS TO COOK
+        Pose2d poses [] = new Pose2d[8];
+        for(int i = 0; i < 8; i++)
         {
-            
-            DriveTrain.field.getObject("target" + i).setPose(fieldLayout.getTagPose(i).get().toPose2d());
-
-        }
+            poses[i] = fieldLayout.getTagPose(i + 1).get().toPose2d();
+        }	        
+        DriveTrain.field.getObject("april tag targets").setPoses(poses);
     }
     @Override
     public void periodic() {
