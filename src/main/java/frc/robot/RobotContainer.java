@@ -216,6 +216,9 @@ public class RobotContainer {
             intake.setMotor(0);
         }, elevator, arm, intake, driveTrain));
 
+        //Driver X(3) - ignore the limit switches
+        new JoystickButton(xboxDriver, Button.kX.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
+
         //Unused Buttons
             //Driver - X(3), Y(4), Right Stick(10)
             //Operator - Left Trigger Axis (2)
