@@ -1,7 +1,8 @@
 package frc.robot;
 
-import org.photonvision.PhotonCamera;
 import java.util.Map;
+
+import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -34,22 +34,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.commands.ChaseTagCommand;
-import frc.robot.commands.drivetrain.ArcadeDriveCmd;
-import frc.robot.commands.drivetrain.CameraAimCmd;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
+import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
-import frc.robot.commands.drivetrain.TurnToNAngleCmd;
-import frc.robot.commands.auton.TwoPieceAutonBottom;
-import frc.robot.commands.drivetrain.ArcadeDriveCmd;
-import frc.robot.commands.drivetrain.CurvatureDriveCmd;
-import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;

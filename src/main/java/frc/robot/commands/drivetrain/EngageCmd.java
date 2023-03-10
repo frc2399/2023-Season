@@ -4,13 +4,7 @@
 
 package frc.robot.commands.drivetrain;
 
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 
 // This command self=balances on the charging station using gyroscope pitch as feedback
@@ -18,9 +12,7 @@ public class EngageCmd extends CommandBase {
 
   private DriveTrain drivetrain;
 
-  private double currentAngle;
   private double drivePower;
-  private double derivative;
 
   /** Command to use Gyro data to resist the tip angle from the beam - to stabalize and balanace */
   public EngageCmd(DriveTrain drivetrain) {
