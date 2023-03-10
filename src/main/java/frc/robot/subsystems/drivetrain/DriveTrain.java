@@ -10,6 +10,7 @@
 package frc.robot.subsystems.drivetrain;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -24,8 +25,15 @@ public class DriveTrain extends SubsystemBase {
 
     private DriveIO driveIO;
 
-    private double lastPitch = 0;
+    public AHRS ahrs;
+    public static PIDController turnController;
+
     private double pitchRate;
+
+    public static double outputSpeed;
+
+    private LinearFilter derivativeCalculator = LinearFilter.backwardFiniteDifference(1, 2, 0.02);
+
 
     // simulation
     private DifferentialDriveOdometry odometry;
@@ -58,13 +66,11 @@ public class DriveTrain extends SubsystemBase {
             getGyroAngle(),
             getLeftEncoderMeters(),
             getRightEncoderMeters()
-
-        
         
         );
 
-        pitchRate = (getGyroPitch() - lastPitch) / 0.02;
-        lastPitch = getGyroPitch();
+
+        pitchRate = derivativeCalculator.calculate(getGyroPitch());
 
         field.setRobotPose(odometry.getPoseMeters());
 
@@ -129,20 +135,20 @@ public class DriveTrain extends SubsystemBase {
      *
      * @return The turn rate of the robot, in degrees per second
      */
-    // public double getTurnRate() {
-    //     return -gyroSim.get;
-    // }
 
     public double getGyroPitch() {
         return driveIO.getGyroPitch();
     }
+
     public double getGyroPitchRate()
     {
         return pitchRate;
     }
+
     public Rotation2d getGyroAngle() {
         return driveIO.getGyroAngle(); 
     }
+
     public double getRightEncoderMeters() {
         return driveIO.getRightEncoderMeters();
     }
