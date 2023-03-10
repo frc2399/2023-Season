@@ -169,4 +169,9 @@ public class Constants {
         public static final double JOYSTICK_SENSITIVITY = 0.5;
     }
 
+    public static final class FieldConstants {
+        public static final double FIELD_LENGTH_METERS = Units.inchesToMeters(651.25);
+        public static final double FIELD_WIDTH_METERS = Units.inchesToMeters(315.5);
+    }
+
 }

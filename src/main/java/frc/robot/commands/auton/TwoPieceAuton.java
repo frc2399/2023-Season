@@ -30,6 +30,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.util.PathUtil;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -80,7 +81,8 @@ public class TwoPieceAuton extends SequentialCommandGroup {
     addCommands(
       new InstantCommand(() -> {
         // Reset odometry for the first path you run during auto
-          driveTrain.resetOdometry(twoPiecePath.getInitialPose());
+          //driveTrain.resetOdometry(twoPiecePath.getInitialPose());
+          driveTrain.resetOdometry(PathUtil.getInitialPoseForAlliance(twoPiecePath));
             }, driveTrain),
         // scores cone to top node
       new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
