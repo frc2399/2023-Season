@@ -12,6 +12,7 @@ package frc.robot.subsystems.drivetrain;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -32,6 +33,9 @@ public class DriveTrain extends SubsystemBase {
     private double pitchRate;
 
     public static double outputSpeed;
+
+    private LinearFilter derivativeCalculator = LinearFilter.backwardFiniteDifference(1, 5, 0.02);
+
 
     // simulation
     private DifferentialDriveOdometry odometry;
@@ -67,10 +71,9 @@ public class DriveTrain extends SubsystemBase {
             getGyroAngle(),
             getLeftEncoderMeters(),
             getRightEncoderMeters()
-
-        
         
         );
+
 
         pitchRate = (getGyroPitch() - lastPitch) / 0.02;
         lastPitch = getGyroPitch();
@@ -147,7 +150,7 @@ public class DriveTrain extends SubsystemBase {
     }
     public double getGyroPitchRate()
     {
-        return pitchRate;
+        return derivativeCalculator.calculate(pitchRate);
     }
     public Rotation2d getGyroAngle() {
         return driveIO.getGyroAngle(); 

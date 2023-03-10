@@ -21,7 +21,6 @@ public class EngageCmd extends CommandBase {
   private double currentAngle;
   private double drivePower;
   private double derivative;
-  private LinearFilter derivativeCalculator = LinearFilter.backwardFiniteDifference(1, 5, 0.02);
 
   /** Command to use Gyro data to resist the tip angle from the beam - to stabalize and balanace */
   public EngageCmd(DriveTrain drivetrain) {
@@ -34,13 +33,11 @@ public class EngageCmd extends CommandBase {
 
   @Override
   public void execute() {
-    derivative = derivativeCalculator.calculate(currentAngle);
     drivePower = 1/180. * drivetrain.getGyroPitch();
     drivePower = Math.max(Math.min(drivePower, 0.2), -0.2);
   
     drivetrain.setMotors(drivePower, drivePower);
 
-    SmartDashboard.putNumber("derivative", derivative);
   }
 
   @Override
@@ -51,6 +48,6 @@ public class EngageCmd extends CommandBase {
   @Override
   public boolean isFinished() {
    // return Math.abs(error) < Constants.DriveConstants.BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES; // End the command when we are within the specified threshold of being 'flat' (gyroscope pitch of 0 degrees)
-    return derivative < -0.05;
+    return drivetrain.getGyroPitchRate() < -15;
   }
 }
