@@ -1,6 +1,7 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 // import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 // import edu.wpi.first.wpilibj.interfaces.*;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -18,6 +19,8 @@ public class DriveForwardGivenDistance extends CommandBase {
     double targetDistanceMeters;
     double newTargetDistance;
     DriveTrain m_driveTrain;
+    private SlewRateLimiter driveLimiter;
+
     
  
 	public DriveForwardGivenDistance(double targetDistanceMeters, DriveTrain subsystem) {
@@ -26,6 +29,8 @@ public class DriveForwardGivenDistance extends CommandBase {
         this.targetDistanceMeters = targetDistanceMeters;
         m_driveTrain = subsystem;
         addRequirements(m_driveTrain);
+        this.driveLimiter = new SlewRateLimiter(4.0);
+
 
         //set command to be interruptible
 		//setInterruptible(true);
@@ -57,8 +62,11 @@ public class DriveForwardGivenDistance extends CommandBase {
         double error = newTargetDistance - currentPosition;
 
 
-        double outputSpeed = (2 * error);
+        double outputSpeed = (1 * error);
+        outputSpeed  = driveLimiter.calculate(outputSpeed);
         outputSpeed = MathUtil.clamp(outputSpeed, -0.3, 0.3);
+
+
 
         m_driveTrain.setMotors(outputSpeed, outputSpeed);
     }
