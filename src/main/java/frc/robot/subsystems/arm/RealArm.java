@@ -15,7 +15,7 @@ public class RealArm implements ArmIO {
     public static DutyCycleEncoder armAbsoluteEncoder;
 
     public RealArm() {
-        armAbsoluteEncoder = new DutyCycleEncoder(0);
+        // armAbsoluteEncoder = new DutyCycleEncoder(0);
         //Higher slew rate of .75 seconds from 0 to 100% (sparkmax thinks we use this) translates to .2 seconds from 0 to 20% (what we actually use)
         armMotorController = MotorUtil.createSparkMAX(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless, Constants.NEO_CURRENT_LIMIT, 
             true, true, 0.75);
