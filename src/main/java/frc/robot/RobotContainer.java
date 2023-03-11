@@ -5,6 +5,7 @@ import java.util.Map;
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -171,14 +172,16 @@ public class RobotContainer {
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.1)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
 
         // Driver Button A (1) - resets arm encoder position to intial offset (at the top)
-        new JoystickButton(xboxDriver, Button.kA.value).onTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
-        
+        // new JoystickButton(xboxDriver, Button.kA.value).onTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
+        new JoystickButton(xboxDriver, Button.kA.value).onTrue(resetArmEncoderCommand(arm));
+
         // Operator Left Y Axis (1) - moves elevator up at 0.2 speed, moves elevator down at 0.4 speed
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.4)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
 
         // Driver Button B (2) - resets elevator encoder to intial offset (at the bottom)
-        new JoystickButton(xboxDriver, Button.kB.value).onTrue(new InstantCommand(() -> elevator.setPosition(0)));
+        // new JoystickButton(xboxDriver, Button.kB.value).onTrue(new InstantCommand(() -> elevator.setPosition(0)));
+        new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));
         
         // Operator Button A (1) - sets the arm and elevator setpoints for the low node
         new JoystickButton(xboxOperator, Button.kA.value).onTrue(setLowPieceSetpoint);
@@ -375,17 +378,28 @@ public class RobotContainer {
 
     //TODO make this work :( - it should automatically send the arm to the top position then reset the encoder to the correct initial offset
     private Command resetArmEncoderCommand(Arm a) {
+        Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(
-            //new InstantCommand(() -> a.setSpeed(0.15)).until(() -> a.getArmCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
-            new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET))
+            new PrintCommand("Resetting arm encoder"),
+            new InstantCommand(() ->  a.disable()),
+            new RunCommand(() -> a.setSpeed(0.15)).withTimeout(0.2),
+            new RunCommand(() -> a.setSpeed(0.15)).until(() -> debouncer.calculate(Math.abs(a.getEncoderSpeed()) < 0.01)),
+            new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET)),
+            makeSetPositionCommand(a, 0)
         );
     }
 
+
     //TODO make this work :( - it should automatically send the elevator to the bottom position then reset the encoder to the correct initial offset
     private Command resetElevatorEncoderCommand(Elevator e) {
+        Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(
-            //new InstantCommand(() -> e.setSpeed(0.15)).until(() -> e.getElevatorCurrent() > Constants.NEO_CURRENT_LIMIT - 5),
-            new InstantCommand(() -> e.setPosition(0))
+            new PrintCommand("Resetting elevator encoder"),
+            new InstantCommand(() ->  e.disable()),
+            new RunCommand(() -> e.setSpeed(-0.05)).withTimeout(0.2),
+            new RunCommand(() -> e.setSpeed(-0.05)).until(() -> debouncer.calculate(Math.abs(e.getEncoderSpeed()) < 0.01)),
+            new InstantCommand(() -> e.setPosition(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT)),
+            makeSetPositionCommand(e, 0.5)
         );
     }
 
