@@ -68,7 +68,7 @@ public class Constants {
         public static final double CUBE_LOW_HEIGHT = 0.08;
         public static final double CONE_MID_HEIGHT = 0.34;
         public static final double CUBE_MID_HEIGHT = 0.25;
-        public static final double CONE_TOP_HEIGHT = 0.69;
+        public static final double CONE_TOP_HEIGHT = 0.71;
         public static final double CUBE_TOP_HEIGHT = 0.58;
 
         //elevator heights for intaking upright cones, cones from tip, cones from phalange, cubes from ground and cone/cube from shelf
@@ -83,7 +83,7 @@ public class Constants {
         public static final double METERS_PER_REVOLUTION = Units.inchesToMeters(27) / 41.951946;
 
         //can be 1 inch off from goal setpoints and still considered at goal
-        public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(1);
+        public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(0.5);
 
     }
 
