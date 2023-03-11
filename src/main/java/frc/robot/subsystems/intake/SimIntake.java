@@ -15,5 +15,11 @@ public class SimIntake implements IntakeIO{
     public void setMotor(double intakeSpeed) {
         leftMotorSim.setInput(intakeSpeed);
     }
+
+     //Do not use these methods; they won't do much. 
+     @Override
+     public double getCurrent() {
+         return 0;
+     }
     
 }

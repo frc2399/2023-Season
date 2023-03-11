@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
 
-public class CollectPieceCmd extends CommandBase {
+public class IntakeUntilStall extends CommandBase {
   private Intake intake;
   double speed;
   SlewRateLimiter filter;
   /** Creates a new CollectPieceCmd. */
-  public CollectPieceCmd(Intake intake) {
+  public IntakeUntilStall(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
     addRequirements(intake);
