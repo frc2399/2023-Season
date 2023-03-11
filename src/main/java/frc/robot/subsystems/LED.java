@@ -15,6 +15,8 @@ public class LED extends SubsystemBase {
   LEDController red = new LEDController(Constants.LEDConstants.RED_CHANNEL);
   LEDController green= new LEDController(Constants.LEDConstants.GREEN_CHANNEL);
   LEDController blue = new LEDController(Constants.LEDConstants.BLUE_CHANNEL);
+  LEDController white = new LEDController(Constants.LEDConstants.WHITE_CHANNEL);
+
   Timer timer = new Timer();
 
 
@@ -26,10 +28,12 @@ public class LED extends SubsystemBase {
     timer.start();
   }
 
-public void setColor(int r, int g, int b) {
+public void setColor(int r, int g, int b, int w) {
   red.set(r);
   green.set(g);
   blue.set(b);
+  white.set(w);
+  // for simulator
   RobotContainer.LEDMechanism.setColor(new Color8Bit(r, g, b));
 }
 
@@ -56,10 +60,10 @@ public void setColor(int r, int g, int b) {
     // }
     
     if(RobotContainer.coneMode == true) {
-      this.setColor(240, 200, 50);
+      this.setColor(254, 117, 0, 2);
     }
     else {
-      this.setColor(150, 30, 150);
+      this.setColor(150, 0, 254, 5);
     }
 
   }

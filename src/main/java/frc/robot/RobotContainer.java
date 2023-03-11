@@ -63,6 +63,7 @@ import frc.robot.subsystems.intake.SimIntake;
 import frc.robot.subsystems.limelight.Camera;
 import frc.robot.subsystems.limelight.PoseEstimator;
 import frc.robot.subsystems.limelight.SimLimelight;
+import frc.robot.util.UIUtil;
 
 
 /**
@@ -255,9 +256,41 @@ public class RobotContainer {
     private void setUpConeCubeCommands () {
         changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
 
-        setTopPieceSetpoint = new ConditionalCommand(new InstantCommand(() -> angleHeight = CommandSelector.CONE_TOP), new InstantCommand(() -> angleHeight = CommandSelector.CUBE_TOP), () -> coneMode);
-        setMidPieceSetpoint = new ConditionalCommand(new InstantCommand(() -> angleHeight = CommandSelector.CONE_MID), new InstantCommand(() -> angleHeight = CommandSelector.CUBE_MID), () -> coneMode);
-        setLowPieceSetpoint = new ConditionalCommand(new InstantCommand(() -> angleHeight = CommandSelector.CONE_LOW), new InstantCommand(() -> angleHeight = CommandSelector.CUBE_LOW), () -> coneMode);
+        setTopPieceSetpoint = new ConditionalCommand(
+                new InstantCommand(() -> {
+                    angleHeight = CommandSelector.CONE_TOP;
+                    UIUtil.setRumblePattern(3, xboxOperator);
+                }),
+                new InstantCommand(() -> {
+                    angleHeight = CommandSelector.CUBE_TOP;
+                    UIUtil.setRumblePattern(3, xboxOperator);
+                }), 
+
+                () -> coneMode);
+        setMidPieceSetpoint = new ConditionalCommand(
+            new InstantCommand(() -> {
+                angleHeight = CommandSelector.CONE_MID;
+                UIUtil.setRumblePattern(2, xboxOperator);
+            }),
+            new InstantCommand(() -> {
+                angleHeight = CommandSelector.CUBE_MID;
+                UIUtil.setRumblePattern(2, xboxOperator);
+            }), 
+
+            () -> coneMode);
+
+        setLowPieceSetpoint = new ConditionalCommand(
+            new InstantCommand(() -> {
+                angleHeight = CommandSelector.CONE_LOW;
+                UIUtil.setRumblePattern(1, xboxOperator);
+            }),
+            new InstantCommand(() -> {
+                angleHeight = CommandSelector.CUBE_LOW;
+                UIUtil.setRumblePattern(1, xboxOperator);
+            }), 
+
+            () -> coneMode);
+    
         selectScoringPositionCommand = selectScoringPositionCommand();
 
         coneUprightIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT);
