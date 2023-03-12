@@ -95,15 +95,13 @@ public class Elevator extends ProfiledPIDSubsystem {
     //accounts for gravity in speed
     speed += gravityCompensation; 
     // Add PID output to speed to account for error in elevator
-    // if (elevatorIO.getEncoderPosition() > 0.65) {
-    //   speed += output*2;
-    // }
-    // else {
-    //   speed += output;
-    // }
+    if (elevatorIO.getEncoderPosition() > 0.65) {
+      speed += output*2;
+    }
+    else {
+      speed += output;
+    } 
     
-    speed += output;
-
     //use setSpeed instead of elevatorIO.setSpeed because need to go through limit switches
     setSpeed(speed);
   }
