@@ -36,10 +36,5 @@ public class SimIntake implements IntakeIO{
     public double getEncoderSpeed() {
         return SmartDashboard.getNumber("intake sim velocity", -100);
     }
-    
-    //Do not use these methods; they won't do much. 
-    @Override
-    public double getCurrent() {
-        return 0;
-    }
+
 }

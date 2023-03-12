@@ -47,6 +47,7 @@ import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.intake.IntakeIfStalled;
 import frc.robot.commands.intake.IntakeUntilStall;
+import frc.robot.commands.intake.StallIntakeCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -104,11 +105,6 @@ public class RobotContainer {
     public static final Joystick xboxOperator = new Joystick(XboxConstants.XBOX_OPERATOR_PORT);
 
     public static boolean coneMode = true;
-
-    private Command coneIntake;
-    private Command cubeIntake;
-    private Command coneOuttake;
-    private Command cubeOuttake;
     
     private Command changeMode;
 
@@ -120,16 +116,10 @@ public class RobotContainer {
     private Command setGroundUpIntakeSetpoint;
     private Command setGroundTipIntakeSetpoint;
     private Command setShelfIntakeSetpoint;
-    private Command intakePiece;
-    private Command outtakePiece;
-    private Command intakePieceShelf;
-    private Command intakeUntilStall;
-    private Command intakeIfStalled;
 
     private Command selectPositionCommand;
 
     private Command turtleMode;
-
 
     public static CommandSelector angleHeight = CommandSelector.CONE_LOW;
     
@@ -219,10 +209,7 @@ public class RobotContainer {
         new JoystickButton(xboxDriver, Button.kX.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
 
         //Driver Triggers - Intake and Outtake
-        //intake commands
-        new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outtakePiece);
-        new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakeUntilStall.andThen(intakeIfStalled));
-        // new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakePiece);
+
         //Unused Buttons
             //Driver - X(3), Y(4), Right Stick(10)
             //Operator - 
@@ -236,9 +223,11 @@ public class RobotContainer {
                 () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
                 () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value), 
                 () -> elevator.getEncoderPosition()));  
-          
-
-        intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
+                
+        intake.setDefaultCommand(
+            new StallIntakeCmd(intake, 
+            () -> xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1, 
+            () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.1));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));
     }
@@ -338,16 +327,6 @@ public class RobotContainer {
 
         // coneTipIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT);
         // conePhalangeIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_PHALANGE_INTAKE_ANGLE, ElevatorConstants.CONE_PHALANGE_INTAKE_HEIGHT);
-
-        coneIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED), intake);
-        cubeIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CUBE_IN_SPEED), intake);
-        coneOuttake = new RunCommand(() -> {intake.setMotor(Constants.IntakeConstants.CONE_OUT_SPEED); Intake.isIntooked = false;}, intake);
-        cubeOuttake = new RunCommand(() -> {intake.setMotor(Constants.IntakeConstants.CUBE_OUT_SPEED); Intake.isIntooked = false;}, intake);
-        
-        intakePiece = new ConditionalCommand(coneIntake, cubeIntake, () -> coneMode);
-        outtakePiece = new ConditionalCommand(coneOuttake, cubeOuttake, () -> coneMode);
-        intakeUntilStall = new IntakeUntilStall(intake);
-        intakeIfStalled = new IntakeIfStalled(intake);
 
         turtleMode = makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0.0);
     }
