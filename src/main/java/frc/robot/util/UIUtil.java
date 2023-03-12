@@ -8,9 +8,9 @@ public class UIUtil {
         try {
             for (int i = 0; i < numRumbles; i++) {
                 joystick.setRumble(GenericHID.RumbleType.kLeftRumble, 1);
-                Thread.sleep(250);
+                Thread.sleep(150);
                 joystick.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-                Thread.sleep(250);
+                Thread.sleep(150);
             }
         } catch (InterruptedException e) {
         }
