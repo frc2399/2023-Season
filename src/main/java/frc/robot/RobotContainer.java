@@ -43,6 +43,7 @@ import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
+import frc.robot.commands.intake.IntakeIfStalled;
 import frc.robot.commands.intake.IntakeUntilStall;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
@@ -125,6 +126,7 @@ public class RobotContainer {
     private Command outtakePiece;
     private Command intakePieceShelf;
     private Command intakeUntilStall;
+    private Command intakeIfStalled;
 
     private Command selectScoringPositionCommand;
 
@@ -219,7 +221,7 @@ public class RobotContainer {
         //intake commands
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(outtakePiece);
         // new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(intakePiece);
-        new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(intakeUntilStall);
+        new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(intakeUntilStall.andThen(intakeIfStalled));
 
         //Unused Buttons
             //Driver - X(3), Y(4), Right Stick(10)
@@ -318,6 +320,7 @@ public class RobotContainer {
         intakePiece = new ConditionalCommand(coneIntake, cubeIntake, () -> coneMode);
         outtakePiece = new ConditionalCommand(coneOuttake, cubeOuttake, () -> coneMode);
         intakeUntilStall = new IntakeUntilStall(intake);
+        intakeIfStalled = new IntakeIfStalled(intake);
 
         turtleMode = makeSetPositionArmAndElevatorCommand(0.71, 0.0);
     }

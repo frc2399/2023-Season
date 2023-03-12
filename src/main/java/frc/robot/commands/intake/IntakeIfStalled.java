@@ -4,49 +4,40 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.intake.Intake;
 
-public class CollectPieceCmd extends CommandBase {
+public class IntakeIfStalled extends CommandBase {
   private Intake intake;
-  double speed;
-  SlewRateLimiter filter;
-  /** Creates a new CollectPieceCmd. */
-  public CollectPieceCmd(Intake intake) {
+  double maintainSpeedFraction = 0.3;
+  /** Creates a new IntakeIfStalled. */
+  public IntakeIfStalled(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
     addRequirements(intake);
-
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //speed = filter.calculate(targetSpeed);
     if (RobotContainer.coneMode) {
-      intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED);
+      intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED * maintainSpeedFraction);
       }
-    else {
-      intake.setMotor(Constants.IntakeConstants.CUBE_IN_SPEED);
-    }
+      else {
+      intake.setMotor(Constants.IntakeConstants.CUBE_IN_SPEED * maintainSpeedFraction);
+      }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //intake.openRight();
-    // intake.openLeft();
-    intake.setMotor(0);
-    System.out.println("speed set to 0");
+    System.out.println("end");
   }
 
   // Returns true when the command should end.
