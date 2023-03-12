@@ -16,7 +16,7 @@ public class IntakeUntilStall extends CommandBase {
   double speed;
   SlewRateLimiter filter;
   Debouncer debouncer;
-  private double velocityThreshold = 0.01;
+  private double velocityThreshold = 100;
   private double currentThreshold = 20;
   /** Creates a new CollectPieceCmd. */
   public IntakeUntilStall(Intake intake) {
@@ -49,15 +49,15 @@ public class IntakeUntilStall extends CommandBase {
   public void end(boolean interrupted) {
     //intake.openRight();
     // intake.openLeft();
-    System.out.println("end");
+    System.out.println("end intakeUntilStall");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (debouncer.calculate(intake.getCurrent() > currentThreshold) && Math.abs(intake.getEncoderSpeed()) < velocityThreshold) {
+    if (debouncer.calculate(Math.abs(intake.getEncoderSpeed()) < velocityThreshold)) {
       Intake.isIntooked = true;
-      System.out.println("finished");
+      System.out.println("finished intakeUntilStall");
       return true;
       // Stalled!
     }

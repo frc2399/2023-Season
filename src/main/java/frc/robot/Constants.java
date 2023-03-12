@@ -16,7 +16,7 @@ import edu.wpi.first.math.util.Units;
  */
 public class Constants {
 
-    public static final int NEO550_CURRENT_LIMIT = 30;
+    public static final int NEO550_CURRENT_LIMIT = 20;
     public static final int NEO_CURRENT_LIMIT = 60;
 
     public static final class DriveConstants {

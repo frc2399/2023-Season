@@ -225,7 +225,7 @@ public class RobotContainer {
         //intake commands
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outtakePiece);
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakeUntilStall.andThen(intakeIfStalled));
-
+        // new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakePiece);
         //Unused Buttons
             //Driver - X(3), Y(4), Right Stick(10)
             //Operator - Left Trigger Axis (2)
@@ -326,8 +326,8 @@ public class RobotContainer {
 
         coneIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED), intake);
         cubeIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CUBE_IN_SPEED), intake);
-        coneOuttake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CONE_OUT_SPEED), intake);
-        cubeOuttake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CUBE_OUT_SPEED), intake);
+        coneOuttake = new RunCommand(() -> {intake.setMotor(Constants.IntakeConstants.CONE_OUT_SPEED); Intake.isIntooked = false;}, intake);
+        cubeOuttake = new RunCommand(() -> {intake.setMotor(Constants.IntakeConstants.CUBE_OUT_SPEED); Intake.isIntooked = false;}, intake);
         
         intakeUprightPosition = new ConditionalCommand(coneUprightIntakePosition, cubeIntakePosition, () -> coneMode);
         intakePieceShelf = new ConditionalCommand(coneIntakeShelf, cubeIntakeShelf, () -> coneMode);
