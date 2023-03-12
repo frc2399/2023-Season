@@ -24,4 +24,9 @@ public class RealIntake implements IntakeIO {
         intakeMotorController.set(intakeSpeed);
         // rightMotorController.set(intakeSpeed);
     }
+
+    public double getCurrent()
+    {
+        return intakeMotorController.getOutputCurrent();
+    }
 }

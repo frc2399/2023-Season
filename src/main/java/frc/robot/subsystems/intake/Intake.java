@@ -24,9 +24,14 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("intake speed", intakeSpeed);
 }
 
+  public double getCurrent() {
+    return intakeIO.getCurrent();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("intake current", getCurrent());
     
   }
 }

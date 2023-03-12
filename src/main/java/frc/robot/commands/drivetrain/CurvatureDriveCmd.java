@@ -68,7 +68,8 @@ public class CurvatureDriveCmd extends CommandBase {
         realTimeTurn = -turnFunction.get();
     
         //transforming the drive value
-        SmartDashboard.putNumber("Raw Joystick Value", realTimeSpeed);
+        SmartDashboard.putNumber("Raw Joystick Speed", realTimeSpeed);
+        SmartDashboard.putNumber("Raw Joystick Turm", realTimeTurn);
 
         realTimeSpeed = realTimeSpeed * realTimeSpeed * Math.signum(realTimeSpeed);
         //realTimeSpeed = realTimeSpeed * realTimeSpeed * realTimeSpeed;
@@ -110,6 +111,8 @@ public class CurvatureDriveCmd extends CommandBase {
             SmartDashboard.putBoolean("isSlow", true);
         }
         else {
+            SmartDashboard.putNumber("left motor speed", left);
+            SmartDashboard.putNumber("right motor speed", right);
             this.driveSubsystem.setMotors(left, right);
             SmartDashboard.putBoolean("isSlow", false);
         }

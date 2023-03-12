@@ -66,7 +66,7 @@ public class Constants {
         //elevatr heights for cone/cube for scoring low, mid, and top nodes
         public static final double CONE_LOW_HEIGHT = 0.09;
         public static final double CUBE_LOW_HEIGHT = 0.08;
-        public static final double CONE_MID_HEIGHT = 0.34;
+        public static final double CONE_MID_HEIGHT = 0.42;
         public static final double CUBE_MID_HEIGHT = 0.25;
         public static final double CONE_TOP_HEIGHT = 0.71;
         public static final double CUBE_TOP_HEIGHT = 0.67;
