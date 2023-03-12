@@ -53,7 +53,7 @@ public class RealDrive implements DriveIO {
         rightEncoder.setVelocityConversionFactor(DriveConstants.ENCODER_CALIBRATION_METERS / 60);
 
 
-        ahrs = new AHRS(SPI.Port.kMXP);
+        ahrs = new AHRS(SPI.Port.kMXP, (byte) 66);
         ahrs.reset();
    }
    

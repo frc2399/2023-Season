@@ -64,8 +64,8 @@ class RegisterIO implements IIOProvider {
         /* IO Loop */
         while (!stop) {
             if ( board_state.update_rate_hz != this.update_rate_hz ) {
-                // System.out.printf("Changing NavX update rate from %d to %d", board_state.update_rate_hz, this.update_rate_hz);
-                // System.out.println();
+                System.out.printf("Changing NavX update rate from %d to %d", board_state.update_rate_hz, this.update_rate_hz);
+                System.out.println();
                 setUpdateRateHz(this.update_rate_hz);
             }
             getCurrentData();
