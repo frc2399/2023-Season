@@ -10,6 +10,7 @@ public class SimIntake implements IntakeIO{
 
     public SimIntake() {
         leftMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 1, 1);
+        SmartDashboard.putNumber("intake current sim", 0);
     }
 
     @Override
@@ -20,8 +21,7 @@ public class SimIntake implements IntakeIO{
      //Do not use these methods; they won't do much. 
      @Override
      public double getCurrent() {
-        SmartDashboard.putNumber("Intake Current", SmartDashboard.getNumber("Intake Current", -100));
-        return SmartDashboard.getNumber("Intake Current", -100);
+        return SmartDashboard.getNumber("intake current sim", -100);
     }
     
 }

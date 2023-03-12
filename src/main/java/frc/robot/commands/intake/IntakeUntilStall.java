@@ -48,7 +48,7 @@ public class IntakeUntilStall extends CommandBase {
   @Override
   public boolean isFinished() {
     Debouncer debouncer = new Debouncer(0.5);
-    if (debouncer.calculate(intake.getCurrent() > 3)) {
+    if (debouncer.calculate(intake.getCurrent() > 20)) {
       return true;
       // Stalled!
     }
