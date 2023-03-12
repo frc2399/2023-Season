@@ -37,4 +37,9 @@ public class RealIntake implements IntakeIO {
     public double getEncoderSpeed() {
         return intakeEncoder.getVelocity();
     }
+
+    public double getCurrent()
+    {
+        return intakeMotorController.getOutputCurrent();
+    }
 }
