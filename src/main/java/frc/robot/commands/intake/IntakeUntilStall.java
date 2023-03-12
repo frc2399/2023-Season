@@ -4,6 +4,7 @@
 
 package frc.robot.commands.intake;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -46,6 +47,11 @@ public class IntakeUntilStall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    Debouncer debouncer = new Debouncer(0.5);
+    if (debouncer.calculate(intake.getCurrent() > 3)) {
+      return true;
+      // Stalled!
+    }
     return false;
   }
 }

@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SimIntake implements IntakeIO{
 
@@ -19,7 +20,8 @@ public class SimIntake implements IntakeIO{
      //Do not use these methods; they won't do much. 
      @Override
      public double getCurrent() {
-         return 0;
-     }
+        SmartDashboard.putNumber("Intake Current", SmartDashboard.getNumber("Intake Current", -100));
+        return SmartDashboard.getNumber("Intake Current", -100);
+    }
     
 }
