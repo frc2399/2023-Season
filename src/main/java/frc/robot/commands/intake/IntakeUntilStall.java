@@ -7,7 +7,7 @@ package frc.robot.commands.intake;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.intake.Intake;
 
@@ -16,6 +16,8 @@ public class IntakeUntilStall extends CommandBase {
   double speed;
   SlewRateLimiter filter;
   Debouncer debouncer;
+  private double velocityThreshold = 0.01;
+  private double currentThreshold = 20;
   /** Creates a new CollectPieceCmd. */
   public IntakeUntilStall(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -35,10 +37,10 @@ public class IntakeUntilStall extends CommandBase {
   public void execute() {
     //speed = filter.calculate(targetSpeed);
     if (RobotContainer.coneMode) {
-    intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED);
+    intake.setMotor(IntakeConstants.CONE_IN_SPEED);
     }
     else {
-    intake.setMotor(Constants.IntakeConstants.CUBE_IN_SPEED);
+    intake.setMotor(IntakeConstants.CUBE_IN_SPEED);
     }
   }
 
@@ -53,7 +55,7 @@ public class IntakeUntilStall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (debouncer.calculate(intake.getCurrent() > 20)) {
+    if (debouncer.calculate(intake.getCurrent() > currentThreshold) && Math.abs(intake.getEncoderSpeed()) < velocityThreshold) {
       System.out.println("finished");
       return true;
       // Stalled!

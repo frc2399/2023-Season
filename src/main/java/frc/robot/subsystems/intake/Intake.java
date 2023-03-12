@@ -28,12 +28,18 @@ public class Intake extends SubsystemBase {
     return intakeIO.getCurrent();
   }
 
+    //returns speed of the intake
+    public double getEncoderSpeed() {
+      return intakeIO.getEncoderSpeed();
+    }
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("intake current", getCurrent());
-    SmartDashboard.putNumber("intake speed", intakeSP);  
+    SmartDashboard.putNumber("intake motor input", intakeSP);  
+    SmartDashboard.putNumber("intake velocity", getEncoderSpeed());  
 
   }
 }

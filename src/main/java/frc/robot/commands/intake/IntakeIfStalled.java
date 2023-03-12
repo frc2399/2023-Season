@@ -11,19 +11,19 @@ import frc.robot.subsystems.intake.Intake;
 
 public class IntakeIfStalled extends CommandBase {
   private Intake intake;
-  double maintainSpeedFraction = 0.3;
-  /** Creates a new IntakeIfStalled. */
+  double maintainSpeedFraction = 0.05;
+  /* Meeeeeeeeep */
   public IntakeIfStalled(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
     addRequirements(intake);
   }
 
-  // Called when the command is initially scheduled.
+  // Meow
   @Override
   public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // Bork
   @Override
   public void execute() {
     if (RobotContainer.coneMode) {
