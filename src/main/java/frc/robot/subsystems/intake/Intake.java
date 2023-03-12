@@ -11,6 +11,7 @@ public class Intake extends SubsystemBase {
 
   private IntakeIO intakeIO;
   private double intakeSP;
+  public static boolean isIntooked = false;
 
   /** Creates a new Intake. */
   public Intake(IntakeIO io) {

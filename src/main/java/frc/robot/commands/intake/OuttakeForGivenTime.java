@@ -36,6 +36,7 @@ public class OuttakeForGivenTime extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         System.out.println("outtake time ended!");
+        Intake.isIntooked = false;
         this.intakeSubsystem.setMotor(0.0);
     }
 

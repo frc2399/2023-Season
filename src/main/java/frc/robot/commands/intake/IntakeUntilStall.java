@@ -56,6 +56,7 @@ public class IntakeUntilStall extends CommandBase {
   @Override
   public boolean isFinished() {
     if (debouncer.calculate(intake.getCurrent() > currentThreshold) && Math.abs(intake.getEncoderSpeed()) < velocityThreshold) {
+      Intake.isIntooked = true;
       System.out.println("finished");
       return true;
       // Stalled!
