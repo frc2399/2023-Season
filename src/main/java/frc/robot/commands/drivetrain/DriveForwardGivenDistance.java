@@ -29,11 +29,7 @@ public class DriveForwardGivenDistance extends CommandBase {
         this.targetDistanceMeters = targetDistanceMeters;
         m_driveTrain = subsystem;
         addRequirements(m_driveTrain);
-        this.driveLimiter = new SlewRateLimiter(4.0);
 
-
-        //set command to be interruptible
-		//setInterruptible(true);
     }
     
 
@@ -49,6 +45,9 @@ public class DriveForwardGivenDistance extends CommandBase {
         // find distance robot needs to travel to from its current position
         newTargetDistance = currentPosition + targetDistanceMeters;
 
+        //slew rate limiter to remove aggression :(
+        this.driveLimiter = new SlewRateLimiter(0.75);
+
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -58,15 +57,11 @@ public class DriveForwardGivenDistance extends CommandBase {
         // Get the average position between leftEncoder and rightEncoder
         currentPosition = (m_driveTrain.getLeftEncoderMeters() + m_driveTrain.getRightEncoderMeters()) / 2;
 
-
         double error = newTargetDistance - currentPosition;
 
-
         double outputSpeed = (1 * error);
-        outputSpeed  = driveLimiter.calculate(outputSpeed);
         outputSpeed = MathUtil.clamp(outputSpeed, -0.3, 0.3);
-
-
+        outputSpeed  = driveLimiter.calculate(outputSpeed);
 
         m_driveTrain.setMotors(outputSpeed, outputSpeed);
     }
