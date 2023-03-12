@@ -19,16 +19,17 @@ public class Elevator extends ProfiledPIDSubsystem {
   private static final double kpPos = 2;
 
   // Trapezoidal profile constants and variables
-  // private static final double max_vel = 0.2;  // m/s
-  // private static final double max_accel = 0.4;  // m/s/s
+  private static final double max_vel = 0.3;  // m/s
+  private static final double max_accel = 0.5;  // m/s/s
+  //private static final double max_vel = 0.2;  // m/s
+  //private static final double max_accel = 0.4;  // m/s/s
 
-  private static final double max_vel = 0.2 / 2;  // m/s
-  private static final double max_accel = 0.4 / 2;  // m/s/s
+  // private static final double max_vel = 0.2 / 2;  // m/s
+  // private static final double max_accel = 0.4 / 2;  // m/s/s
   public boolean ignoreLimitSwitches = false;
 
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
-  //private static double gravityCompensation = 0.025;
-  private static double gravityCompensation = 0.005;
+  private static double gravityCompensation = 0.025;
 
   public Elevator(ElevatorIO io) {
     super(new ProfiledPIDController(kpPos, 0, 0, constraints));
