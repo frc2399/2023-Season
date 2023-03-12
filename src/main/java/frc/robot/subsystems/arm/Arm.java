@@ -58,7 +58,6 @@ public class Arm extends ProfiledPIDSubsystem {
   public void setSpeed(double speed) {
     speed = Math.max(Math.min(speed, 0.5), -0.5);
     armIO.setSpeed(speed);
-
     SmartDashboard.putNumber("arm speed", speed);
   }
 
