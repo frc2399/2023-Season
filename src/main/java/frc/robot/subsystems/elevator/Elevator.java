@@ -16,16 +16,14 @@ public class Elevator extends ProfiledPIDSubsystem {
 
   // tuned values:
   private static final double feedForward = 0.8;
-  private static final double kpPos = 2;
+  private static final double kpPos = 3;
 
   // Trapezoidal profile constants and variables
-  private static final double max_vel = 0.3;  // m/s
-  private static final double max_accel = 0.5;  // m/s/s
-  //private static final double max_vel = 0.2;  // m/s
-  //private static final double max_accel = 0.4;  // m/s/s
+  private static final double max_vel = 1.25;  // m/s //0.2
+  private static final double max_accel = 2.50;  // m/s/s //0.4
 
-  // private static final double max_vel = 0.2 / 2;  // m/s
-  // private static final double max_accel = 0.4 / 2;  // m/s/s
+  //private static final double max_vel = 0.2 / 2;  // m/s
+  //private static final double max_accel = 0.4 / 2;  // m/s/s
   public boolean ignoreLimitSwitches = false;
 
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
@@ -73,7 +71,7 @@ public class Elevator extends ProfiledPIDSubsystem {
     }
     
     //caps the elevator speed at 0.5 rather than 1
-    speed = Math.max(Math.min(speed, 0.5), -0.5);
+    //speed = Math.max(Math.min(speed, 0.5), -0.5);
     elevatorIO.setSpeed(speed);
   }
 
@@ -97,7 +95,15 @@ public class Elevator extends ProfiledPIDSubsystem {
     //accounts for gravity in speed
     speed += gravityCompensation; 
     // Add PID output to speed to account for error in elevator
+    // if (elevatorIO.getEncoderPosition() > 0.65) {
+    //   speed += output*2;
+    // }
+    // else {
+    //   speed += output;
+    // }
+    
     speed += output;
+
     //use setSpeed instead of elevatorIO.setSpeed because need to go through limit switches
     setSpeed(speed);
   }

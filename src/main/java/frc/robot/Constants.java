@@ -64,26 +64,26 @@ public class Constants {
         public static final double MAX_ELEVATOR_HEIGHT = 0.75;
 
         //elevatr heights for cone/cube for scoring low, mid, and top nodes
-        public static final double CONE_LOW_HEIGHT = 0.08;
+        public static final double CONE_LOW_HEIGHT = 0.09;
         public static final double CUBE_LOW_HEIGHT = 0.08;
         public static final double CONE_MID_HEIGHT = 0.42;
         public static final double CUBE_MID_HEIGHT = 0.25;
         public static final double CONE_TOP_HEIGHT = 0.71;
-        public static final double CUBE_TOP_HEIGHT = 0.58;
+        public static final double CUBE_TOP_HEIGHT = 0.67;
 
         //elevator heights for intaking upright cones, cones from tip, cones from phalange, cubes from ground and cone/cube from shelf
-        public static final double CONE_UP_INTAKE_HEIGHT = 0.08;
+        public static final double CONE_UP_INTAKE_HEIGHT = 0.18;
         // public static final double CONE_TIP_INTAKE_HEIGHT= xx;
         // public static final double CONE_PHALANGE_INTAKE_HEIGHT = xx;
-        public static final double CUBE_INTAKE_HEIGHT = 0;
-        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.712;
+        public static final double CUBE_INTAKE_HEIGHT = 0.06;
+        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.682;
         public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
 
         //27 inches per 41.951946 encoder counts
         public static final double METERS_PER_REVOLUTION = Units.inchesToMeters(27) / 41.951946;
 
         //can be 1 inch off from goal setpoints and still considered at goal
-        public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(1);
+        public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(0.5);
 
     }
 
@@ -113,21 +113,25 @@ public class Constants {
         //arm angles for cone/cube for scoring low, mid, and top nodes
         public static final double CONE_LOW_ANGLE = 0.03;
         public static final double CUBE_LOW_ANGLE = 0.03;
-        public static final double CONE_MID_ANGLE = 0.30;
+        //-0.34
+        public static final double CONE_MID_ANGLE = -0.05;
         public static final double CUBE_MID_ANGLE = 0.46;
-        public static final double CONE_TOP_ANGLE = 0.09;
+        public static final double CONE_TOP_ANGLE = -0.25;
         public static final double CUBE_TOP_ANGLE = 0.06;
 
         //arm angles for intaking upright cones, cones from tip, cones from phalange, cubes from ground and cone/cube from shelf
-        public static final double CONE_UP_INTAKE_ANGLE = -0.24;
+        public static final double CONE_UP_INTAKE_ANGLE = -0.56;
         // public static final double CONE_TIP_INTAKE_ANGLE = xx;
         // public static final double CONE_PHALANGE_INTAKE_ANGLE = xx;
-        public static final double CUBE_INTAKE_ANGLE = 0;
-        public static final double CONE_SHELF_INTAKE_ANGLE = 0.09;
+        public static final double CUBE_INTAKE_ANGLE = -0.36;
+        public static final double CONE_SHELF_INTAKE_ANGLE = -0.197;
         public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
 
+        public static final double TURTLE_ANGLE = 0.5;
+
         public static final double RADIANS_PER_REVOLUTION = 0.0837;
-        public static final double INITIAL_OFFSET = 0.711 + (0.287);
+        // initial offset is 0.711 + (0.287) - (0.308)
+        public static final double INITIAL_OFFSET = 0.660;
 
         //can be 2 degrees off from goal setpoints and still considered at goal
         public static final double ANGLE_TOLERANCE = Units.degreesToRadians(2);
@@ -137,10 +141,10 @@ public class Constants {
 
         public static final int INTAKE_MOTOR_ID = 5;
         public static final double INTAKE_SLEW_RATE = 10;
-        public static final double CONE_IN_SPEED = 1.0;
-        public static final double CONE_OUT_SPEED = -1.0;
-        public static final double CUBE_IN_SPEED = -1.0;
-        public static final double CUBE_OUT_SPEED = 1.0;
+        public static final double CONE_IN_SPEED = -1.0;
+        public static final double CONE_OUT_SPEED = 1.0;
+        public static final double CUBE_IN_SPEED = 0.6;
+        public static final double CUBE_OUT_SPEED = -1;
     }
 
     public static final class LEDConstants {
