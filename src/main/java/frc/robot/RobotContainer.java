@@ -167,7 +167,7 @@ public class RobotContainer {
         new JoystickButton(xboxOperator, Button.kLeftBumper.value).onTrue(changeMode);
 
         // Driver Left Stick (9) - change from normal to slow mode
-        new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {ArcadeDriveCmd.isSlow = !ArcadeDriveCmd.isSlow;}));
+        new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {CurvatureDriveCmd.isSlow = !CurvatureDriveCmd.isSlow;}));
         
         // Operator Right Y Axis (5) - moves arm up at 0.2 speed, moves arm down at 0.2 speed
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
@@ -232,10 +232,11 @@ public class RobotContainer {
 
     private void setDefaultCommands() {
         driveTrain.setDefaultCommand(
-            new ArcadeDriveCmd(driveTrain,
+            new CurvatureDriveCmd(driveTrain,
                 () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
-                () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value)));  
-                //, () -> elevator.getEncoderPosition()      
+                () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value), 
+                () -> elevator.getEncoderPosition()));  
+          
 
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
@@ -342,7 +343,7 @@ public class RobotContainer {
         intakePiece = new ConditionalCommand(coneIntake, cubeIntake, () -> coneMode);
         outtakePiece = new ConditionalCommand(coneOuttake, cubeOuttake, () -> coneMode);
 
-        turtleMode = makeSetPositionArmAndElevatorCommand(0.99, 0.0);
+        turtleMode = makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0.0);
     }
 
     private void setUpSubsystems () {
