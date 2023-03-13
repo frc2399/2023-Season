@@ -3,6 +3,7 @@ package frc.robot.commands.intake;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.RobotContainer;
@@ -15,7 +16,8 @@ public class StallIntakeCmd extends CommandBase {
     Debouncer debouncer;
     double currentPos, lastPos;
     double intakeSpeed;
-    int intakeCurrent;
+    int intakeCurrentLimit;
+    boolean isIntooked = false; 
 
     public StallIntakeCmd(Intake intakeSubsystem, Supplier<Boolean> intake, Supplier<Boolean> outtake) {
         this.intakeSubsystem = intakeSubsystem;
@@ -29,31 +31,41 @@ public class StallIntakeCmd extends CommandBase {
     public void initialize() {
         debouncer = new Debouncer(0.5);
         intakeSpeed = 0.0;
-        intakeCurrent = 0;
-        lastPos = intakeSubsystem.getEncoderPosition();
+        intakeCurrentLimit = 0;
+        lastPos = intakeSubsystem.getEncoderPosition(); 
     }
 
     @Override
     public void execute() {
+        currentPos = intakeSubsystem.getEncoderPosition();
 
         if (intake.get()) {
             intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED;
-            intakeCurrent = RobotContainer.coneMode ? IntakeConstants.CONE_IN_CURRENT : IntakeConstants.CUBE_IN_CURRENT;
+            intakeCurrentLimit = RobotContainer.coneMode ? IntakeConstants.CONE_IN_CURRENT : IntakeConstants.CUBE_IN_CURRENT;
+            if (debouncer.calculate(Math.abs(currentPos - lastPos) < 2)) {
+                isIntooked = true;
+                //intakeSubsystem.setCurrentLimit(3);
+            }
         }
-        if (outtake.get()) {
+        else if (outtake.get()) {
             intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_OUT_SPEED : IntakeConstants.CUBE_OUT_SPEED;
-            intakeCurrent = IntakeConstants.OUT_CURRENT;
+            intakeCurrentLimit = IntakeConstants.OUT_CURRENT;
+            isIntooked = false;
         }
-        currentPos = intakeSubsystem.getEncoderPosition();
-        
-        if (debouncer.calculate(Math.abs(currentPos - lastPos) < 2)) {
-            intakeSubsystem.setCurrentLimit(3);
+        else if (isIntooked)
+        {
+            intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED;
+            intakeCurrentLimit = 3;
         }
         else {
-            intakeSubsystem.setMotor(intakeSpeed);
-            intakeSubsystem.setCurrentLimit(intakeCurrent);
-            lastPos = currentPos;
+            intakeSpeed = 0;
+            intakeCurrentLimit = 0;
         }
+        
+        intakeSubsystem.setMotor(intakeSpeed);
+        intakeSubsystem.setCurrentLimit(intakeCurrentLimit);
+        SmartDashboard.putNumber("Intake current limit", intakeCurrentLimit);
+        lastPos = currentPos;
     }
 
     @Override
