@@ -29,10 +29,22 @@ public class Intake extends SubsystemBase {
     return intakeIO.getCurrent();
   }
 
-    //returns speed of the intake
-    public double getEncoderSpeed() {
-      return intakeIO.getEncoderSpeed();
-    }
+  //returns speed of the intake
+  public double getEncoderSpeed() {
+    return intakeIO.getEncoderSpeed();
+  }
+
+  public double getEncoderPosition() {
+    return intakeIO.getEncoderPosition();
+  }
+
+  public void setPosition(double position) {
+    intakeIO.setPosition(position);
+  }
+
+  public void setCurrentLimit(int current) {
+    intakeIO.setCurrentLimit(current);
+  }
 
   @Override
   public void periodic() {

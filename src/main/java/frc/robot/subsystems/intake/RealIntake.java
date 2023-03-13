@@ -38,4 +38,19 @@ public class RealIntake implements IntakeIO {
         return intakeEncoder.getVelocity();
     }
 
+    @Override
+    public double getEncoderPosition() {
+        return intakeEncoder.getPosition();
+    }
+
+    @Override
+    public void setPosition(double position) {
+        intakeEncoder.setPosition(position);
+    }
+
+    @Override
+    public void setCurrentLimit(int current) {
+        intakeMotorController.setSmartCurrentLimit(current);        
+    }
+
 }

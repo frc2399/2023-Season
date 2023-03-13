@@ -37,4 +37,19 @@ public class SimIntake implements IntakeIO{
         return SmartDashboard.getNumber("intake sim velocity", -100);
     }
 
+    @Override
+    public double getEncoderPosition() {
+        return intakeSimEncoder.getDistance();
+    }
+
+    @Override
+    public void setPosition(double position) {
+        intakeSimEncoder.setDistance(position);
+    }
+
+    @Override
+    public void setCurrentLimit(int current) {
+        SmartDashboard.getNumber("intake current sim", current);
+    }
+
 }
