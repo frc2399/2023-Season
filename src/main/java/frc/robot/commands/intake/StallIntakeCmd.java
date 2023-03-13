@@ -44,7 +44,7 @@ public class StallIntakeCmd extends CommandBase {
         }
         if (outtake.get()) {
             intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_OUT_SPEED : IntakeConstants.CUBE_OUT_SPEED;
-            intakeCurrent = RobotContainer.coneMode ? IntakeConstants.CONE_OUT_CURRENT : IntakeConstants.CUBE_OUT_CURRENT;
+            intakeCurrent = IntakeConstants.OUT_CURRENT;
         }
         currentPos = intakeSubsystem.getEncoderPosition();
         
