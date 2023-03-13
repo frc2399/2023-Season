@@ -41,12 +41,9 @@ import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
-import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
-import frc.robot.commands.intake.IntakeIfStalled;
-import frc.robot.commands.intake.IntakeUntilStall;
 import frc.robot.commands.intake.StallIntakeCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
@@ -391,7 +388,6 @@ public class RobotContainer {
         );
     }
 
-    //TODO make this work :( - it should automatically send the arm to the top position then reset the encoder to the correct initial offset
     private Command resetArmEncoderCommand(Arm a) {
         Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(
@@ -404,8 +400,6 @@ public class RobotContainer {
         );
     }
 
-
-    //TODO make this work :( - it should automatically send the elevator to the bottom position then reset the encoder to the correct initial offset
     private Command resetElevatorEncoderCommand(Elevator e) {
         Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(

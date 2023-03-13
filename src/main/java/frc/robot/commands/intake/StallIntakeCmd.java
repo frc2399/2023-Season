@@ -4,10 +4,8 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.commands.robot.IntakeConeFromGround;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.intake.Intake;
 
 public class StallIntakeCmd extends CommandBase {
@@ -60,7 +58,7 @@ public class StallIntakeCmd extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("ArcadeDriveCmd ended!");
+        System.out.println("StallIntakeCmd ended!");
     }
 
     @Override
