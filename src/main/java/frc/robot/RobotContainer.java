@@ -271,11 +271,11 @@ public class RobotContainer {
         setTopPieceSetpoint = new ConditionalCommand(
                 new InstantCommand(() -> {
                     angleHeight = CommandSelector.CONE_TOP;
-                    UIUtil.setRumblePattern(3, xboxOperator);
+                    //UIUtil.setRumblePattern(3, xboxOperator);
                 }),
                 new InstantCommand(() -> {
                     angleHeight = CommandSelector.CUBE_TOP;
-                    UIUtil.setRumblePattern(3, xboxOperator);
+                    //UIUtil.setRumblePattern(3, xboxOperator);
                 }), 
 
                 () -> coneMode);
@@ -283,11 +283,11 @@ public class RobotContainer {
         setMidPieceSetpoint = new ConditionalCommand(
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CONE_MID;
-                UIUtil.setRumblePattern(2, xboxOperator);
+                //UIUtil.setRumblePattern(2, xboxOperator);
             }),
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CUBE_MID;
-                UIUtil.setRumblePattern(2, xboxOperator);
+                //UIUtil.setRumblePattern(2, xboxOperator);
             }), 
 
             () -> coneMode);
@@ -295,11 +295,11 @@ public class RobotContainer {
         setLowPieceSetpoint = new ConditionalCommand(
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CONE_LOW;
-                UIUtil.setRumblePattern(1, xboxOperator);
+                //UIUtil.setRumblePattern(1, xboxOperator);
             }),
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CUBE_LOW;
-                UIUtil.setRumblePattern(1, xboxOperator);
+                //UIUtil.setRumblePattern(1, xboxOperator);
             }), 
 
             () -> coneMode);

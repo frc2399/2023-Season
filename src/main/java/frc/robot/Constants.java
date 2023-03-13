@@ -66,7 +66,7 @@ public class Constants {
         //elevatr heights for cone/cube for scoring low, mid, and top nodes
         public static final double CONE_LOW_HEIGHT = 0.09;
         public static final double CUBE_LOW_HEIGHT = 0.08;
-        public static final double CONE_MID_HEIGHT = 0.42;
+        public static final double CONE_MID_HEIGHT = 0.53;
         public static final double CUBE_MID_HEIGHT = 0.25;
         public static final double CONE_TOP_HEIGHT = 0.71;
         public static final double CUBE_TOP_HEIGHT = 0.67;
@@ -76,7 +76,7 @@ public class Constants {
         // public static final double CONE_TIP_INTAKE_HEIGHT= xx;
         // public static final double CONE_PHALANGE_INTAKE_HEIGHT = xx;
         public static final double CUBE_INTAKE_HEIGHT = 0.06;
-        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.682;
+        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.697;
         public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
 
         //27 inches per 41.951946 encoder counts
@@ -114,7 +114,7 @@ public class Constants {
         public static final double CONE_LOW_ANGLE = 0.03;
         public static final double CUBE_LOW_ANGLE = 0.03;
         //-0.34
-        public static final double CONE_MID_ANGLE = -0.05;
+        public static final double CONE_MID_ANGLE = -0.37;
         public static final double CUBE_MID_ANGLE = 0.46;
         public static final double CONE_TOP_ANGLE = -0.25;
         public static final double CUBE_TOP_ANGLE = 0.06;
@@ -124,7 +124,7 @@ public class Constants {
         // public static final double CONE_TIP_INTAKE_ANGLE = xx;
         // public static final double CONE_PHALANGE_INTAKE_ANGLE = xx;
         public static final double CUBE_INTAKE_ANGLE = -0.36;
-        public static final double CONE_SHELF_INTAKE_ANGLE = -0.197;
+        public static final double CONE_SHELF_INTAKE_ANGLE = -0.247;
         public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
 
         public static final double TURTLE_ANGLE = 0.5;
