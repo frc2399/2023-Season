@@ -71,10 +71,9 @@ public class Constants {
         public static final double CONE_TOP_HEIGHT = 0.71;
         public static final double CUBE_TOP_HEIGHT = 0.67;
 
-        //elevator heights for intaking upright cones, cones from tip, cones from phalange, cubes from ground and cone/cube from shelf
+        //elevator heights for intaking upright cones, cones from tip, cubes from ground and cone/cube from shelf
         public static final double CONE_UP_INTAKE_HEIGHT = 0.18;
-        // public static final double CONE_TIP_INTAKE_HEIGHT= xx;
-        // public static final double CONE_PHALANGE_INTAKE_HEIGHT = xx;
+        public static final double CONE_TIP_INTAKE_HEIGHT = 0.06;
         public static final double CUBE_INTAKE_HEIGHT = 0.06;
         public static final double CONE_SHELF_INTAKE_HEIGHT = 0.682;
         public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
@@ -119,10 +118,9 @@ public class Constants {
         public static final double CONE_TOP_ANGLE = -0.25;
         public static final double CUBE_TOP_ANGLE = 0.06;
 
-        //arm angles for intaking upright cones, cones from tip, cones from phalange, cubes from ground and cone/cube from shelf
+        //arm angles for intaking upright cones, cones from tip, cubes from ground and cone/cube from shelf
         public static final double CONE_UP_INTAKE_ANGLE = -0.56;
-        // public static final double CONE_TIP_INTAKE_ANGLE = xx;
-        // public static final double CONE_PHALANGE_INTAKE_ANGLE = xx;
+        public static final double CONE_TIP_INTAKE_ANGLE = -0.36;
         public static final double CUBE_INTAKE_ANGLE = -0.36;
         public static final double CONE_SHELF_INTAKE_ANGLE = -0.197;
         public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
@@ -134,7 +132,7 @@ public class Constants {
         public static final double INITIAL_OFFSET = 0.660;
 
         //can be 2 degrees off from goal setpoints and still considered at goal
-        public static final double ANGLE_TOLERANCE = Units.degreesToRadians(2);
+        public static final double ANGLE_TOLERANCE = Units.degreesToRadians(0.5);
     }
 
     public static final class IntakeConstants {

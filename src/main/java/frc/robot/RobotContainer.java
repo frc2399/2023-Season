@@ -103,12 +103,6 @@ public class RobotContainer {
 
     public static boolean coneMode = true;
 
-    private Command coneIntakeShelf;
-    private Command cubeIntakeShelf; 
-    private Command coneUprightIntakePosition;
-    private Command coneTipIntakePosition;
-    private Command conePhalangeIntakePosition;
-    private Command cubeIntakePosition;
     private Command coneIntake;
     private Command cubeIntake;
     private Command coneOuttake;
@@ -121,11 +115,11 @@ public class RobotContainer {
     private Command setTopPieceSetpoint;
     private Command setMidPieceSetpoint;
     private Command setLowPieceSetpoint;
-    private Command setGroundIntakeSetpoint;
-    private Command intakeUprightPosition;
+    private Command setGroundUpIntakeSetpoint;
+    private Command setGroundTipIntakeSetpoint;
+    private Command setShelfIntakeSetpoint;
     private Command intakePiece;
     private Command outtakePiece;
-    private Command intakePieceShelf;
 
     private Command selectPositionCommand;
 
@@ -167,14 +161,13 @@ public class RobotContainer {
         new JoystickButton(xboxOperator, Button.kLeftBumper.value).onTrue(changeMode);
 
         // Driver Left Stick (9) - change from normal to slow mode
-        new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {ArcadeDriveCmd.isSlow = !ArcadeDriveCmd.isSlow;}));
+        new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {CurvatureDriveCmd.isSlow = !CurvatureDriveCmd.isSlow;}));
         
         // Operator Right Y Axis (5) - moves arm up at 0.2 speed, moves arm down at 0.2 speed
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
 
         // Driver Button A (1) - resets arm encoder position to intial offset (at the top)
-        // new JoystickButton(xboxDriver, Button.kA.value).onTrue(new InstantCommand(() -> arm.setPosition(Constants.ArmConstants.INITIAL_OFFSET)));
         new JoystickButton(xboxDriver, Button.kA.value).onTrue(resetArmEncoderCommand(arm));
 
         // Operator Left Y Axis (1) - moves elevator up at 0.2 speed, moves elevator down at 0.4 speed
@@ -182,7 +175,6 @@ public class RobotContainer {
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.4)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
 
         // Driver Button B (2) - resets elevator encoder to intial offset (at the bottom)
-        // new JoystickButton(xboxDriver, Button.kB.value).onTrue(new InstantCommand(() -> elevator.setPosition(0)));
         new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));
         
         // Operator Button A (1) - sets the arm and elevator setpoints for the low node
@@ -198,10 +190,13 @@ public class RobotContainer {
         new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(selectPositionCommand);
         
         // Operator Right Trigger Axis (3) - sends the arm and elevator to the positions for intaking pieces from the ground
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(setGroundIntakeSetpoint);
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(setGroundUpIntakeSetpoint);
+
+        // Operator Left Trigger Axis (2) - sends the arm and elevator to the positions for intaking cones from the tip on the ground and cubes
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(setGroundTipIntakeSetpoint);
 
         // Operator Button B (2) - sends the arm and elevator to the positions for intaking pieces from the shelf
-        new JoystickButton(xboxOperator, Button.kB.value).onTrue(intakePieceShelf);
+        new JoystickButton(xboxOperator, Button.kB.value).onTrue(setShelfIntakeSetpoint);
 
         //Kill command - sets speeds of subsystems to 0
 
@@ -225,17 +220,18 @@ public class RobotContainer {
 
         //Unused Buttons
             //Driver - X(3), Y(4), Right Stick(10)
-            //Operator - Left Trigger Axis (2)
+            //Operator - 
         // Driver X(3) - engage command
         new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
     }
 
     private void setDefaultCommands() {
         driveTrain.setDefaultCommand(
-            new ArcadeDriveCmd(driveTrain,
+            new CurvatureDriveCmd(driveTrain,
                 () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
-                () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value)));  
-                //, () -> elevator.getEncoderPosition()      
+                () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value), 
+                () -> elevator.getEncoderPosition()));  
+          
 
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
@@ -270,11 +266,11 @@ public class RobotContainer {
         setTopPieceSetpoint = new ConditionalCommand(
                 new InstantCommand(() -> {
                     angleHeight = CommandSelector.CONE_TOP;
-                    UIUtil.setRumblePattern(3, xboxOperator);
+                    //UIUtil.setRumblePattern(3, xboxOperator);
                 }),
                 new InstantCommand(() -> {
                     angleHeight = CommandSelector.CUBE_TOP;
-                    UIUtil.setRumblePattern(3, xboxOperator);
+                   // UIUtil.setRumblePattern(3, xboxOperator);
                 }), 
 
                 () -> coneMode);
@@ -282,11 +278,11 @@ public class RobotContainer {
         setMidPieceSetpoint = new ConditionalCommand(
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CONE_MID;
-                UIUtil.setRumblePattern(2, xboxOperator);
+                //UIUtil.setRumblePattern(2, xboxOperator);
             }),
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CUBE_MID;
-                UIUtil.setRumblePattern(2, xboxOperator);
+                //UIUtil.setRumblePattern(2, xboxOperator);
             }), 
 
             () -> coneMode);
@@ -294,16 +290,36 @@ public class RobotContainer {
         setLowPieceSetpoint = new ConditionalCommand(
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CONE_LOW;
-                UIUtil.setRumblePattern(1, xboxOperator);
+                //UIUtil.setRumblePattern(1, xboxOperator);
             }),
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CUBE_LOW;
-                UIUtil.setRumblePattern(1, xboxOperator);
+                //UIUtil.setRumblePattern(1, xboxOperator);
+            }), 
+
+            () -> coneMode);
+    
+        setGroundUpIntakeSetpoint = new ConditionalCommand(
+            new InstantCommand(() -> {
+                angleHeight = CommandSelector.CONE_GROUND_INTAKE;
+            }),
+            new InstantCommand(() -> {
+                angleHeight = CommandSelector.CUBE_INTAKE;
             }), 
 
             () -> coneMode);
 
-        intakePieceShelf = new ConditionalCommand(
+        setGroundTipIntakeSetpoint = new ConditionalCommand(
+            new InstantCommand(() -> {
+                angleHeight = CommandSelector.CONE_TIP_INTAKE;
+            }),
+            new InstantCommand(() -> {
+                angleHeight = CommandSelector.CUBE_INTAKE;
+            }), 
+
+            () -> coneMode);
+        
+        setShelfIntakeSetpoint = new ConditionalCommand(
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CONE_SHELF;
             }),
@@ -313,23 +329,8 @@ public class RobotContainer {
 
             () -> coneMode);
 
-             
-
-    
-        setGroundIntakeSetpoint = new ConditionalCommand(
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CONE_GROUND_INTAKE;
-            }),
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CUBE_GROUND_INTAKE;
-            }), 
-
-            () -> coneMode);
-
         selectPositionCommand = selectPositionCommand();
 
-        coneUprightIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT);
-        cubeIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT);
         // coneTipIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT);
         // conePhalangeIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_PHALANGE_INTAKE_ANGLE, ElevatorConstants.CONE_PHALANGE_INTAKE_HEIGHT);
 
@@ -338,11 +339,10 @@ public class RobotContainer {
         coneOuttake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CONE_OUT_SPEED), intake);
         cubeOuttake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CUBE_OUT_SPEED), intake);
         
-        intakeUprightPosition = new ConditionalCommand(coneUprightIntakePosition, cubeIntakePosition, () -> coneMode);
         intakePiece = new ConditionalCommand(coneIntake, cubeIntake, () -> coneMode);
         outtakePiece = new ConditionalCommand(coneOuttake, cubeOuttake, () -> coneMode);
 
-        turtleMode = makeSetPositionArmAndElevatorCommand(0.99, 0.0);
+        turtleMode = makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0.0);
     }
 
     private void setUpSubsystems () {
@@ -368,7 +368,7 @@ public class RobotContainer {
         elevator = new Elevator(elevatorIO);
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
-        limelight = new SimLimelight(driveTrain);
+        //limelight = new SimLimelight(driveTrain);
         camera = new Camera(photonCamera);
 
     }
@@ -450,7 +450,8 @@ public class RobotContainer {
         CONE_SHELF,
         CUBE_SHELF,
         CONE_GROUND_INTAKE,
-        CUBE_GROUND_INTAKE
+        CUBE_INTAKE,
+        CONE_TIP_INTAKE
       }
 
     private CommandSelector select() {
@@ -473,7 +474,8 @@ public class RobotContainer {
                 Map.entry(CommandSelector.CONE_SHELF,  makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_SHELF_INTAKE_ANGLE, ElevatorConstants.CONE_SHELF_INTAKE_HEIGHT)),
                 Map.entry(CommandSelector.CUBE_SHELF,  makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_SHELF_INTAKE_ANGLE, ElevatorConstants.CUBE_SHELF_INTAKE_HEIGHT)),
                 Map.entry(CommandSelector.CONE_GROUND_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT)),
-                Map.entry(CommandSelector.CUBE_GROUND_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT))),
+                Map.entry(CommandSelector.CUBE_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT)),
+                Map.entry(CommandSelector.CONE_TIP_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT))),
             this::select); 
     }
 }
