@@ -41,7 +41,6 @@ import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
-import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
@@ -65,7 +64,6 @@ import frc.robot.subsystems.intake.SimIntake;
 import frc.robot.subsystems.limelight.Camera;
 import frc.robot.subsystems.limelight.PoseEstimator;
 import frc.robot.subsystems.limelight.SimLimelight;
-import frc.robot.util.UIUtil;
 
 
 /**
@@ -210,8 +208,11 @@ public class RobotContainer {
             intake.setMotor(0);
         }, elevator, arm, intake, driveTrain));
 
-        //Driver X(3) - ignore the limit switches
-        new JoystickButton(xboxDriver, Button.kX.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
+        // Driver X(3) - engage command
+        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
+
+        //Driver Y(4) - ignore the limit switches
+        new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
 
         //Driver Triggers - Intake and Outtake
         //intake commands
@@ -219,10 +220,9 @@ public class RobotContainer {
         new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outtakePiece);
 
         //Unused Buttons
-            //Driver - X(3), Y(4), Right Stick(10)
+            //Driver - Right Stick(10)
             //Operator - 
-        // Driver X(3) - engage command
-        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
+
     }
 
     private void setDefaultCommands() {
