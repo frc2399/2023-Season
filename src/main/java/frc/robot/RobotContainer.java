@@ -375,8 +375,8 @@ public class RobotContainer {
 
     private void setUpAutonChooser () {
         chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator, intake, arm));
-        chooser.addOption("engage", new Engage(driveTrain));
-        chooser.addOption("leave and engage", new LeaveEngage(driveTrain));
+        chooser.addOption("engage", new Engage(driveTrain, arm, elevator));
+        chooser.addOption("leave and engage", new LeaveEngage(driveTrain, arm, elevator));
         chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("score, leave community, and engage", new OnePieceCommunityEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("Leave community and engage", new OnePieceCommunityEngage(driveTrain, intake, elevator, arm));
@@ -406,31 +406,34 @@ public class RobotContainer {
         );
     }
 
-    //TODO make this work :( - it should automatically send the arm to the top position then reset the encoder to the correct initial offset
-    private Command resetArmEncoderCommand(Arm a) {
+    // automatically sends the arm to the top position then reset the encoder to the correct initial offset
+    private static Command resetArmEncoderCommand(Arm a) {
         Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(
             new PrintCommand("Resetting arm encoder"),
             new InstantCommand(() ->  a.disable()),
-            new RunCommand(() -> a.setSpeed(0.15)).withTimeout(0.2),
             new RunCommand(() -> a.setSpeed(0.15)).until(() -> debouncer.calculate(Math.abs(a.getEncoderSpeed()) < 0.01)),
             new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET)),
             makeSetPositionCommand(a, 0)
         );
     }
 
-
-    //TODO make this work :( - it should automatically send the elevator to the bottom position then reset the encoder to the correct initial offset
-    private Command resetElevatorEncoderCommand(Elevator e) {
+    // automatically sends the elevator to the bottom position then reset the encoder to the correct initial offset
+    private static Command resetElevatorEncoderCommand(Elevator e) {
         Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(
             new PrintCommand("Resetting elevator encoder"),
             new InstantCommand(() ->  e.disable()),
-            new RunCommand(() -> e.setSpeed(-0.10)).withTimeout(0.2),
             new RunCommand(() -> e.setSpeed(-0.10)).until(() -> debouncer.calculate(Math.abs(e.getEncoderSpeed()) < 0.01)),
             new InstantCommand(() -> e.setPosition(0)),
             makeSetPositionCommand(e, 0)
         );
+    }
+
+    public static Command resetArmAndElevatorEncoderCommand(Arm a, Elevator e) {
+        return new ParallelCommandGroup(resetArmEncoderCommand(arm), 
+        resetElevatorEncoderCommand(elevator)
+     );
     }
 
     public static Command makeSetPositionArmAndElevatorCommand(double angle, double height) {
