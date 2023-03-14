@@ -132,7 +132,7 @@ public class Constants {
         public static final double INITIAL_OFFSET = 0.660;
 
         //can be 2 degrees off from goal setpoints and still considered at goal
-        public static final double ANGLE_TOLERANCE = Units.degreesToRadians(2);
+        public static final double ANGLE_TOLERANCE = Units.degreesToRadians(0.5);
     }
 
     public static final class IntakeConstants {

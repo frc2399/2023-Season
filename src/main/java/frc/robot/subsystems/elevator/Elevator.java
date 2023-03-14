@@ -72,6 +72,7 @@ public class Elevator extends ProfiledPIDSubsystem {
     
     //caps the elevator speed at 0.5 rather than 1
     //speed = Math.max(Math.min(speed, 0.5), -0.5);
+    SmartDashboard.putNumber("elevator motor input", speed);
     elevatorIO.setSpeed(speed);
   }
 
@@ -89,14 +90,15 @@ public class Elevator extends ProfiledPIDSubsystem {
   protected void useOutput(double output, State setpoint) {
     SmartDashboard.putNumber("elevator setpoint pos", setpoint.position);
     SmartDashboard.putNumber("elevator setpoint vel", setpoint.velocity);
+    SmartDashboard.putNumber("error", setpoint.position - getEncoderPosition());
 
     // Calculate the feedforward from the setpoint
     double speed = feedForward * setpoint.velocity;
     //accounts for gravity in speed
     speed += gravityCompensation; 
     // Add PID output to speed to account for error in elevator
-    if (elevatorIO.getEncoderPosition() > 0.65) {
-      speed += output*2;
+    if (getEncoderPosition() > 0.65) {
+      speed += output * 2;
     }
     else {
       speed += output;

@@ -39,6 +39,7 @@ import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
+import frc.robot.commands.auton.OnePieceLeaveEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
@@ -266,11 +267,11 @@ public class RobotContainer {
         setTopPieceSetpoint = new ConditionalCommand(
                 new InstantCommand(() -> {
                     angleHeight = CommandSelector.CONE_TOP;
-                    UIUtil.setRumblePattern(3, xboxOperator);
+                    //UIUtil.setRumblePattern(3, xboxOperator);
                 }),
                 new InstantCommand(() -> {
                     angleHeight = CommandSelector.CUBE_TOP;
-                    UIUtil.setRumblePattern(3, xboxOperator);
+                   // UIUtil.setRumblePattern(3, xboxOperator);
                 }), 
 
                 () -> coneMode);
@@ -278,11 +279,11 @@ public class RobotContainer {
         setMidPieceSetpoint = new ConditionalCommand(
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CONE_MID;
-                UIUtil.setRumblePattern(2, xboxOperator);
+                //UIUtil.setRumblePattern(2, xboxOperator);
             }),
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CUBE_MID;
-                UIUtil.setRumblePattern(2, xboxOperator);
+                //UIUtil.setRumblePattern(2, xboxOperator);
             }), 
 
             () -> coneMode);
@@ -290,11 +291,11 @@ public class RobotContainer {
         setLowPieceSetpoint = new ConditionalCommand(
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CONE_LOW;
-                UIUtil.setRumblePattern(1, xboxOperator);
+                //UIUtil.setRumblePattern(1, xboxOperator);
             }),
             new InstantCommand(() -> {
                 angleHeight = CommandSelector.CUBE_LOW;
-                UIUtil.setRumblePattern(1, xboxOperator);
+                //UIUtil.setRumblePattern(1, xboxOperator);
             }), 
 
             () -> coneMode);
@@ -368,7 +369,7 @@ public class RobotContainer {
         elevator = new Elevator(elevatorIO);
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
-        limelight = new SimLimelight(driveTrain);
+        //limelight = new SimLimelight(driveTrain);
         camera = new Camera(photonCamera);
 
     }
@@ -377,6 +378,7 @@ public class RobotContainer {
         chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator, intake, arm));
         chooser.addOption("engage", new Engage(driveTrain));
         chooser.addOption("leave and engage", new LeaveEngage(driveTrain));
+        chooser.addOption("one piece leave and engage", new OnePieceLeaveEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("Leave community and engage", new OnePieceCommunityEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
