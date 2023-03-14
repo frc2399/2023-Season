@@ -17,6 +17,7 @@ public class OnePieceCommunityEngage extends SequentialCommandGroup {
     public OnePieceCommunityEngage(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
 
         addCommands(
+            new DriveForwardGivenDistance(-0.2, driveTrain),
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
             // leaves community then drives back on charging station

@@ -50,7 +50,7 @@ public class CurvatureDriveCmd extends CommandBase {
 
     @Override
     public void initialize() {
-        System.out.println("CurvatureDriveCmd started!");
+        //System.out.println("CurvatureDriveCmd started!");
         isSlow = false;
     }
 
@@ -122,7 +122,7 @@ public class CurvatureDriveCmd extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("CurvatureDriveCmd ended!");
+        //System.out.println("CurvatureDriveCmd ended!");
     }
 
 

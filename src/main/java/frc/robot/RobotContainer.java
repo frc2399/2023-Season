@@ -266,11 +266,11 @@ public class RobotContainer {
         setTopPieceSetpoint = new ConditionalCommand(
                 new InstantCommand(() -> {
                     angleHeight = CommandSelector.CONE_TOP;
-                   // UIUtil.setRumblePattern(3, xboxOperator);
+                    //UIUtil.setRumblePattern(3, xboxOperator);
                 }),
                 new InstantCommand(() -> {
                     angleHeight = CommandSelector.CUBE_TOP;
-                    //UIUtil.setRumblePattern(3, xboxOperator);
+                    // UIUtil.setRumblePattern(3, xboxOperator);
                 }), 
 
                 () -> coneMode);
@@ -368,7 +368,7 @@ public class RobotContainer {
         elevator = new Elevator(elevatorIO);
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
-        limelight = new SimLimelight(driveTrain);
+        //limelight = new SimLimelight(driveTrain);
         camera = new Camera(photonCamera);
 
     }
@@ -378,6 +378,7 @@ public class RobotContainer {
         chooser.addOption("engage", new Engage(driveTrain));
         chooser.addOption("leave and engage", new LeaveEngage(driveTrain));
         chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
+        chooser.addOption("score, leave community, and engage", new OnePieceCommunityEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("Leave community and engage", new OnePieceCommunityEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
         chooser.addOption("leave community", new DriveForwardGivenDistance(-5, driveTrain));
