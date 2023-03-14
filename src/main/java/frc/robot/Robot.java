@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,12 +33,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-  
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
     robotContainer = new RobotContainer();
-    DataLogManager.start();
+    if (!RobotBase.isSimulation()) {
+      DataLogManager.start();
+    }
 
     PPRamseteCommand.setLoggingCallbacks(
       (PathPlannerTrajectory activeTrajectory) -> {
@@ -48,12 +47,10 @@ public class Robot extends TimedRobot {
           // Log target pose
       },
       (ChassisSpeeds setpointSpeeds) -> {
-          // Log setpoint ChassisSpeeds
-          // System.out.println("log setpoint ChassisSpeeds " + setpointSpeeds);
+        
           DifferentialDriveWheelSpeeds targetWheelSpeeds =
           DriveConstants.kDriveKinematics.toWheelSpeeds(setpointSpeeds);
-          // ChassisSpeeds chassisSpeeds = 
-          // DriveConstants.kDriveKinematics.toChassisSpeeds(targetWheelSpeeds);
+
           double leftTargetVelocity = targetWheelSpeeds.leftMetersPerSecond;
           double rightTargetVelocity = targetWheelSpeeds.rightMetersPerSecond;
 

@@ -79,6 +79,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
 
     addCommands(
       new InstantCommand(() -> {
+        // TODO: add reset arm and elevator encoder if using
         // Reset odometry for the first path you run during auto
           //driveTrain.resetOdometry(twoPiecePath.getInitialPose());
           driveTrain.resetOdometry(PathUtil.getInitialPoseForAlliance(twoPiecePath));
