@@ -414,7 +414,7 @@ public class RobotContainer {
             new InstantCommand(() ->  a.disable()),
             new RunCommand(() -> a.setSpeed(0.15)).until(() -> debouncer.calculate(Math.abs(a.getEncoderSpeed()) < 0.01)),
             new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET)),
-            makeSetPositionCommand(a, 0)
+            makeSetPositionCommand(a, ArmConstants.TURTLE_ANGLE)
         );
     }
 
