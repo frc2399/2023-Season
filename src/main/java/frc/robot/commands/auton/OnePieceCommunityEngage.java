@@ -19,14 +19,14 @@ public class OnePieceCommunityEngage extends SequentialCommandGroup {
 
         addCommands(
             RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
-            new DriveForwardGivenDistance(-0.2, driveTrain),
+            new DriveForwardGivenDistance(-0.20, driveTrain),
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
             // leaves community then drives back on charging station
-            new DriveForwardGivenDistance(-4, driveTrain),
+            new DriveForwardGivenDistance(-4.2, driveTrain),
             
             // drive back on charging station
-            new DriveForwardGivenDistance(2, driveTrain),
+            new DriveForwardGivenDistance(2.1, driveTrain),
             new PrintCommand("drive forward given distance finished "),
 
             // balances robot when it's on charging station
