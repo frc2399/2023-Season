@@ -412,6 +412,7 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new PrintCommand("Resetting arm encoder"),
             new InstantCommand(() ->  a.disable()),
+            new RunCommand(() -> a.setSpeed(0.15)).withTimeout(0.2),
             new RunCommand(() -> a.setSpeed(0.15)).until(() -> debouncer.calculate(Math.abs(a.getEncoderSpeed()) < 0.01)),
             new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET)),
             makeSetPositionCommand(a, ArmConstants.TURTLE_ANGLE)
@@ -424,6 +425,7 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new PrintCommand("Resetting elevator encoder"),
             new InstantCommand(() ->  e.disable()),
+            new RunCommand(() -> e.setSpeed(-0.10)).withTimeout(0.2),
             new RunCommand(() -> e.setSpeed(-0.10)).until(() -> debouncer.calculate(Math.abs(e.getEncoderSpeed()) < 0.01)),
             new InstantCommand(() -> e.setPosition(0)),
             makeSetPositionCommand(e, 0)

@@ -19,10 +19,10 @@ public class Elevator extends ProfiledPIDSubsystem {
   private static final double kpPos = 3;
 
   // Trapezoidal profile constants and variables
-  // private static final double max_vel = 1.25;  // m/s //0.2
-  private static final double max_vel = 1.25 / 3;  // m/s //0.2
-  // private static final double max_accel = 2.50;  // m/s/s //0.4
-  private static final double max_accel = 2.50 / 3;  // m/s/s //0.4
+  
+  private static final double max_vel = 1.25;  // m/s //0.2
+  // private static final double max_vel = 0.45;  // m/s //0.2
+  private static final double max_accel = 2.50;  // m/s/s //0.4
 
   //private static final double max_vel = 0.2 / 2;  // m/s
   //private static final double max_accel = 0.4 / 2;  // m/s/s
@@ -65,7 +65,6 @@ public class Elevator extends ProfiledPIDSubsystem {
       if (elevatorIO.isAtUpperLimit()) {
         //+0.005 so the elevator doesnt fall down
         speed = Math.min(speed, gravityCompensation + 0.005);
-        System.out.println("Upper limit reached!");
       }
       if (elevatorIO.isAtLowerLimit()) {
         speed = Math.max(speed, 0);
