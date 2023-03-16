@@ -15,7 +15,7 @@ public class LeaveEngage extends SequentialCommandGroup {
         addCommands(
             RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
             // leaves community and drives over charging station
-            new DriveForwardGivenDistance(-4.2, driveTrain),
+            new DriveForwardGivenDistance(-4.3, driveTrain),
             // drives back on charging station
             new DriveForwardGivenDistance(2.1, driveTrain),
              // balances robot when it's on charging station
