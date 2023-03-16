@@ -2,7 +2,7 @@ package frc.robot;
 
 import java.util.Map;
 
-import org.photonvision.PhotonCamera;
+// import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.Debouncer;
@@ -62,7 +62,7 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
 import frc.robot.subsystems.limelight.Camera;
-import frc.robot.subsystems.limelight.PoseEstimator;
+// import frc.robot.subsystems.limelight.PoseEstimator;
 import frc.robot.subsystems.limelight.SimLimelight;
 
 
@@ -88,8 +88,8 @@ public class RobotContainer {
     
     public static Intake intake;
     public static Elevator elevator;
-    public static PoseEstimator poseEstimator;
-    public static PhotonCamera photonCamera;
+    // public static PoseEstimator poseEstimator;
+    // public static PhotonCamera photonCamera;
      
     public static MechanismLigament2d elevatorMechanism;
     public static MechanismLigament2d armMechanism;
@@ -135,7 +135,7 @@ public class RobotContainer {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
-        photonCamera = new PhotonCamera ("photonvision");
+        // photonCamera = new PhotonCamera ("photonvision");
 
         // camera not in simulator to make it not crash
         if (RobotBase.isReal()) {
@@ -144,7 +144,7 @@ public class RobotContainer {
         
         setUpSubsystems();
 
-        poseEstimator = new PoseEstimator(photonCamera, driveTrain);
+        // poseEstimator = new PoseEstimator(photonCamera, driveTrain);
 
         setUpAutonChooser();
         setUpConeCubeCommands();
@@ -369,7 +369,7 @@ public class RobotContainer {
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
         //limelight = new SimLimelight(driveTrain);
-        camera = new Camera(photonCamera);
+        // camera = new Camera(photonCamera);
 
     }
 
