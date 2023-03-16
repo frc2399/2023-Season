@@ -75,7 +75,7 @@ public class Constants {
         public static final double CONE_UP_INTAKE_HEIGHT = 0.18;
         public static final double CONE_TIP_INTAKE_HEIGHT = 0.06;
         public static final double CUBE_INTAKE_HEIGHT = 0.06;
-        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.697;
+        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.727;
         public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
 
         //27 inches per 41.951946 encoder counts
@@ -122,7 +122,7 @@ public class Constants {
         public static final double CONE_UP_INTAKE_ANGLE = -0.56;
         public static final double CONE_TIP_INTAKE_ANGLE = -0.36;
         public static final double CUBE_INTAKE_ANGLE = -0.36;
-        public static final double CONE_SHELF_INTAKE_ANGLE = -0.247;
+        public static final double CONE_SHELF_INTAKE_ANGLE = -0.302;
         public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
 
         public static final double TURTLE_ANGLE = 0.5;
