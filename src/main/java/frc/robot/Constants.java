@@ -60,7 +60,7 @@ public class Constants {
         public static final int ELEVATOR_SLEW = 5;
 
         //elevator min and max heights in meters
-        public static final double MIN_ELEVATOR_HEIGHT = 0.05;
+        public static final double MIN_ELEVATOR_HEIGHT = 0.0;
         public static final double MAX_ELEVATOR_HEIGHT = 0.75;
 
         //elevatr heights for cone/cube for scoring low, mid, and top nodes
@@ -107,7 +107,7 @@ public class Constants {
         //arm mass in kg
         public static final double ARM_MASS = 2.72155;
         //arm length in meters
-        public static final double ARM_LENGTH = 0.72;
+        public static final double ARM_LENGTH = 0.65;
 
         //arm angles for cone/cube for scoring low, mid, and top nodes
         public static final double CONE_LOW_ANGLE = 0.03;
