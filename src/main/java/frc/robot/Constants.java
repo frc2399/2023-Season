@@ -66,7 +66,7 @@ public class Constants {
         //elevatr heights for cone/cube for scoring low, mid, and top nodes
         public static final double CONE_LOW_HEIGHT = 0.09;
         public static final double CUBE_LOW_HEIGHT = 0.08;
-        public static final double CONE_MID_HEIGHT = 0.53;
+        public static final double CONE_MID_HEIGHT = 0.58;
         public static final double CUBE_MID_HEIGHT = 0.25;
         public static final double CONE_TOP_HEIGHT = 0.71;
         public static final double CUBE_TOP_HEIGHT = 0.67;
@@ -82,7 +82,7 @@ public class Constants {
         public static final double METERS_PER_REVOLUTION = Units.inchesToMeters(27) / 41.951946;
 
         //can be 1 inch off from goal setpoints and still considered at goal
-        public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(0.5);
+        public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(1);
 
     }
 
@@ -132,7 +132,8 @@ public class Constants {
         public static final double INITIAL_OFFSET = 0.660;
 
         //can be 2 degrees off from goal setpoints and still considered at goal
-        public static final double ANGLE_TOLERANCE = Units.degreesToRadians(0.5);
+        public static final double ANGLE_TOLERANCE_AUTON = Units.degreesToRadians(2);
+
     }
 
     public static final class IntakeConstants {

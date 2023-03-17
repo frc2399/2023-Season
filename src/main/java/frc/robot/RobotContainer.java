@@ -85,7 +85,7 @@ public class RobotContainer {
     public static LED led = new LED();
     public static Arm arm;
     public static SimLimelight limelight;
-    public static Camera camera;
+   // public static Camera camera;
     
     public static Intake intake;
     public static Elevator elevator;
@@ -139,9 +139,9 @@ public class RobotContainer {
         // photonCamera = new PhotonCamera ("photonvision");
 
         // camera not in simulator to make it not crash
-        if (RobotBase.isReal()) {
-            CameraServer.startAutomaticCapture();
-        }
+        // if (RobotBase.isReal()) {
+        //     CameraServer.startAutomaticCapture();
+        // }
         
         setUpSubsystems();
 
