@@ -76,7 +76,7 @@ public class Constants {
         public static final double CONE_TIP_INTAKE_HEIGHT = 0.06;
         public static final double CUBE_INTAKE_HEIGHT = 0.06;
         public static final double CONE_SHELF_INTAKE_HEIGHT = 0.727;
-        public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
+        public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.463;
 
         //27 inches per 41.951946 encoder counts
         public static final double METERS_PER_REVOLUTION = Units.inchesToMeters(27) / 41.951946;
