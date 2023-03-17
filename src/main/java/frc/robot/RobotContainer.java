@@ -107,6 +107,9 @@ public class RobotContainer {
     private Command changeMode;
 
     private Command chaseTagCmd;
+    private Command intakePiece;
+    private Command cubeIntake;
+    private Command coneIntake;
 
     private Command setTopPieceSetpoint;
     private Command setMidPieceSetpoint;
@@ -212,8 +215,6 @@ public class RobotContainer {
 
         //Driver Y(4) - ignore the limit switches
         new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
-
-        //Driver Triggers - Intake and Outtake
 
         //Unused Buttons
             //Driver - Right Stick(10)
@@ -330,9 +331,12 @@ public class RobotContainer {
 
         selectPositionCommand = selectPositionCommand();
 
+        coneIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED), intake);
+        cubeIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CUBE_IN_SPEED), intake);
+
         // coneTipIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT);
         // conePhalangeIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_PHALANGE_INTAKE_ANGLE, ElevatorConstants.CONE_PHALANGE_INTAKE_HEIGHT);
-
+        intakePiece = new ConditionalCommand(coneIntake, cubeIntake, () -> coneMode);
         turtleMode = makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0.0);
     }
 
@@ -397,12 +401,7 @@ public class RobotContainer {
         );
     }
 
-<<<<<<< HEAD
-    // automatically sends the arm to the top position then reset the encoder to the correct initial offset
     private static Command resetArmEncoderCommand(Arm a) {
-=======
-    private Command resetArmEncoderCommand(Arm a) {
->>>>>>> intake-new
         Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(
             new PrintCommand("Resetting arm encoder"),
@@ -414,12 +413,7 @@ public class RobotContainer {
         );
     }
 
-<<<<<<< HEAD
-    // automatically sends the elevator to the bottom position then reset the encoder to the correct initial offset
     private static Command resetElevatorEncoderCommand(Elevator e) {
-=======
-    private Command resetElevatorEncoderCommand(Elevator e) {
->>>>>>> intake-new
         Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(
             new PrintCommand("Resetting elevator encoder"),
