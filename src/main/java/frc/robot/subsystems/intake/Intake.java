@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
 
   private IntakeIO intakeIO;
+  private double intakeSP;
+  public static boolean isIntooked = false;
 
   /** Creates a new Intake. */
   public Intake(IntakeIO io) {
@@ -19,19 +21,37 @@ public class Intake extends SubsystemBase {
   }
 
   public void setMotor(double intakeSpeed) {
-  
+    intakeSP = intakeSpeed;  
     intakeIO.setMotor(intakeSpeed);
-    SmartDashboard.putNumber("intake speed", intakeSpeed);
-}
+  }
 
   public double getCurrent() {
     return intakeIO.getCurrent();
+  }
+
+  //returns speed of the intake
+  public double getEncoderSpeed() {
+    return intakeIO.getEncoderSpeed();
+  }
+
+  public double getEncoderPosition() {
+    return intakeIO.getEncoderPosition();
+  }
+
+  public void setPosition(double position) {
+    intakeIO.setPosition(position);
+  }
+
+  public void setCurrentLimit(int current) {
+    intakeIO.setCurrentLimit(current);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("intake current", getCurrent());
-    
+    SmartDashboard.putNumber("intake motor input", intakeSP);  
+    SmartDashboard.putNumber("intake velocity", getEncoderSpeed());  
+
   }
 }

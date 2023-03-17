@@ -16,7 +16,7 @@ import edu.wpi.first.math.util.Units;
  */
 public class Constants {
 
-    public static final int NEO550_CURRENT_LIMIT = 20;
+    public static final int NEO550_CURRENT_LIMIT = 30;
     public static final int NEO_CURRENT_LIMIT = 60;
 
     public static final class DriveConstants {
@@ -143,7 +143,10 @@ public class Constants {
         public static final double CONE_IN_SPEED = -1.0;
         public static final double CONE_OUT_SPEED = 1.0;
         public static final double CUBE_IN_SPEED = 0.6;
-        public static final double CUBE_OUT_SPEED = -1;
+        public static final double CUBE_OUT_SPEED = -1.0;
+        public static final int CONE_IN_CURRENT = 30;
+        public static final int CUBE_IN_CURRENT = 25;
+        public static final int OUT_CURRENT = 30;
     }
 
     public static final class LEDConstants {
