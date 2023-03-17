@@ -32,7 +32,6 @@ public class IntakeForGivenTime extends CommandBase {
     @Override
     public void execute() {
         this.intakeSubsystem.setMotor(speed);
-        SmartDashboard.putNumber("intakeSpeed", speed);
     }
 
     @Override
