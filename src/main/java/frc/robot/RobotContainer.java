@@ -108,8 +108,6 @@ public class RobotContainer {
 
     private Command chaseTagCmd;
     private Command intakePiece;
-    private Command cubeIntake;
-    private Command coneIntake;
 
     private Command setTopPieceSetpoint;
     private Command setMidPieceSetpoint;
@@ -207,9 +205,6 @@ public class RobotContainer {
         //     intake.setMotor(0);
         // }, elevator, arm, intake, driveTrain));
 
-        // Operator Right Bumper (6) - intake 
-        new JoystickButton(xboxOperator, Button.kRightBumper.value).whileTrue(intakePiece);
-
         // Driver X(3) - engage command
         new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
 
@@ -231,7 +226,7 @@ public class RobotContainer {
                 
         intake.setDefaultCommand(
             new StallIntakeCmd(intake, 
-            () -> xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1, 
+            () -> (xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1 || xboxOperator.getRawButtonPressed(XboxController.Button.kRightBumper.value)), 
             () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.1));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));
@@ -331,12 +326,8 @@ public class RobotContainer {
 
         selectPositionCommand = selectPositionCommand();
 
-        coneIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED), intake);
-        cubeIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CUBE_IN_SPEED), intake);
-
         // coneTipIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT);
         // conePhalangeIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_PHALANGE_INTAKE_ANGLE, ElevatorConstants.CONE_PHALANGE_INTAKE_HEIGHT);
-        intakePiece = new ConditionalCommand(coneIntake, cubeIntake, () -> coneMode);
         turtleMode = makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0.0);
     }
 

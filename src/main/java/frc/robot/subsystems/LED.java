@@ -61,7 +61,7 @@ public void setColor(int r, int g, int b, int w) {
     // }
 
     if (Intake.isIntooked) {
-      this.setColor(0, 255, 0, 5);
+      this.setColor(0, 255, 0, 0);
     }
     else {
       if(RobotContainer.coneMode == true) {
