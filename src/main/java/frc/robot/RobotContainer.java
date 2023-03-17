@@ -6,6 +6,7 @@ import java.util.Map;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -257,7 +258,8 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // The selected command will be run in autonomous
-        System.out.println("Autonomous command! " + chooser.getSelected());
+        String autonCommand = chooser.getSelected().toString();
+        DataLogManager.log("Auton: " + autonCommand);
         return chooser.getSelected();
     }
 

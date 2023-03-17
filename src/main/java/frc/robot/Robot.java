@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -36,7 +37,8 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
     if (!RobotBase.isSimulation()) {
-      DataLogManager.start();
+      // DataLogManager.start();
+      DriverStation.startDataLog(DataLogManager.getLog());
     }
 
     PPRamseteCommand.setLoggingCallbacks(
@@ -65,7 +67,7 @@ public class Robot extends TimedRobot {
       }
     );
     // SmartDashboard.putString("branch and date", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE);
-    Shuffleboard.getTab("Driver").add("branch and date", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE);
+    Shuffleboard.getTab("Driver").add("branch and date", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE + " " + MyVersion.GIT_SHA);
   
   }
 
