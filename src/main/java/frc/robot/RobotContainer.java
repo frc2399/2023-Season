@@ -204,11 +204,14 @@ public class RobotContainer {
         new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
 
         // Operator Right Bumper (6) - kill command (sets speeds of subsystems to 0)
-        new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
-            makeSetSpeedGravityCompensationCommand(elevator, 0);
-            makeSetSpeedGravityCompensationCommand(arm, 0);
-            intake.setMotor(0);
-        }, elevator, arm, intake, driveTrain));
+        // new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
+        //     makeSetSpeedGravityCompensationCommand(elevator, 0);
+        //     makeSetSpeedGravityCompensationCommand(arm, 0);
+        //     intake.setMotor(0);
+        // }, elevator, arm, intake, driveTrain));
+
+        // Operator Right Bumper (6) - intake 
+        new JoystickButton(xboxOperator, Button.kRightBumper.value).whileTrue(intakePiece);
 
         // Driver X(3) - engage command
         new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
