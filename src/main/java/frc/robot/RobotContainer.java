@@ -125,7 +125,7 @@ public class RobotContainer {
 
     private Command turtleMode;
 
-
+    // so the enum is not initialized to dangerous position
     public static CommandSelector angleHeight = CommandSelector.CONE_GROUND_INTAKE;
     
      // A chooser for autonomous commands

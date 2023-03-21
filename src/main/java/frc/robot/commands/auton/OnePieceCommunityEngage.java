@@ -26,7 +26,7 @@ public class OnePieceCommunityEngage extends SequentialCommandGroup {
             new PrintCommand("place cone on node finished"),
             // leaves community then drives back on charging station
             new DriveForwardGivenDistance(-4.2, driveTrain),
-            
+            // wait one second before driving back on charging station so charging station becomes level again
             new WaitCommand(1),
             // drive back on charging station
             new DriveForwardGivenDistance(2.1, driveTrain),
