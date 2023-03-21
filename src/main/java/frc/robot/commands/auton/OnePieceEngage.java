@@ -2,6 +2,7 @@ package frc.robot.commands.auton;
 
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
@@ -23,7 +24,8 @@ public class OnePieceEngage extends SequentialCommandGroup {
             new DriveForwardGivenDistance(-0.2, driveTrain),
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
-            
+            // wait one second before driving back on charging station so charging station becomes level again
+            new WaitCommand(1),
             // drive on charging station
             new DriveForwardGivenDistance(-2, driveTrain),
             new PrintCommand("drive forward given distance finished "),

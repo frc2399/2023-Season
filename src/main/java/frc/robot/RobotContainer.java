@@ -2,10 +2,11 @@ package frc.robot;
 
 import java.util.Map;
 
-import org.photonvision.PhotonCamera;
+// import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -37,6 +38,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
+import frc.robot.commands.auton.OnePieceCommunity;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
@@ -62,7 +64,7 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
 import frc.robot.subsystems.limelight.Camera;
-import frc.robot.subsystems.limelight.PoseEstimator;
+// import frc.robot.subsystems.limelight.PoseEstimator;
 import frc.robot.subsystems.limelight.SimLimelight;
 
 
@@ -84,12 +86,12 @@ public class RobotContainer {
     public static LED led = new LED();
     public static Arm arm;
     public static SimLimelight limelight;
-    public static Camera camera;
+   // public static Camera camera;
     
     public static Intake intake;
     public static Elevator elevator;
-    public static PoseEstimator poseEstimator;
-    public static PhotonCamera photonCamera;
+    // public static PoseEstimator poseEstimator;
+    // public static PhotonCamera photonCamera;
      
     public static MechanismLigament2d elevatorMechanism;
     public static MechanismLigament2d armMechanism;
@@ -123,8 +125,8 @@ public class RobotContainer {
 
     private Command turtleMode;
 
-
-    public static CommandSelector angleHeight = CommandSelector.CONE_TOP;
+    // so the enum is not initialized to dangerous position
+    public static CommandSelector angleHeight = CommandSelector.CONE_GROUND_INTAKE;
     
      // A chooser for autonomous commands
      final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -135,16 +137,16 @@ public class RobotContainer {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
-        photonCamera = new PhotonCamera ("photonvision");
+        // photonCamera = new PhotonCamera ("photonvision");
 
         // camera not in simulator to make it not crash
-        if (RobotBase.isReal()) {
-            CameraServer.startAutomaticCapture();
-        }
+        // if (RobotBase.isReal()) {
+        //     CameraServer.startAutomaticCapture();
+        // }
         
         setUpSubsystems();
 
-        poseEstimator = new PoseEstimator(photonCamera, driveTrain);
+        // poseEstimator = new PoseEstimator(photonCamera, driveTrain);
 
         setUpAutonChooser();
         setUpConeCubeCommands();
@@ -202,11 +204,14 @@ public class RobotContainer {
         new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
 
         // Operator Right Bumper (6) - kill command (sets speeds of subsystems to 0)
-        new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
-            makeSetSpeedGravityCompensationCommand(elevator, 0);
-            makeSetSpeedGravityCompensationCommand(arm, 0);
-            intake.setMotor(0);
-        }, elevator, arm, intake, driveTrain));
+        // new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
+        //     makeSetSpeedGravityCompensationCommand(elevator, 0);
+        //     makeSetSpeedGravityCompensationCommand(arm, 0);
+        //     intake.setMotor(0);
+        // }, elevator, arm, intake, driveTrain));
+
+        // Operator Right Bumper (6) - intake 
+        new JoystickButton(xboxOperator, Button.kRightBumper.value).whileTrue(intakePiece);
 
         // Driver X(3) - engage command
         new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
@@ -256,7 +261,8 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // The selected command will be run in autonomous
-        System.out.println("Autonomous command! " + chooser.getSelected());
+        String autonCommand = chooser.getSelected().toString();
+        DataLogManager.log("Auton: " + autonCommand);
         return chooser.getSelected();
     }
 
@@ -369,7 +375,7 @@ public class RobotContainer {
         arm = new Arm(armIO);
         intake = new Intake(intakeIO);
         //limelight = new SimLimelight(driveTrain);
-        camera = new Camera(photonCamera);
+        // camera = new Camera(photonCamera);
 
     }
 
@@ -379,7 +385,7 @@ public class RobotContainer {
         chooser.addOption("leave and engage", new LeaveEngage(driveTrain, arm, elevator));
         chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("score, leave community, and engage", new OnePieceCommunityEngage(driveTrain, intake, elevator, arm));
-        chooser.addOption("Leave community and engage", new OnePieceCommunityEngage(driveTrain, intake, elevator, arm));
+        chooser.addOption("score and leave community", new OnePieceCommunity(driveTrain, intake, elevator, arm));
         chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
         chooser.addOption("leave community", new DriveForwardGivenDistance(-5, driveTrain));
         chooser.addOption("two cone auton bottom", new TwoPieceAutonBottom(driveTrain, elevator, intake, arm));

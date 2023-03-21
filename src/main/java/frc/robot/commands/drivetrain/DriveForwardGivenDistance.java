@@ -69,7 +69,8 @@ public class DriveForwardGivenDistance extends CommandBase {
     // Make this return true when this Command no longer needs to run execute()
     @Override
     public boolean isFinished() {
-        double butteryErrorTolerance = 0.01;
+        // increased error tolerance so the command will finish in auton
+        double butteryErrorTolerance = 0.05;
         // SmartDashboard.getNumber("Error Tolerance Distance", 0.5);
         // SmartDashboard.putNumber("distance bt td and cp", Math.abs(targetDistance - currentPosition));
         // System.out.println("distance bt td and cp " +  Math.abs(td - cp));

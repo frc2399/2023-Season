@@ -20,7 +20,7 @@ public class ArmElevatorToHeight extends SequentialCommandGroup {
             new WaitUntilCommand(() -> elevator.atGoal()),
             new PrintCommand("arm angle: " + arm.getGoal()),
             RobotContainer.makeSetPositionCommand(arm, ArmConstants.MAX_ARM_ANGLE),
-            RobotContainer.makeSetPositionCommand(elevator, ElevatorConstants.MIN_ELEVATOR_HEIGHT),
+            RobotContainer.makeSetPositionCommand(elevator, 0),
             new WaitUntilCommand(() -> arm.atGoal()),
             new WaitUntilCommand(() -> elevator.atGoal())
           );

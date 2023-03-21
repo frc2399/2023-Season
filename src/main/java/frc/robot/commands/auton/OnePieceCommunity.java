@@ -1,8 +1,8 @@
 package frc.robot.commands.auton;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
@@ -14,26 +14,18 @@ import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
 
-public class OnePieceCommunityEngage extends SequentialCommandGroup {
+public class OnePieceCommunity extends SequentialCommandGroup {
 
-    public OnePieceCommunityEngage(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
+    public OnePieceCommunity(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
 
         addCommands(
             RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
             new DriveForwardGivenDistance(-0.20, driveTrain),
-            new PrintCommand("drive back finished"),
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
-            // leaves community then drives back on charging station
-            new DriveForwardGivenDistance(-4.2, driveTrain),
-            // wait one second before driving back on charging station so charging station becomes level again
-            new WaitCommand(1),
-            // drive back on charging station
-            new DriveForwardGivenDistance(2.1, driveTrain),
-            new PrintCommand("drive forward given distance finished "),
-
-            // balances robot when it's on charging station
-            new EngageCmd(driveTrain)
+            // leaves community
+            new DriveForwardGivenDistance(-4.2, driveTrain)
+            
           );
     }
 

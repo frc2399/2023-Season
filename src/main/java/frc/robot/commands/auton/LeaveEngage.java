@@ -1,6 +1,8 @@
 package frc.robot.commands.auton;
 
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
@@ -15,9 +17,13 @@ public class LeaveEngage extends SequentialCommandGroup {
         addCommands(
             RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
             // leaves community and drives over charging station
-            new DriveForwardGivenDistance(-4, driveTrain),
+            new DriveForwardGivenDistance(-4.3, driveTrain),
             // drives back on charging station
-            new DriveForwardGivenDistance(2, driveTrain),
+            new PrintCommand("finshed driving back"),
+            // wait one second before driving back on charging station so charging station becomes level again
+            new WaitCommand(1),
+            new DriveForwardGivenDistance(2.1, driveTrain),
+            new PrintCommand("finshed driving foward"),
              // balances robot when it's on charging station
             new EngageCmd(driveTrain)
           );

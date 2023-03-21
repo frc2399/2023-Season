@@ -60,13 +60,13 @@ public class Constants {
         public static final int ELEVATOR_SLEW = 5;
 
         //elevator min and max heights in meters
-        public static final double MIN_ELEVATOR_HEIGHT = 0.05;
+        public static final double MIN_ELEVATOR_HEIGHT = 0.0;
         public static final double MAX_ELEVATOR_HEIGHT = 0.75;
 
         //elevatr heights for cone/cube for scoring low, mid, and top nodes
         public static final double CONE_LOW_HEIGHT = 0.09;
         public static final double CUBE_LOW_HEIGHT = 0.08;
-        public static final double CONE_MID_HEIGHT = 0.53;
+        public static final double CONE_MID_HEIGHT = 0.58;
         public static final double CUBE_MID_HEIGHT = 0.25;
         public static final double CONE_TOP_HEIGHT = 0.71;
         public static final double CUBE_TOP_HEIGHT = 0.67;
@@ -75,14 +75,14 @@ public class Constants {
         public static final double CONE_UP_INTAKE_HEIGHT = 0.18;
         public static final double CONE_TIP_INTAKE_HEIGHT = 0.06;
         public static final double CUBE_INTAKE_HEIGHT = 0.06;
-        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.697;
-        public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
+        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.727;
+        public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.463;
 
         //27 inches per 41.951946 encoder counts
         public static final double METERS_PER_REVOLUTION = Units.inchesToMeters(27) / 41.951946;
 
-        //can be 1 inch off from goal setpoints and still considered at goal
-        public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(0.5);
+        //can be 1 inch off from goal setpoints and still considered at goal; made higher so placeConeOnNode cmd in auton will execute
+        public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(1);
 
     }
 
@@ -107,7 +107,7 @@ public class Constants {
         //arm mass in kg
         public static final double ARM_MASS = 2.72155;
         //arm length in meters
-        public static final double ARM_LENGTH = 0.72;
+        public static final double ARM_LENGTH = 0.65;
 
         //arm angles for cone/cube for scoring low, mid, and top nodes
         public static final double CONE_LOW_ANGLE = 0.03;
@@ -122,7 +122,7 @@ public class Constants {
         public static final double CONE_UP_INTAKE_ANGLE = -0.56;
         public static final double CONE_TIP_INTAKE_ANGLE = -0.36;
         public static final double CUBE_INTAKE_ANGLE = -0.36;
-        public static final double CONE_SHELF_INTAKE_ANGLE = -0.247;
+        public static final double CONE_SHELF_INTAKE_ANGLE = -0.302;
         public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
 
         public static final double TURTLE_ANGLE = 0.5;
@@ -131,8 +131,9 @@ public class Constants {
         // initial offset is 0.711 + (0.287) - (0.308)
         public static final double INITIAL_OFFSET = 0.660;
 
-        //can be 2 degrees off from goal setpoints and still considered at goal
-        public static final double ANGLE_TOLERANCE = Units.degreesToRadians(0.5);
+        //can be 2 degrees off from goal setpoints and still considered at goal; made higher so arm.atGoal() in placeConeOnNode cmd will execute in auton
+        public static final double ANGLE_TOLERANCE_AUTON = Units.degreesToRadians(2);
+
     }
 
     public static final class IntakeConstants {
