@@ -5,6 +5,7 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveTrain;
@@ -23,6 +24,7 @@ public class TurnToNAngleCmd extends CommandBase {
   private double currentAngle;
   private double range = Units.degreesToRadians(5);
   private double kP = .2;
+  private SlewRateLimiter turnLimiter;
 
   public TurnToNAngleCmd(double targetAngle, DriveTrain subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -37,22 +39,22 @@ public class TurnToNAngleCmd extends CommandBase {
   public void initialize() {
     System.out.println("TurnToNAngle initialized, targetAngle: " + targetAngle);
     // SmartDashboard.putNumber("target angle", targetAngle);
+
+    // TODO: find optimal rate limit val
+    this.turnLimiter = new SlewRateLimiter(0.75);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    
     currentAngle = m_driveTrain.getGyroAngle().getRadians();
-    currentAngle = modAngle(currentAngle);
 
-    double error = targetAngle - currentAngle;
-    error = modAngle(error);
+    double error = modAngle(targetAngle - currentAngle);
     // SmartDashboard.putNumber("error", error);
 
     double outputSpeed = kP * error;
     outputSpeed = MathUtil.clamp(outputSpeed, -0.5, 0.5);
+    outputSpeed = turnLimiter.calculate(outputSpeed);
 
     m_driveTrain.setMotors(-outputSpeed, outputSpeed);
 
