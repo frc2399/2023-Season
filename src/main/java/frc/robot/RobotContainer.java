@@ -38,6 +38,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
+import frc.robot.commands.auton.OneAndHalfPieceEngage;
 import frc.robot.commands.auton.OnePieceCommunity;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
@@ -388,6 +389,7 @@ public class RobotContainer {
         chooser.addOption("score and leave community", new OnePieceCommunity(driveTrain, intake, elevator, arm));
         chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
         chooser.addOption("leave community", new DriveForwardGivenDistance(-5, driveTrain));
+        chooser.addOption("one and half cone and engage", new OneAndHalfPieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("two cone auton bottom", new TwoPieceAutonBottom(driveTrain, elevator, intake, arm));
     }  
     

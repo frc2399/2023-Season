@@ -1,5 +1,7 @@
 package frc.robot.commands.auton;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -23,7 +25,7 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
 
     public OneAndHalfPieceEngage(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
 
-        driveTrain.resetOdometry(null);
+        driveTrain.resetOdometry(new Pose2d(2.75, 3.26, new Rotation2d(-3.14)));
 
         addCommands(
             RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
@@ -40,9 +42,11 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
             RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, 0),
             // intake upright cone from ground
             new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 0.7),
-            RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
-            // drive back on charging station
-            new DriveForwardGivenDistance(-2.4, driveTrain),
+            new ParallelCommandGroup(
+                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
+                // drive back on charging station
+                new DriveForwardGivenDistance(-2.4, driveTrain)
+            ),
             new EngageCmd(driveTrain)
 
             
