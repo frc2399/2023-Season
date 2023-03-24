@@ -37,7 +37,7 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
             // TODO: find actual turn angle
             new TurnToNAngleCmd(Units.degreesToRadians(180), driveTrain),
             // lower arm
-            RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, 0),
+            RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
             // drives and intakes cone off ground
             new ParallelCommandGroup(
                 new DriveForwardGivenDistance(0.3, driveTrain),
