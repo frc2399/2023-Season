@@ -40,6 +40,8 @@ public class CurvatureDriveCmd extends CommandBase {
         this.driveLimiter = new SlewRateLimiter(4.0);
         // Creates a Debouncer in "both" mode.
         m_debouncer = new Debouncer(0.1, Debouncer.DebounceType.kRising);
+        // set isSlow to false in constructor not initialize so when curvatureDdriveCmd is initialized and default not automatically set to false
+        isSlow = false;
 
 
         // So if currently false the signal must go true for at least .1 seconds before being read as a True signal.
@@ -51,7 +53,6 @@ public class CurvatureDriveCmd extends CommandBase {
     @Override
     public void initialize() {
         //System.out.println("CurvatureDriveCmd started!");
-        isSlow = false;
     }
 
 

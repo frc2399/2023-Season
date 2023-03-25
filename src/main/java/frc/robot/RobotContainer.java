@@ -40,14 +40,17 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
+import frc.robot.commands.auton.OneAndHalfPieceEngage;
 import frc.robot.commands.auton.OnePieceCommunity;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
+import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
+import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -216,7 +219,11 @@ public class RobotContainer {
         new JoystickButton(xboxOperator, Button.kRightBumper.value).whileTrue(intakePiece);
 
         // Driver X(3) - engage command
-        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
+        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(
+            new SequentialCommandGroup(
+                new InstantCommand(() -> {CurvatureDriveCmd.isSlow = true;}),
+                new EngageCmd(driveTrain)
+        ));
 
         //Driver Y(4) - ignore the limit switches
         new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
@@ -229,6 +236,9 @@ public class RobotContainer {
         //Unused Buttons
             //Driver - Right Stick(10)
             //Operator - 
+
+        //Turn to angle button
+        new JoystickButton(xboxDriver, Button.kRightStick.value).onTrue(new TurnToNAngleCmd(Math.PI, driveTrain));
 
     }
 
@@ -388,6 +398,7 @@ public class RobotContainer {
         chooser.addOption("score and leave community", new OnePieceCommunity(driveTrain, intake, elevator, arm));
         chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
         chooser.addOption("leave community", new DriveForwardGivenDistance(-5, driveTrain));
+        chooser.addOption("one and half cone and engage", new OneAndHalfPieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("two cone auton bottom", new TwoPieceAutonBottom(driveTrain, elevator, intake, arm));
     }  
     
