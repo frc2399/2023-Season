@@ -139,7 +139,6 @@ public class RobotContainer {
 
         DriverStation.silenceJoystickConnectionWarning(true);
         pdp = new PowerDistribution(1, ModuleType.kRev);
-        SmartDashboard.putData("PDP", pdp);
         // photonCamera = new PhotonCamera ("photonvision");
 
         // camera not in simulator to make it not crash
