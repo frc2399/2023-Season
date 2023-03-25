@@ -76,13 +76,13 @@ public class DriveTrain extends SubsystemBase {
         SmartDashboard.putNumber("drive/yaw angle (deg)", getGyroAngle().getDegrees());
         SmartDashboard.putNumber("drive/left position (m)", getLeftEncoderMeters());
         SmartDashboard.putNumber("drive/right postion (m)", getRightEncoderMeters());
-        SmartDashboard.putNumber("drive/left velocity (m/s)", getLeftEncoderMetersPerSecond());
-        SmartDashboard.putNumber("drive/right velocity (m/s)", getRightEncoderMetersPerSecond());
+        SmartDashboard.putNumber("drive/left velocity (m per s)", getLeftEncoderMetersPerSecond());
+        SmartDashboard.putNumber("drive/right velocity (m per s)", getRightEncoderMetersPerSecond());
         SmartDashboard.putNumber("drive/odometry x (m)", getPoseMeters().getX());
         SmartDashboard.putNumber("drive/odometry y (m)", getPoseMeters().getY());
         SmartDashboard.putNumber("drive/odometry angle (rad)", getPoseMeters().getRotation().getDegrees());
         SmartDashboard.putNumber("drive/pitch (rad)", getGyroPitch());
-        SmartDashboard.putNumber("drive/pitch rate (rad/sec)", getGyroPitchRate());
+        SmartDashboard.putNumber("drive/pitch rate (rad per s)", getGyroPitchRate());
 
     }
 
