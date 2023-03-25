@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
@@ -41,9 +42,9 @@ public class Arm extends ProfiledPIDSubsystem {
     super.periodic();
     armIO.periodicUpdate();
 
-    SmartDashboard.putNumber("arm goal position", getGoal());
-    SmartDashboard.putNumber("arm velocity", getEncoderSpeed()); 
-    SmartDashboard.putNumber("arm postion", getEncoderPosition()); 
+    SmartDashboard.putNumber("arm/goal position", getGoal());
+    SmartDashboard.putNumber("arm/velocity", getEncoderSpeed()); 
+    SmartDashboard.putNumber("arm/postion", getEncoderPosition()); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);
   
   }
@@ -59,7 +60,7 @@ public class Arm extends ProfiledPIDSubsystem {
   public void setSpeed(double speed) {
     speed = Math.max(Math.min(speed, 0.5), -0.5);
     armIO.setSpeed(speed);
-    SmartDashboard.putNumber("arm speed", speed);
+    SmartDashboard.putNumber("arm/speed", speed);
   }
 
   public double getTargetAngle() {
@@ -67,7 +68,7 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public void setTargetAngle(double angle) {
-    System.out.println("Set target to " + angle);
+    DataLogManager.log("Set target to " + angle);
     targetAngle = angle; 
   }
 
@@ -82,8 +83,8 @@ public class Arm extends ProfiledPIDSubsystem {
 
   @Override
   protected void useOutput(double output, State setpoint) {
-    SmartDashboard.putNumber("arm setpoint pos", setpoint.position);
-    SmartDashboard.putNumber("arm setpoint vel", setpoint.velocity);
+    SmartDashboard.putNumber("arm/setpoint pos", setpoint.position);
+    SmartDashboard.putNumber("arm/setpoint vel", setpoint.velocity);
 
     // Calculate the feedforward from the setpoint
     double speed = feedForward * setpoint.velocity;

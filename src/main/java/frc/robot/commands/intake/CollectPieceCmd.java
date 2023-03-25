@@ -5,6 +5,7 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
@@ -41,7 +42,7 @@ public class CollectPieceCmd extends CommandBase {
     //intake.openRight();
     // intake.openLeft();
     intake.setMotor(0);
-    System.out.println("speed set to 0");
+    DataLogManager.log("speed set to 0");
   }
 
   // Returns true when the command should end.

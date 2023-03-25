@@ -73,16 +73,16 @@ public class DriveTrain extends SubsystemBase {
 
         field.setRobotPose(odometry.getPoseMeters());
 
-        SmartDashboard.putNumber("gyro angle", getGyroAngle().getDegrees());
-        SmartDashboard.putNumber("left encoder postion", getLeftEncoderMeters());
-        SmartDashboard.putNumber("right encoder postion", getRightEncoderMeters());
-        SmartDashboard.putNumber("left encoder velocity", getLeftEncoderMetersPerSecond());
-        SmartDashboard.putNumber("right encoder veloicty", getRightEncoderMetersPerSecond());
-        SmartDashboard.putNumber("odometry x", getPoseMeters().getX());
-        SmartDashboard.putNumber("odometry y", getPoseMeters().getY());
-        SmartDashboard.putNumber("odometry angle", getPoseMeters().getRotation().getDegrees());
-        SmartDashboard.putNumber("pitch", getGyroPitch());
-        SmartDashboard.putNumber("pitch rate", getGyroPitchRate());
+        SmartDashboard.putNumber("drive/yaw angle (deg)", getGyroAngle().getDegrees());
+        SmartDashboard.putNumber("drive/left position (m)", getLeftEncoderMeters());
+        SmartDashboard.putNumber("drive/right postion (m)", getRightEncoderMeters());
+        SmartDashboard.putNumber("drive/left velocity (m/s)", getLeftEncoderMetersPerSecond());
+        SmartDashboard.putNumber("drive/right velocity (m/s)", getRightEncoderMetersPerSecond());
+        SmartDashboard.putNumber("drive/odometry x (m)", getPoseMeters().getX());
+        SmartDashboard.putNumber("drive/odometry y (m)", getPoseMeters().getY());
+        SmartDashboard.putNumber("drive/odometry angle (rad)", getPoseMeters().getRotation().getDegrees());
+        SmartDashboard.putNumber("drive/pitch (rad)", getGyroPitch());
+        SmartDashboard.putNumber("drive/pitch rate (rad/sec)", getGyroPitchRate());
 
     }
 

@@ -42,10 +42,10 @@ public class Elevator extends ProfiledPIDSubsystem {
     elevatorIO.updateForSim();
     double currentPos = getEncoderPosition();
     double currentVel = getEncoderSpeed();
-    SmartDashboard.putNumber("elevator goal position", getGoal());
-    SmartDashboard.putNumber("elevator position", currentPos); 
-    SmartDashboard.putNumber("elevator velocity", currentVel); 
-    SmartDashboard.putBoolean("ignoring limit switched?", ignoreLimitSwitches);
+    SmartDashboard.putNumber("elevator/goal (m)", getGoal());
+    SmartDashboard.putNumber("elevator/position (m)", currentPos); 
+    SmartDashboard.putNumber("elevator/velocity (m/s)", currentVel); 
+    SmartDashboard.putBoolean("elevator/ignore limit switches", ignoreLimitSwitches);
     RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
   }
 
@@ -73,7 +73,7 @@ public class Elevator extends ProfiledPIDSubsystem {
     
     //caps the elevator speed at 0.5 rather than 1
     //speed = Math.max(Math.min(speed, 0.5), -0.5);
-    SmartDashboard.putNumber("elevator motor input", speed);
+    SmartDashboard.putNumber("elevator/motor input (%)", speed);
     elevatorIO.setSpeed(speed);
   }
 
@@ -89,9 +89,9 @@ public class Elevator extends ProfiledPIDSubsystem {
 
   @Override
   protected void useOutput(double output, State setpoint) {
-    SmartDashboard.putNumber("elevator setpoint pos", setpoint.position);
-    SmartDashboard.putNumber("elevator setpoint vel", setpoint.velocity);
-    SmartDashboard.putNumber("error", setpoint.position - getEncoderPosition());
+    SmartDashboard.putNumber("elevator/setpoint position (m)", setpoint.position);
+    SmartDashboard.putNumber("elevator/setpoint velocity (m/sec)", setpoint.velocity);
+    SmartDashboard.putNumber("elevator/setpoint error", setpoint.position - getEncoderPosition());
 
     // Calculate the feedforward from the setpoint
     double speed = feedForward * setpoint.velocity;
