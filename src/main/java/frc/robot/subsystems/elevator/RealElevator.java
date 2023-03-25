@@ -66,8 +66,8 @@ public class RealElevator implements ElevatorIO {
 
     @Override
     public void updateForSim() {
-        SmartDashboard.putBoolean("Top Limit Pressed", topLimitSwitch.isPressed());
-        SmartDashboard.putBoolean("Bottom Limit Pressed", bottomLimitSwitch.isPressed());    
+        SmartDashboard.putBoolean("elevator/top limit pressed", topLimitSwitch.isPressed());
+        SmartDashboard.putBoolean("elevator/bottom limit pressed", bottomLimitSwitch.isPressed());    
     }
 
     @Override

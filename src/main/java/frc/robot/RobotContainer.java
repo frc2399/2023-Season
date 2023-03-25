@@ -9,8 +9,10 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -104,6 +106,8 @@ public class RobotContainer {
     public static final Joystick xboxDriver = new Joystick(XboxConstants.XBOX_DRIVER_PORT);
     public static final Joystick xboxOperator = new Joystick(XboxConstants.XBOX_OPERATOR_PORT);
 
+    public static PowerDistribution pdp;
+
     public static boolean coneMode = true;
 
     private Command coneIntake;
@@ -112,8 +116,6 @@ public class RobotContainer {
     private Command cubeOuttake;
     
     private Command changeMode;
-
-    private Command chaseTagCmd;
 
     private Command setTopPieceSetpoint;
     private Command setMidPieceSetpoint;
@@ -139,7 +141,7 @@ public class RobotContainer {
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
-
+        pdp = new PowerDistribution(1, ModuleType.kRev);
         // photonCamera = new PhotonCamera ("photonvision");
 
         // camera not in simulator to make it not crash
@@ -245,9 +247,7 @@ public class RobotContainer {
             new CurvatureDriveCmd(driveTrain,
                 () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
                 () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value), 
-                () -> elevator.getEncoderPosition()));  
-          
-
+                () -> elevator.getEncoderPosition()));
         intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));

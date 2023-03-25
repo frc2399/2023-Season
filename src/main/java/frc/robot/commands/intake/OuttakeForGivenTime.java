@@ -1,5 +1,6 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.intake.Intake;
@@ -23,7 +24,7 @@ public class OuttakeForGivenTime extends CommandBase {
 
     @Override
     public void initialize() {
-        System.out.println("outtake for time started!");
+        DataLogManager.log("outtake for time started!");
         timer.reset();
         timer.start();
     }
@@ -35,7 +36,7 @@ public class OuttakeForGivenTime extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("outtake time ended!");
+        DataLogManager.log("outtake time ended!");
         this.intakeSubsystem.setMotor(0.0);
     }
 

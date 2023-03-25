@@ -69,22 +69,22 @@ public class CurvatureDriveCmd extends CommandBase {
         realTimeTurn = -turnFunction.get();
     
         //transforming the drive value
-        SmartDashboard.putNumber("Raw Joystick Speed", realTimeSpeed);
-        SmartDashboard.putNumber("Raw Joystick Turm", realTimeTurn);
+        SmartDashboard.putNumber("drive/joystick for/back (%)", realTimeSpeed);
+        SmartDashboard.putNumber("drive/joystick turn (%)", realTimeTurn);
 
         realTimeSpeed = realTimeSpeed * realTimeSpeed * Math.signum(realTimeSpeed);
         //realTimeSpeed = realTimeSpeed * realTimeSpeed * realTimeSpeed;
         //realTimeSpeed = 0.9 * realTimeSpeed * realTimeSpeed * realTimeSpeed + 0.1 * Math.signum(realTimeSpeed);
         realTimeSpeed  = driveLimiter.calculate(realTimeSpeed);
         realTimeSpeed = DriveUtil.computeDeadband(realTimeSpeed, driveDeadband);
-        SmartDashboard.putNumber("Transformed Joystick Value", realTimeSpeed);
+        // SmartDashboard.putNumber("Transformed Joystick Value", realTimeSpeed);
 
 
         //transforming the turn value
-        SmartDashboard.putNumber("Raw Turn Value", realTimeTurn);
+        // SmartDashboard.putNumber("Raw Turn Value", realTimeTurn);
         realTimeTurn = DriveUtil.computeDeadband(realTimeTurn, turnDeadband);
         realTimeTurn = realTimeTurn * realTimeTurn * Math.signum(realTimeTurn);
-        SmartDashboard.putNumber("Transformed Turn Value", realTimeTurn);
+        // SmartDashboard.putNumber("Transformed Turn Value", realTimeTurn);
 
         if(m_debouncer.calculate(Math.abs(realTimeSpeed) <= Constants.XboxConstants.FORWARD_DEADBAND) && realTimeTurn != 0)
         {
@@ -109,13 +109,13 @@ public class CurvatureDriveCmd extends CommandBase {
 
         if (isSlow || elevatorHeight.get() > ElevatorConstants.MAX_ELEVATOR_HEIGHT / 2) {        
             this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
-            SmartDashboard.putBoolean("isSlow", true);
+            SmartDashboard.putBoolean("drive/slow mode", true);
         }
         else {
-            SmartDashboard.putNumber("left motor speed", left);
-            SmartDashboard.putNumber("right motor speed", right);
+            // SmartDashboard.putNumber("left motor speed", left);
+            // SmartDashboard.putNumber("right motor speed", right);
             this.driveSubsystem.setMotors(left, right);
-            SmartDashboard.putBoolean("isSlow", false);
+            SmartDashboard.putBoolean("drive/slow mode", false);
         }
         
     }

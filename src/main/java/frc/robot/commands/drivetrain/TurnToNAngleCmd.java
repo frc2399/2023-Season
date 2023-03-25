@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.util.PIDUtil;
@@ -38,9 +39,8 @@ public class TurnToNAngleCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("TurnToNAngle initialized, targetAngle: " + targetAngle);
-
     this.turnLimiter = new SlewRateLimiter(1.5);
+    DataLogManager.log("TurnToNAngle initialized, targetAngle: " + targetAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,7 +65,7 @@ public class TurnToNAngleCmd extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_driveTrain.setMotors(0, 0);
-    System.out.println("TurnToNangle ended");
+    DataLogManager.log("TurnToNangle ended");
   }
 
   // Returns true when the command should end.
