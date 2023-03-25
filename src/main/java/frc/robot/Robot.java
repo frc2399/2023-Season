@@ -68,6 +68,7 @@ public class Robot extends TimedRobot {
     );
     // SmartDashboard.putString("branch and date", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE);
     Shuffleboard.getTab("Driver").add("robot/branch info", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE + " " + MyVersion.GIT_SHA);
+    SmartDashboard.putData("PDP", RobotContainer.pdp);
   }
 
   @Override
