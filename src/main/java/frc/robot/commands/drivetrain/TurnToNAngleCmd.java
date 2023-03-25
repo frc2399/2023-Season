@@ -7,6 +7,7 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.util.PIDUtil;
@@ -21,10 +22,10 @@ public class TurnToNAngleCmd extends CommandBase {
   /** Creates a new TurnToNAngle. */
   public double targetAngle;
   private final DriveTrain m_driveTrain;
-  private double currentAngle;
-  private double range = Units.degreesToRadians(5);
-  private double kP = .2;
+  private double errorTolerance = Units.degreesToRadians(2);
+  private double kP = .25;
   private SlewRateLimiter turnLimiter;
+  double error; 
 
   public TurnToNAngleCmd(double targetAngle, DriveTrain subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -38,23 +39,23 @@ public class TurnToNAngleCmd extends CommandBase {
   @Override
   public void initialize() {
     System.out.println("TurnToNAngle initialized, targetAngle: " + targetAngle);
-    // SmartDashboard.putNumber("target angle", targetAngle);
 
-    // TODO: find optimal rate limit val
-    this.turnLimiter = new SlewRateLimiter(0.75);
+    this.turnLimiter = new SlewRateLimiter(1.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    currentAngle = m_driveTrain.getGyroAngle().getRadians();
+    double currentAngle = m_driveTrain.getGyroAngle().getRadians();
 
-    double error = modAngle(targetAngle - currentAngle);
-    // SmartDashboard.putNumber("error", error);
+    error = modAngle(targetAngle - currentAngle);
+    SmartDashboard.putNumber("turn to angle error", error);
 
     double outputSpeed = kP * error;
     outputSpeed = MathUtil.clamp(outputSpeed, -0.5, 0.5);
     outputSpeed = turnLimiter.calculate(outputSpeed);
+    //created a min speed to overcome small errors
+    outputSpeed += 0.07 * Math.signum(outputSpeed);
 
     m_driveTrain.setMotors(-outputSpeed, outputSpeed);
 
@@ -70,10 +71,13 @@ public class TurnToNAngleCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return PIDUtil.checkWithinRange(targetAngle, currentAngle, range);
+    return PIDUtil.checkWithinRange(0, error, errorTolerance);
   }
 
   public double modAngle(double value) {
-    return ((value + Math.PI) % (Math.PI * 2)) - Math.PI;
+    value = (value + Math.PI) % (Math.PI * 2);  // Take "remainder" (https://stackoverflow.com/a/2172061)
+    value = value < 0 ? value + Math.PI * 2 : value;  // If less then 0, add the value to make it "modulus"
+    return value - Math.PI;  // Subtract PI to make the angle in the range -PI to PI
+
   }
 }

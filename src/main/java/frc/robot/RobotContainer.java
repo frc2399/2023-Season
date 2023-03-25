@@ -47,6 +47,7 @@ import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
+import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -228,6 +229,9 @@ public class RobotContainer {
         //Unused Buttons
             //Driver - Right Stick(10)
             //Operator - 
+
+        //Turn to angle button
+        new JoystickButton(xboxDriver, Button.kRightStick.value).onTrue(new TurnToNAngleCmd(Math.PI, driveTrain));
 
     }
 
