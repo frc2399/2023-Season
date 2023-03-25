@@ -28,7 +28,7 @@ public class StallIntakeCmd extends CommandBase {
       // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        debouncer = new Debouncer(0.5);
+        debouncer = new Debouncer(0.15);
         intakeSpeed = 0.0;
         intakeCurrentLimit = 0;
     }

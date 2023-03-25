@@ -12,7 +12,7 @@ public class RealIntake implements IntakeIO {
 
     public static CANSparkMax intakeMotorController;
     public static RelativeEncoder intakeEncoder;
-    private double slewRate = 0.6;
+    private double slewRate = 0.2;
 
     public RealIntake()
     {
