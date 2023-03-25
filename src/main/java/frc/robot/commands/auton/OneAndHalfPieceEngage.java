@@ -5,7 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
@@ -32,21 +34,23 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
             // leaves community
-            new DriveForwardGivenDistance(-4.1, driveTrain),
+            new DriveForwardGivenDistance(-4.2, driveTrain),
             new ParallelCommandGroup(
                 // lower arm
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
-                new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain)
+                new TurnToNAngleCmd(Units.degreesToRadians(-5), driveTrain)
             ),
             // drives and intakes cone off ground
-            new ParallelCommandGroup(
-                new DriveForwardGivenDistance(0.3, driveTrain),
-                new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 0.7)
-            ),
+            new ParallelDeadlineGroup(
+                new SequentialCommandGroup(
+                    new DriveForwardGivenDistance(0.63, driveTrain),
+                    new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
+                ),
+                new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2)),
             new ParallelCommandGroup(
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
                 // drive back on charging station
-                new DriveForwardGivenDistance(-2.4, driveTrain),
+                new DriveForwardGivenDistance(-3.05, driveTrain),
                 new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 0.5)
             ),
             new EngageCmd(driveTrain)

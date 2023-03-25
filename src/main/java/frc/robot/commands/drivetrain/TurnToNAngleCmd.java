@@ -22,8 +22,8 @@ public class TurnToNAngleCmd extends CommandBase {
   /** Creates a new TurnToNAngle. */
   public double targetAngle;
   private final DriveTrain m_driveTrain;
-  private double errorTolerance = Units.degreesToRadians(2);
-  private double kP = .25;
+  private double errorTolerance = Units.degreesToRadians(1);
+  private double kP = .15;
   private SlewRateLimiter turnLimiter;
   double error; 
 
