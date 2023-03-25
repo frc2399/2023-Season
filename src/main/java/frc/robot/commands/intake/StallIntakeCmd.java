@@ -48,7 +48,6 @@ public class StallIntakeCmd extends CommandBase {
             intakeCurrentLimit = IntakeConstants.OUT_CURRENT;
             Intake.isIntooked = false;
             // reset debouncer hacky way
-            debouncer.calculate(false);
         }
         else if (Intake.isIntooked)
         {
@@ -59,7 +58,9 @@ public class StallIntakeCmd extends CommandBase {
             intakeSpeed = 0;
             intakeCurrentLimit = 3;
         }
-        
+        if (!intake.get()) {
+            debouncer.calculate(false);
+        }
         intakeSubsystem.setMotor(intakeSpeed);
         intakeSubsystem.setCurrentLimit(intakeCurrentLimit);
         SmartDashboard.putNumber("Intake current limit", intakeCurrentLimit);
