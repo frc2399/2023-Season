@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.util.LEDController;
 
 public class LED extends SubsystemBase {
@@ -58,12 +59,17 @@ public void setColor(int r, int g, int b, int w) {
     //   timer.reset();
     //   timer.start();
     // }
-    
-    if(RobotContainer.coneMode == true) {
-      this.setColor(254, 117, 0, 2);
+
+    if (Intake.isIntooked) {
+      this.setColor(0, 255, 0, 0);
     }
     else {
-      this.setColor(150, 0, 254, 5);
+      if(RobotContainer.coneMode == true) {
+        this.setColor(254, 117, 0, 2);
+      }
+      else {
+        this.setColor(150, 0, 254, 5);
+      }
     }
 
   }

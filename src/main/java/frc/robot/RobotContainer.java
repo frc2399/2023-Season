@@ -50,6 +50,7 @@ import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
+import frc.robot.commands.intake.StallIntakeCmd;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
@@ -109,11 +110,6 @@ public class RobotContainer {
     public static PowerDistribution pdp;
 
     public static boolean coneMode = true;
-
-    private Command coneIntake;
-    private Command cubeIntake;
-    private Command coneOuttake;
-    private Command cubeOuttake;
     
     private Command changeMode;
 
@@ -123,8 +119,6 @@ public class RobotContainer {
     private Command setGroundUpIntakeSetpoint;
     private Command setGroundTipIntakeSetpoint;
     private Command setShelfIntakeSetpoint;
-    private Command intakePiece;
-    private Command outtakePiece;
 
     private Command selectPositionCommand;
 
@@ -215,9 +209,6 @@ public class RobotContainer {
         //     intake.setMotor(0);
         // }, elevator, arm, intake, driveTrain));
 
-        // Operator Right Bumper (6) - intake 
-        new JoystickButton(xboxOperator, Button.kRightBumper.value).whileTrue(intakePiece);
-
         // Driver X(3) - engage command
         new JoystickButton(xboxDriver, Button.kX.value).whileTrue(
             new SequentialCommandGroup(
@@ -227,11 +218,6 @@ public class RobotContainer {
 
         //Driver Y(4) - ignore the limit switches
         new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
-
-        //Driver Triggers - Intake and Outtake
-        //intake commands
-        new Trigger(() -> xboxDriver.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(intakePiece);
-        new Trigger(() -> xboxDriver.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(outtakePiece);
 
         //Unused Buttons
             //Driver - Right Stick(10)
@@ -247,8 +233,12 @@ public class RobotContainer {
             new CurvatureDriveCmd(driveTrain,
                 () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
                 () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value), 
-                () -> elevator.getEncoderPosition()));
-        intake.setDefaultCommand(new RunCommand(() -> intake.setMotor(0), intake));
+                () -> elevator.getEncoderPosition()));  
+                
+        intake.setDefaultCommand(
+            new StallIntakeCmd(intake, 
+            () -> (xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1 || xboxOperator.getRawButtonPressed(XboxController.Button.kRightBumper.value)), 
+            () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.1));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));
     }
@@ -349,15 +339,6 @@ public class RobotContainer {
 
         // coneTipIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT);
         // conePhalangeIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_PHALANGE_INTAKE_ANGLE, ElevatorConstants.CONE_PHALANGE_INTAKE_HEIGHT);
-
-        coneIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CONE_IN_SPEED), intake);
-        cubeIntake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CUBE_IN_SPEED), intake);
-        coneOuttake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CONE_OUT_SPEED), intake);
-        cubeOuttake = new RunCommand(() -> intake.setMotor(Constants.IntakeConstants.CUBE_OUT_SPEED), intake);
-        
-        intakePiece = new ConditionalCommand(coneIntake, cubeIntake, () -> coneMode);
-        outtakePiece = new ConditionalCommand(coneOuttake, cubeOuttake, () -> coneMode);
-
         turtleMode = makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0.0);
     }
 
@@ -423,7 +404,6 @@ public class RobotContainer {
         );
     }
 
-    // automatically sends the arm to the top position then reset the encoder to the correct initial offset
     private static Command resetArmEncoderCommand(Arm a) {
         Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(
@@ -436,7 +416,6 @@ public class RobotContainer {
         );
     }
 
-    // automatically sends the elevator to the bottom position then reset the encoder to the correct initial offset
     private static Command resetElevatorEncoderCommand(Elevator e) {
         Debouncer debouncer = new Debouncer(0.2);
         return new SequentialCommandGroup(
