@@ -78,6 +78,5 @@ public class TurnToNAngleCmd extends CommandBase {
     value = (value + Math.PI) % (Math.PI * 2);  // Take "remainder" (https://stackoverflow.com/a/2172061)
     value = value < 0 ? value + Math.PI * 2 : value;  // If less then 0, add the value to make it "modulus"
     return value - Math.PI;  // Subtract PI to make the angle in the range -PI to PI
-
   }
 }
