@@ -25,9 +25,8 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
 
     public OneAndHalfPieceEngage(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
 
-        driveTrain.resetOdometry(new Pose2d(2.75, 3.26, new Rotation2d(-3.14)));
-
         addCommands(
+            new InstantCommand(() -> {driveTrain.resetOdometry(new Pose2d(2.75, 3.26, new Rotation2d(-3.14)));}, driveTrain),
             RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
             new DriveForwardGivenDistance(-0.20, driveTrain),
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
@@ -35,7 +34,7 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
             // leaves community
             new DriveForwardGivenDistance(-4.2, driveTrain),
             // TODO: find actual turn angle
-            new TurnToNAngleCmd(Units.degreesToRadians(180), driveTrain),
+            new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain),
             // lower arm
             RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
             // drives and intakes cone off ground
