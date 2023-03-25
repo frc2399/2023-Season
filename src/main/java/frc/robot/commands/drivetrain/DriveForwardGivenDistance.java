@@ -2,6 +2,7 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DataLogManager;
 // import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 // import edu.wpi.first.wpilibj.interfaces.*;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -40,7 +41,7 @@ public class DriveForwardGivenDistance extends CommandBase {
         currentPosition = (
             m_driveTrain.getLeftEncoderMeters() + 
             m_driveTrain.getRightEncoderMeters() )/ 2;
-        System.out.println("starting current position " + currentPosition);
+        DataLogManager.log("starting current position " + currentPosition);
         
         // find distance robot needs to travel to from its current position
         newTargetDistance = currentPosition + targetDistanceMeters;
@@ -89,6 +90,6 @@ public class DriveForwardGivenDistance extends CommandBase {
     
         m_driveTrain.setMotors(0, 0);
 
-        System.out.println("DriveForwardGivenDistance ended");
+        DataLogManager.log("DriveForwardGivenDistance ended");
     }
 }
