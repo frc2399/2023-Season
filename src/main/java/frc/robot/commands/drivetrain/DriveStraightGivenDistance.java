@@ -67,7 +67,7 @@ public class DriveStraightGivenDistance extends CommandBase {
         outputSpeed = MathUtil.clamp(outputSpeed, -0.3, 0.3);
         outputSpeed  = driveLimiter.calculate(outputSpeed);
 
-        double straightCorrection = 1.0 * angleError;
+        double straightCorrection = 1.0 * modAngle(angleError);
         straightCorrection = MathUtil.clamp(straightCorrection, -0.5 * Math.abs(outputSpeed), 0.5 * Math.abs(outputSpeed));
 
         m_driveTrain.setMotors(outputSpeed - straightCorrection, outputSpeed + straightCorrection);
@@ -89,6 +89,12 @@ public class DriveStraightGivenDistance extends CommandBase {
         return false;
         
     }
+
+    public double modAngle(double value) {
+        value = (value + Math.PI) % (Math.PI * 2);  // Take "remainder" (https://stackoverflow.com/a/2172061)
+        value = value < 0 ? value + Math.PI * 2 : value;  // If less then 0, add the value to make it "modulus"
+        return value - Math.PI;  // Subtract PI to make the angle in the range -PI to PI
+      }
 
     // Called once after isFinished returns true
     @Override
