@@ -47,6 +47,8 @@ public class StallIntakeCmd extends CommandBase {
             intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_OUT_SPEED : IntakeConstants.CUBE_OUT_SPEED;
             intakeCurrentLimit = IntakeConstants.OUT_CURRENT;
             Intake.isIntooked = false;
+            // reset debouncer hacky way
+            debouncer.calculate(false);
         }
         else if (Intake.isIntooked)
         {
