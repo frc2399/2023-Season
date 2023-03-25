@@ -219,7 +219,7 @@ public class RobotContainer {
         // Driver X(3) - engage command
         new JoystickButton(xboxDriver, Button.kX.value).whileTrue(
             new SequentialCommandGroup(
-                new InstantCommand(() -> {ArcadeDriveCmd.isSlow = true;}),
+                new InstantCommand(() -> {CurvatureDriveCmd.isSlow = true;}),
                 new EngageCmd(driveTrain)
         ));
 

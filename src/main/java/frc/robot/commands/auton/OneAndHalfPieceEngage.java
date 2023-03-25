@@ -32,11 +32,12 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
             // leaves community
-            new DriveForwardGivenDistance(-4.2, driveTrain),
-            // TODO: find actual turn angle
-            new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain),
-            // lower arm
-            RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
+            new DriveForwardGivenDistance(-4.1, driveTrain),
+            new ParallelCommandGroup(
+                // lower arm
+                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
+                new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain)
+            ),
             // drives and intakes cone off ground
             new ParallelCommandGroup(
                 new DriveForwardGivenDistance(0.3, driveTrain),
@@ -45,7 +46,8 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
             new ParallelCommandGroup(
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
                 // drive back on charging station
-                new DriveForwardGivenDistance(-2.4, driveTrain)
+                new DriveForwardGivenDistance(-2.4, driveTrain),
+                new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 0.5)
             ),
             new EngageCmd(driveTrain)
 
