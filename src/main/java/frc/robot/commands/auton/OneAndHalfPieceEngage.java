@@ -14,6 +14,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
+import frc.robot.commands.drivetrain.DriveStraightGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
@@ -34,7 +35,7 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
             // leaves community
-            new DriveForwardGivenDistance(-4.2, driveTrain),
+            new DriveStraightGivenDistance(-4.2, driveTrain),
             new ParallelCommandGroup(
                 // lower arm
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
