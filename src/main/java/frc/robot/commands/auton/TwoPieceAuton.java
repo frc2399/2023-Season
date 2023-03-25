@@ -70,7 +70,6 @@ public class TwoPieceAuton extends SequentialCommandGroup {
       driveTrain // Requires this drive subsystem
     );
 
-
     addCommands(
       RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
       new DriveForwardGivenDistance(-0.20, driveTrain),
@@ -78,7 +77,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
       new PrintCommand("place cone on node finished"),
       // leaves community
       new DriveForwardGivenDistance(-4.2, driveTrain),
-      new TurnToNAngleCmd(Units.degreesToRadians(180), driveTrain),
+      new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain),
       // lower arm
       RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
       // drives and intakes cone off ground
