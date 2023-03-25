@@ -3,6 +3,7 @@ package frc.robot.commands.intake;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.IntakeConstants;
@@ -14,6 +15,7 @@ public class StallIntakeCmd extends CommandBase {
     private final Intake intakeSubsystem;
     private final Supplier<Boolean> intake, outtake;
     Debouncer debouncer;
+    Timer timer;
     double intakeSpeed;
     int intakeCurrentLimit;
     double velocityThreshold = 100;
@@ -29,6 +31,7 @@ public class StallIntakeCmd extends CommandBase {
     @Override
     public void initialize() {
         debouncer = new Debouncer(0.15);
+        timer = new Timer();
         intakeSpeed = 0.0;
         intakeCurrentLimit = 0;
     }
@@ -36,11 +39,11 @@ public class StallIntakeCmd extends CommandBase {
     @Override
     public void execute() {
         if (intake.get()) {
+            timer.reset();
             intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED;
             intakeCurrentLimit = RobotContainer.coneMode ? IntakeConstants.CONE_IN_CURRENT : IntakeConstants.CUBE_IN_CURRENT;
             if (debouncer.calculate(Math.abs(intakeSubsystem.getEncoderSpeed()) < velocityThreshold)) {
                 Intake.isIntooked = true;
-                //intakeSubsystem.setCurrentLimit(3);
             }
         }
         else if (outtake.get()) {
@@ -53,6 +56,12 @@ public class StallIntakeCmd extends CommandBase {
         {
             intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED;
             intakeCurrentLimit = 3;
+        }
+        else if (!timer.hasElapsed(1)) {
+            intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED;
+            if (debouncer.calculate(Math.abs(intakeSubsystem.getEncoderSpeed()) < velocityThreshold)) {
+                Intake.isIntooked = true;
+            }
         }
         else {
             intakeSpeed = 0;
