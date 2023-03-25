@@ -67,13 +67,13 @@ public class Constants {
         public static final double CONE_LOW_HEIGHT = 0.09;
         public static final double CUBE_LOW_HEIGHT = 0.08;
         public static final double CONE_MID_HEIGHT = 0.58;
-        public static final double CUBE_MID_HEIGHT = 0.25;
+        public static final double CUBE_MID_HEIGHT = 0.48;
         public static final double CONE_TOP_HEIGHT = 0.71;
-        public static final double CUBE_TOP_HEIGHT = 0.67;
+        public static final double CUBE_TOP_HEIGHT = 0.74;
 
         //elevator heights for intaking upright cones, cones from tip, cubes from ground and cone/cube from shelf
         public static final double CONE_UP_INTAKE_HEIGHT = 0.18;
-        public static final double CONE_TIP_INTAKE_HEIGHT = 0.06;
+        public static final double CONE_TIP_INTAKE_HEIGHT = 0.03;
         public static final double CUBE_INTAKE_HEIGHT = 0.06;
         public static final double CONE_SHELF_INTAKE_HEIGHT = 0.727;
         public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.463;
@@ -114,13 +114,13 @@ public class Constants {
         public static final double CUBE_LOW_ANGLE = 0.03;
         //-0.34
         public static final double CONE_MID_ANGLE = -0.37;
-        public static final double CUBE_MID_ANGLE = 0.46;
+        public static final double CUBE_MID_ANGLE = -0.06;
         public static final double CONE_TOP_ANGLE = -0.25;
-        public static final double CUBE_TOP_ANGLE = 0.06;
+        public static final double CUBE_TOP_ANGLE = 0.07;
 
         //arm angles for intaking upright cones, cones from tip, cubes from ground and cone/cube from shelf
         public static final double CONE_UP_INTAKE_ANGLE = -0.56;
-        public static final double CONE_TIP_INTAKE_ANGLE = -0.36;
+        public static final double CONE_TIP_INTAKE_ANGLE = -0.57;
         public static final double CUBE_INTAKE_ANGLE = -0.36;
         public static final double CONE_SHELF_INTAKE_ANGLE = -0.302;
         public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
