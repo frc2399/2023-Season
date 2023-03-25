@@ -20,7 +20,7 @@ public class RealElevator implements ElevatorIO {
 
     public RealElevator()
     {
-        //Higher slew rate of .75 seconds from 0 to 100% (sparkmax thinks we use this) translates to .2 seconds from 0 to 20% (what we actually use)
+        // lowered slew rate to 0.1 to help with elevator slamming
         elevatorMotorControllerRight = MotorUtil.createSparkMAX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
             Constants.NEO_CURRENT_LIMIT, true, true, 0.1);
         elevatorMotorControllerLeft = MotorUtil.createSparkMAX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, MotorType.kBrushless, 
@@ -66,8 +66,8 @@ public class RealElevator implements ElevatorIO {
 
     @Override
     public void updateForSim() {
-        SmartDashboard.putBoolean("Top Limit Pressed", topLimitSwitch.isPressed());
-        SmartDashboard.putBoolean("Bottom Limit Pressed", bottomLimitSwitch.isPressed());    
+        SmartDashboard.putBoolean("elevator/top limit pressed", topLimitSwitch.isPressed());
+        SmartDashboard.putBoolean("elevator/bottom limit pressed", bottomLimitSwitch.isPressed());    
     }
 
     @Override

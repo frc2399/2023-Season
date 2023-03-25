@@ -67,8 +67,8 @@ public class Robot extends TimedRobot {
       }
     );
     // SmartDashboard.putString("branch and date", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE);
-    Shuffleboard.getTab("Driver").add("branch and date", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE + " " + MyVersion.GIT_SHA);
-  
+    Shuffleboard.getTab("Driver").add("robot/branch info", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE + " " + MyVersion.GIT_SHA);
+    SmartDashboard.putData("PDP", RobotContainer.pdp);
   }
 
   @Override
@@ -85,15 +85,15 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 
     CommandScheduler.getInstance().run();
-    SmartDashboard.putBoolean("cone cube mode", RobotContainer.coneMode);
-    SmartDashboard.putString("node height", RobotContainer.angleHeight.toString());
+    SmartDashboard.putBoolean("robot/cone cube mode", RobotContainer.coneMode);
+    SmartDashboard.putString("robot/node height", RobotContainer.angleHeight.toString());
   }
 
   @Override
 
   public void autonomousInit(){
         m_autonomousCommand = robotContainer.getAutonomousCommand();
-        System.out.println("We are in auton init!" + m_autonomousCommand);
+        DataLogManager.log("We are in auton init!" + m_autonomousCommand);
 
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {

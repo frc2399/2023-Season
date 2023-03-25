@@ -25,21 +25,23 @@ public class EngageCmd extends CommandBase {
 
   @Override
   public void execute() {
-    drivePower = 1/180. * drivetrain.getGyroPitch();
-    drivePower = Math.max(Math.min(drivePower, 0.2), -0.2);
+    drivePower = 0.01 * drivetrain.getGyroPitch();
+    drivePower = Math.max(Math.min(drivePower, 0.3), -0.3);
     drivePower = -drivePower;
 
     if (Math.abs(drivetrain.getGyroPitchRate()) > 15) {
       drivePower = 0;
     }
   
-    drivetrain.setMotors(drivePower, drivePower);
+   //converting drivePower into voltage 
+    drivePower *= 12; 
+    drivetrain.setMotorVoltage(drivePower, drivePower);
 
   }
 
   @Override
   public void end(boolean interrupted) {
-    drivetrain.setMotors(0, 0);
+    drivetrain.setMotorVoltage(0, 0);
   }
 
   @Override

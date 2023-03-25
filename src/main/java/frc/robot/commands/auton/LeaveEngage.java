@@ -20,6 +20,7 @@ public class LeaveEngage extends SequentialCommandGroup {
             new DriveForwardGivenDistance(-4.3, driveTrain),
             // drives back on charging station
             new PrintCommand("finshed driving back"),
+            // wait one second before driving back on charging station so charging station becomes level again
             new WaitCommand(1),
             new DriveForwardGivenDistance(2.1, driveTrain),
             new PrintCommand("finshed driving foward"),

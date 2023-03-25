@@ -1,6 +1,7 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
@@ -31,7 +32,7 @@ public class ArcadeDriveCmd extends CommandBase {
 
     @Override
     public void initialize() {
-        System.out.println("ArcadeDriveCmd started!");
+        DataLogManager.log("ArcadeDriveCmd started!");
         isSlow = true;
     }
 
@@ -77,7 +78,7 @@ public class ArcadeDriveCmd extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("ArcadeDriveCmd ended!");
+        DataLogManager.log("ArcadeDriveCmd ended!");
     }
 
     @Override

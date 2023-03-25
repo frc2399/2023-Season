@@ -97,10 +97,10 @@ public void setMotors(double leftSpeed, double rightSpeed) {
 @Override
 public void updateForReal()
 {
-    SmartDashboard.putNumber("LF Celsius", leftFrontMotorController.getMotorTemperature());
-    SmartDashboard.putNumber("LB Celsius", leftBackMotorController.getMotorTemperature());
-    SmartDashboard.putNumber("RF Celsius", rightFrontMotorController.getMotorTemperature());
-    SmartDashboard.putNumber("RB Celsius", rightBackMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("drive/lf temp (C)", leftFrontMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("drive/lb temp (C)", leftBackMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("drive/rf temp (C)", rightFrontMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("drive/rb temp (C)", rightBackMotorController.getMotorTemperature());
 }
 
 @Override

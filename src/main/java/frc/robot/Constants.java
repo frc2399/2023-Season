@@ -76,12 +76,12 @@ public class Constants {
         public static final double CONE_TIP_INTAKE_HEIGHT = 0.06;
         public static final double CUBE_INTAKE_HEIGHT = 0.06;
         public static final double CONE_SHELF_INTAKE_HEIGHT = 0.727;
-        public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.508;
+        public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.463;
 
         //27 inches per 41.951946 encoder counts
         public static final double METERS_PER_REVOLUTION = Units.inchesToMeters(27) / 41.951946;
 
-        //can be 1 inch off from goal setpoints and still considered at goal
+        //can be 1 inch off from goal setpoints and still considered at goal; made higher so placeConeOnNode cmd in auton will execute
         public static final double HEIGHT_TOLERANCE = Units.inchesToMeters(1);
 
     }
@@ -131,7 +131,7 @@ public class Constants {
         // initial offset is 0.711 + (0.287) - (0.308)
         public static final double INITIAL_OFFSET = 0.660;
 
-        //can be 2 degrees off from goal setpoints and still considered at goal
+        //can be 2 degrees off from goal setpoints and still considered at goal; made higher so arm.atGoal() in placeConeOnNode cmd will execute in auton
         public static final double ANGLE_TOLERANCE_AUTON = Units.degreesToRadians(2);
 
     }

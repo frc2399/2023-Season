@@ -9,8 +9,10 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -38,15 +40,18 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
+import frc.robot.commands.auton.OneAndHalfPieceEngage;
 import frc.robot.commands.auton.OnePieceCommunity;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
+import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.intake.StallIntakeCmd;
+import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -102,12 +107,11 @@ public class RobotContainer {
     public static final Joystick xboxDriver = new Joystick(XboxConstants.XBOX_DRIVER_PORT);
     public static final Joystick xboxOperator = new Joystick(XboxConstants.XBOX_OPERATOR_PORT);
 
+    public static PowerDistribution pdp;
+
     public static boolean coneMode = true;
     
     private Command changeMode;
-
-    private Command chaseTagCmd;
-    private Command intakePiece;
 
     private Command setTopPieceSetpoint;
     private Command setMidPieceSetpoint;
@@ -120,7 +124,7 @@ public class RobotContainer {
 
     private Command turtleMode;
 
-
+    // so the enum is not initialized to dangerous position
     public static CommandSelector angleHeight = CommandSelector.CONE_GROUND_INTAKE;
     
      // A chooser for autonomous commands
@@ -131,7 +135,7 @@ public class RobotContainer {
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
-
+        pdp = new PowerDistribution(1, ModuleType.kRev);
         // photonCamera = new PhotonCamera ("photonvision");
 
         // camera not in simulator to make it not crash
@@ -206,7 +210,11 @@ public class RobotContainer {
         // }, elevator, arm, intake, driveTrain));
 
         // Driver X(3) - engage command
-        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
+        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(
+            new SequentialCommandGroup(
+                new InstantCommand(() -> {CurvatureDriveCmd.isSlow = true;}),
+                new EngageCmd(driveTrain)
+        ));
 
         //Driver Y(4) - ignore the limit switches
         new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
@@ -214,6 +222,9 @@ public class RobotContainer {
         //Unused Buttons
             //Driver - Right Stick(10)
             //Operator - 
+
+        //Turn to angle button
+        new JoystickButton(xboxDriver, Button.kRightStick.value).onTrue(new TurnToNAngleCmd(Math.PI, driveTrain));
 
     }
 
@@ -368,6 +379,7 @@ public class RobotContainer {
         chooser.addOption("score and leave community", new OnePieceCommunity(driveTrain, intake, elevator, arm));
         chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
         chooser.addOption("leave community", new DriveForwardGivenDistance(-5, driveTrain));
+        chooser.addOption("one and half cone and engage", new OneAndHalfPieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("two cone auton bottom", new TwoPieceAutonBottom(driveTrain, elevator, intake, arm));
     }  
     

@@ -6,6 +6,7 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.RobotContainer;
@@ -49,7 +50,8 @@ public class IntakeUntilStall extends CommandBase {
   public void end(boolean interrupted) {
     //intake.openRight();
     // intake.openLeft();
-    System.out.println("end intakeUntilStall");
+    intake.setMotor(0);
+    DataLogManager.log("speed set to 0");
   }
 
   // Returns true when the command should end.

@@ -2,7 +2,6 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.DataLogManager;
 // import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 // import edu.wpi.first.wpilibj.interfaces.*;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,18 +12,19 @@ import frc.robot.subsystems.drivetrain.DriveTrain;
  * only used for shuffleboard testing, not used in any commands
  **/
 
-public class DriveForwardGivenDistance extends CommandBase {
+public class DriveStraightGivenDistance extends CommandBase {
 
     //insantiate global variables
     double currentPosition;
     double targetDistanceMeters;
     double newTargetDistance;
+    double startAngle, currentAngle;
     DriveTrain m_driveTrain;
     private SlewRateLimiter driveLimiter;
 
     
  
-	public DriveForwardGivenDistance(double targetDistanceMeters, DriveTrain subsystem) {
+	public DriveStraightGivenDistance(double targetDistanceMeters, DriveTrain subsystem) {
         
         //initialize variables
         this.targetDistanceMeters = targetDistanceMeters;
@@ -41,8 +41,9 @@ public class DriveForwardGivenDistance extends CommandBase {
         currentPosition = (
             m_driveTrain.getLeftEncoderMeters() + 
             m_driveTrain.getRightEncoderMeters() )/ 2;
-        DataLogManager.log("starting current position " + currentPosition);
-        
+        System.out.println("starting current position " + currentPosition);
+        startAngle = m_driveTrain.getPoseMeters().getRotation().getRadians();
+
         // find distance robot needs to travel to from its current position
         newTargetDistance = currentPosition + targetDistanceMeters;
 
@@ -57,14 +58,19 @@ public class DriveForwardGivenDistance extends CommandBase {
 
         // Get the average position between leftEncoder and rightEncoder
         currentPosition = (m_driveTrain.getLeftEncoderMeters() + m_driveTrain.getRightEncoderMeters()) / 2;
+        currentAngle = m_driveTrain.getPoseMeters().getRotation().getRadians();
 
-        double error = newTargetDistance - currentPosition;
+        double distanceError = newTargetDistance - currentPosition;
+        double angleError = startAngle - currentAngle;
 
-        double outputSpeed = (1 * error);
+        double outputSpeed = (1 * distanceError);
         outputSpeed = MathUtil.clamp(outputSpeed, -0.3, 0.3);
         outputSpeed  = driveLimiter.calculate(outputSpeed);
 
-        m_driveTrain.setMotors(outputSpeed, outputSpeed);
+        double straightCorrection = 1.0 * angleError;
+        straightCorrection = MathUtil.clamp(straightCorrection, -0.5 * Math.abs(outputSpeed), 0.5 * Math.abs(outputSpeed));
+
+        m_driveTrain.setMotors(outputSpeed - straightCorrection, outputSpeed + straightCorrection);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -90,6 +96,6 @@ public class DriveForwardGivenDistance extends CommandBase {
     
         m_driveTrain.setMotors(0, 0);
 
-        DataLogManager.log("DriveForwardGivenDistance ended");
+        System.out.println("DriveForwardGivenDistance ended");
     }
 }

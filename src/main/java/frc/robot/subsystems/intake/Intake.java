@@ -23,7 +23,8 @@ public class Intake extends SubsystemBase {
   public void setMotor(double intakeSpeed) {
     intakeSP = intakeSpeed;  
     intakeIO.setMotor(intakeSpeed);
-  }
+    SmartDashboard.putNumber("intake/motor input (%)", intakeSpeed);
+}
 
   public double getCurrent() {
     return intakeIO.getCurrent();
@@ -49,9 +50,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("intake current", getCurrent());
-    SmartDashboard.putNumber("intake motor input", intakeSP);  
-    SmartDashboard.putNumber("intake velocity", getEncoderSpeed());  
-
+    SmartDashboard.putNumber("intake/current (A)", getCurrent());
+    
   }
 }
