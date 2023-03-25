@@ -24,6 +24,8 @@ public class StallIntakeCmd extends CommandBase {
         this.intakeSubsystem = intakeSubsystem;
         this.intake = intake;
         this.outtake = outtake;
+        //timer in constructor so it doesn't automatically intake when robot starts
+        timer = new Timer();
         addRequirements(intakeSubsystem);
     }
 
@@ -31,7 +33,6 @@ public class StallIntakeCmd extends CommandBase {
     @Override
     public void initialize() {
         debouncer = new Debouncer(0.15);
-        timer = new Timer();
         intakeSpeed = 0.0;
         intakeCurrentLimit = 0;
     }
