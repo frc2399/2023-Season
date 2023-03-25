@@ -44,6 +44,7 @@ import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
+import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
@@ -216,7 +217,11 @@ public class RobotContainer {
         new JoystickButton(xboxOperator, Button.kRightBumper.value).whileTrue(intakePiece);
 
         // Driver X(3) - engage command
-        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(new EngageCmd(driveTrain));
+        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(
+            new SequentialCommandGroup(
+                new InstantCommand(() -> {ArcadeDriveCmd.isSlow = true;}),
+                new EngageCmd(driveTrain)
+        ));
 
         //Driver Y(4) - ignore the limit switches
         new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
