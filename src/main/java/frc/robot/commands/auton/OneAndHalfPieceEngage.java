@@ -43,7 +43,7 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
             // drives and intakes cone off ground
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
-                    new DriveForwardGivenDistance(0.63, driveTrain),
+                    new DriveForwardGivenDistance(0.65, driveTrain),
                     new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
                 ),
                 new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2)),
