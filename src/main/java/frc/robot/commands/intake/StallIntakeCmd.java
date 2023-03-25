@@ -26,6 +26,7 @@ public class StallIntakeCmd extends CommandBase {
         this.outtake = outtake;
         //timer in constructor so it doesn't automatically intake when robot starts
         timer = new Timer();
+        timer.start();
         addRequirements(intakeSubsystem);
     }
 
@@ -51,11 +52,10 @@ public class StallIntakeCmd extends CommandBase {
             intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_OUT_SPEED : IntakeConstants.CUBE_OUT_SPEED;
             intakeCurrentLimit = IntakeConstants.OUT_CURRENT;
             Intake.isIntooked = false;
-            // reset debouncer hacky way
         }
         else if (Intake.isIntooked)
         {
-            intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED;
+            intakeSpeed = 0.1 * (RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED);
             intakeCurrentLimit = 3;
         }
         else if (!timer.hasElapsed(1)) {
@@ -68,7 +68,8 @@ public class StallIntakeCmd extends CommandBase {
             intakeSpeed = 0;
             intakeCurrentLimit = 3;
         }
-        if (!intake.get()) {
+        // reset when timer has elapsed and not intaking
+        if (!intake.get() && timer.hasElapsed(1)) {
             debouncer.calculate(false);
         }
         intakeSubsystem.setMotor(intakeSpeed);
