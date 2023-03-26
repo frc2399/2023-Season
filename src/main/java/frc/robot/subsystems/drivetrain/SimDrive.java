@@ -81,9 +81,14 @@ public class SimDrive implements DriveIO {
         return rightEncoderSim.getSpeed();
     }
 
+    @Override
+    public double getGyroPitch() {
+        return 0;
+    }
+
 
     @Override
-    public void updateForSim() {
+    public void periodicUpdate() {
         // This method will be called once per scheduler run when in simulation
         // Set the inputs to the system. Note that we need to convert
         // the [-1, 1] PWM signal to voltage by multiplying it by the
@@ -106,19 +111,6 @@ public class SimDrive implements DriveIO {
         rightEncoderSim.setSpeed(driveSim.getRightVelocityMetersPerSecond());
 
         // we want CCW positive, CW negative
-        gyroSim.setAngle(new Rotation2d(driveSim.getHeading().getRadians()));
-        
-    }
-
-
-    @Override
-    public void updateForReal() {
-        
-    }
-
-
-    @Override
-    public double getGyroPitch() {
-        return 0;
+        gyroSim.setAngle(new Rotation2d(driveSim.getHeading().getRadians()));        
     }
 }

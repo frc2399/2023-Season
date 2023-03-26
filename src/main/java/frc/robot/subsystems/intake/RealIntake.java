@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.util.MotorUtil;
@@ -51,6 +52,12 @@ public class RealIntake implements IntakeIO {
     @Override
     public void setCurrentLimit(int current) {
         intakeMotorController.setSmartCurrentLimit(current);        
+    }
+
+    @Override
+    public void periodicUpdate() {
+        SmartDashboard.putNumber("intake/current (A)", getCurrent());
+        SmartDashboard.putNumber("intake/temp (C)", intakeMotorController.getMotorTemperature());        
     }
 
 }

@@ -59,20 +59,6 @@ public class SimElevator implements ElevatorIO {
         return elevatorSimEncoder.getDistance();
     }
 
-    public void updateForSim() {
-
-        // sets input for elevator motor in simulation
-        elevatorSim.setInput(elevatorPower * RobotController.getBatteryVoltage());
-        // Next, we update it. The standard loop time is 20ms.
-        elevatorSim.update(0.02);
-        // Finally, we set our simulated encoder's readings
-        elevatorSimEncoder.setDistance(elevatorSim.getPositionMeters());
-        // sets our simulated encoder speeds
-        elevatorSimEncoder.setSpeed(elevatorSim.getVelocityMetersPerSecond());
-
-        // SimBattery estimates loaded battery voltages
-        RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-    }
     @Override
     public void setPosition(double position) {
         elevatorSimEncoder.setDistance(position);
@@ -89,6 +75,20 @@ public class SimElevator implements ElevatorIO {
     @Override
     public boolean isAtLowerLimit() {
         return elevatorSim.hasHitLowerLimit();
+    }
+    @Override
+    public void periodicUpdate() {
+        // sets input for elevator motor in simulation
+        elevatorSim.setInput(elevatorPower * RobotController.getBatteryVoltage());
+        // Next, we update it. The standard loop time is 20ms.
+        elevatorSim.update(0.02);
+        // Finally, we set our simulated encoder's readings
+        elevatorSimEncoder.setDistance(elevatorSim.getPositionMeters());
+        // sets our simulated encoder speeds
+        elevatorSimEncoder.setSpeed(elevatorSim.getVelocityMetersPerSecond());
+
+        // SimBattery estimates loaded battery voltages
+        RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
     } 
 }
 

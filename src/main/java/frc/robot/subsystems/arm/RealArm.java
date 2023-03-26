@@ -33,7 +33,7 @@ public class RealArm implements ArmIO {
 
     @Override
     public void periodicUpdate() {
-        
+        SmartDashboard.putNumber("arm/temp (C)", armMotorController.getMotorTemperature());
     }
 
     @Override

@@ -48,4 +48,9 @@ public class SimIntake implements IntakeIO{
         SmartDashboard.getNumber("intake current sim", current);
     }
 
+    @Override
+    public void periodicUpdate() {
+        SmartDashboard.putNumber("intake/current (A)", getCurrent());
+    }
+
 }
