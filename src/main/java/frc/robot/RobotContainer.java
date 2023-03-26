@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
@@ -51,7 +52,9 @@ import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
+import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.commands.intake.StallIntakeCmd;
+import frc.robot.commands.robot.IntakeConeFromGround;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.arm.Arm;
@@ -221,11 +224,14 @@ public class RobotContainer {
         new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
 
         //Unused Buttons
-            //Driver - Right Stick(10)
+            //Driver - 
             //Operator - 
 
         //Turn to angle button
         new JoystickButton(xboxDriver, Button.kRightStick.value).onTrue(new TurnToNAngleCmd(Math.PI, driveTrain));
+
+        //intake for given time button
+        new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 1.5));
 
     }
 

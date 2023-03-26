@@ -29,18 +29,20 @@ import frc.robot.subsystems.intake.Intake;
 public class TwoPieceAuton extends SequentialCommandGroup {
     
     public TwoPieceAuton(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
-        double angle1 = -90;
+        double angle1 = -5;
         double angle2 = -178;
+        double xpose = 1.88;
+        double ypose = 5.06;
         Alliance allianceColor = DriverStation.getAlliance();
         if (allianceColor == DriverStation.Alliance.Red)
         {
-            angle1 = 90;
+            angle1 = 5;
             angle2 = 178;
         }
 
         addCommands(
             //TODO: figure out where to reset the pose to 
-            new InstantCommand(() -> {driveTrain.resetOdometry(new Pose2d(2.75, 3.26, new Rotation2d(-3.14)));}, driveTrain),
+            new InstantCommand(() -> {driveTrain.resetOdometry(new Pose2d(xpose, ypose, new Rotation2d(-3.14)));}, driveTrain),
             RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
             new DriveForwardGivenDistance(-0.20, driveTrain),
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
@@ -51,18 +53,18 @@ public class TwoPieceAuton extends SequentialCommandGroup {
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT),
                 new TurnToNAngleCmd(Units.degreesToRadians(angle1), driveTrain)
             ),
-            // drives and intakes cube off ground
+            // // drives and intakes cube off ground
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
                     new DriveForwardGivenDistance(0.4, driveTrain),
-                    new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
+                    new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.35) 
                 ),
             new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
             new ParallelCommandGroup(
-                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
-                new TurnToNAngleCmd(Units.degreesToRadians(angle2), driveTrain)
-            ),
-            new DriveStraightGivenDistance(4.4, driveTrain),
+                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
+                 new TurnToNAngleCmd(Units.degreesToRadians(angle2), driveTrain)
+             ),
+            new DriveStraightGivenDistance(4.5, driveTrain),
             new PlaceCubeOnNode(intake, elevator, arm, ElevatorConstants.CUBE_TOP_HEIGHT, ArmConstants.CUBE_TOP_ANGLE)
 
         );
