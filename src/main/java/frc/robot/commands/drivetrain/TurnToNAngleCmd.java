@@ -27,6 +27,8 @@ public class TurnToNAngleCmd extends CommandBase {
   private double kP = .15;
   private SlewRateLimiter turnLimiter;
   double error; 
+  // TODO: look at this
+  boolean useAllianceColor = true;
 
   public TurnToNAngleCmd(double targetAngle, DriveTrain subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -39,6 +41,9 @@ public class TurnToNAngleCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (useAllianceColor) {
+      targetAngle = -targetAngle;
+      }
     this.turnLimiter = new SlewRateLimiter(1.5);
     DataLogManager.log("TurnToNAngle initialized, targetAngle: " + targetAngle);
   }
