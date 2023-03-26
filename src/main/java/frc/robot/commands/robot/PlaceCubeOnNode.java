@@ -12,9 +12,9 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
 
-public class PlaceConeOnNode extends SequentialCommandGroup {
+public class PlaceCubeOnNode extends SequentialCommandGroup {
 
-    public PlaceConeOnNode(Intake intake, Elevator elevator, Arm arm, double height, double armAngle) {
+    public PlaceCubeOnNode(Intake intake, Elevator elevator, Arm arm, double height, double armAngle) {
 
         addCommands(
             RobotContainer.makeSetPositionCommand(arm, ArmConstants.TURTLE_ANGLE),
@@ -26,7 +26,7 @@ public class PlaceConeOnNode extends SequentialCommandGroup {
             new WaitUntilCommand(() -> arm.atGoal()),
             new PrintCommand("arm at goal"),
             new DriveForwardGivenDistance(0.08, RobotContainer.driveTrain),
-            new IntakeForGivenTime(intake, IntakeConstants.CONE_OUT_SPEED, 0.5),
+            new IntakeForGivenTime(intake, IntakeConstants.CUBE_OUT_SPEED, 0.5),
             RobotContainer.makeSetPositionCommand(arm, ArmConstants.TURTLE_ANGLE),
             RobotContainer.makeSetPositionCommand(elevator, 0),
             new WaitUntilCommand(() -> arm.atGoal()),

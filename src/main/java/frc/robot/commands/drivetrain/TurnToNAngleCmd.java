@@ -9,7 +9,9 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.util.PIDUtil;
 
@@ -41,6 +43,10 @@ public class TurnToNAngleCmd extends CommandBase {
   public void initialize() {
     this.turnLimiter = new SlewRateLimiter(1.5);
     DataLogManager.log("TurnToNAngle initialized, targetAngle: " + targetAngle);
+    System.out.println(DriverStation.getAlliance().toString());
+    if (Robot.allianceColor == DriverStation.Alliance.Red) {
+      targetAngle = -targetAngle;
+      }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

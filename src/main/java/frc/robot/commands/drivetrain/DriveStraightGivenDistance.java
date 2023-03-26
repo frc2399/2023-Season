@@ -19,15 +19,17 @@ public class DriveStraightGivenDistance extends CommandBase {
     double targetDistanceMeters;
     double newTargetDistance;
     double startAngle, currentAngle;
+    double speedLimit;
     DriveTrain m_driveTrain;
     private SlewRateLimiter driveLimiter;
 
     
  
-	public DriveStraightGivenDistance(double targetDistanceMeters, DriveTrain subsystem) {
+	public DriveStraightGivenDistance(double targetDistanceMeters, double speedLimit, DriveTrain subsystem) {
         
         //initialize variables
         this.targetDistanceMeters = targetDistanceMeters;
+        this.speedLimit = speedLimit;
         m_driveTrain = subsystem;
         addRequirements(m_driveTrain);
 
@@ -66,6 +68,8 @@ public class DriveStraightGivenDistance extends CommandBase {
         double outputSpeed = (1 * distanceError);
         outputSpeed = MathUtil.clamp(outputSpeed, -0.3, 0.3);
         outputSpeed  = driveLimiter.calculate(outputSpeed);
+
+        outputSpeed *= speedLimit;
 
         double straightCorrection = 1.0 * modAngle(angleError);
         straightCorrection = MathUtil.clamp(straightCorrection, -0.5 * Math.abs(outputSpeed), 0.5 * Math.abs(outputSpeed));

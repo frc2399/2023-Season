@@ -35,7 +35,7 @@ public class OneAndHalfPieceEngage extends SequentialCommandGroup {
             new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
             // leaves community
-            new DriveStraightGivenDistance(-4.2, driveTrain),
+            new DriveStraightGivenDistance(-4.2, 1.0, driveTrain),
             new ParallelCommandGroup(
                 // lower arm
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),

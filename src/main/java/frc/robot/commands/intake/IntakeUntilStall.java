@@ -18,7 +18,6 @@ public class IntakeUntilStall extends CommandBase {
   SlewRateLimiter filter;
   Debouncer debouncer;
   private double velocityThreshold = 100;
-  private double currentThreshold = 20;
   /** Creates a new CollectPieceCmd. */
   public IntakeUntilStall(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
