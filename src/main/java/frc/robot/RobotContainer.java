@@ -45,6 +45,7 @@ import frc.robot.commands.auton.OnePieceCommunity;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
+import frc.robot.commands.auton.TwoPieceAutonPP;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.drivetrain.ArcadeDriveCmd;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
@@ -371,7 +372,7 @@ public class RobotContainer {
     }
 
     private void setUpAutonChooser () {
-        chooser.addOption("two cone auton", new TwoPieceAuton(driveTrain, elevator, intake, arm));
+        chooser.addOption("two cone auton", new TwoPieceAutonPP(driveTrain, elevator, intake, arm));
         chooser.addOption("engage", new Engage(driveTrain, arm, elevator));
         chooser.addOption("leave and engage", new LeaveEngage(driveTrain, arm, elevator));
         chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
@@ -381,6 +382,7 @@ public class RobotContainer {
         chooser.addOption("leave community", new DriveForwardGivenDistance(-5, driveTrain));
         chooser.addOption("one and half cone and engage", new OneAndHalfPieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("two cone auton bottom", new TwoPieceAutonBottom(driveTrain, elevator, intake, arm));
+        chooser.addOption("two piece auton", new TwoPieceAuton(driveTrain, intake, elevator, arm));
     }  
     
     public static Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {

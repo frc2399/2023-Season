@@ -1,94 +1,70 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.auton;
 
-import java.util.HashMap;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
-import com.pathplanner.lib.commands.PPRamseteCommand;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.RobotContainer;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
+import frc.robot.commands.drivetrain.DriveStraightGivenDistance;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.commands.robot.PlaceConeOnNode;
+import frc.robot.commands.robot.PlaceCubeOnNode;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.util.PathUtil;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TwoPieceAuton extends SequentialCommandGroup {
-  /** Creates a new TwoPieceAuton. */
+    
+    public TwoPieceAuton(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
+        double angle1 = -90;
+        double angle2 = -178;
+        Alliance allianceColor = DriverStation.getAlliance();
+        if (allianceColor == DriverStation.Alliance.Red)
+        {
+            angle1 = 90;
+            angle2 = 178;
+        }
 
-   //mirror if on red alliance
-   boolean useAllianceColor = true;
+        addCommands(
+            //TODO: figure out where to reset the pose to 
+            new InstantCommand(() -> {driveTrain.resetOdometry(new Pose2d(2.75, 3.26, new Rotation2d(-3.14)));}, driveTrain),
+            RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
+            new DriveForwardGivenDistance(-0.20, driveTrain),
+            new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
+            new PrintCommand("place cone on node finished"),
+            new DriveStraightGivenDistance(-4.2, driveTrain),
+            new ParallelCommandGroup(
+                // lower arm
+                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT),
+                new TurnToNAngleCmd(Units.degreesToRadians(angle1), driveTrain)
+            ),
+            // drives and intakes cube off ground
+            new ParallelDeadlineGroup(
+                new SequentialCommandGroup(
+                    new DriveForwardGivenDistance(0.4, driveTrain),
+                    new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
+                ),
+            new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
+            new ParallelCommandGroup(
+                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
+                new TurnToNAngleCmd(Units.degreesToRadians(angle2), driveTrain)
+            ),
+            new DriveStraightGivenDistance(4.4, driveTrain),
+            new PlaceCubeOnNode(intake, elevator, arm, ElevatorConstants.CUBE_TOP_HEIGHT, ArmConstants.CUBE_TOP_ANGLE)
 
-   PathPlannerTrajectory secondCone = PathPlanner.loadPath("Second-Cone-Auton", 
-   new PathConstraints(1, 1), true);
-        
-  
-  public TwoPieceAuton(DriveTrain driveTrain, Elevator elevator, Intake intake, Arm arm) {
-    Command coneTwo = 
-    new PPRamseteCommand(
-      secondCone,
-      () -> driveTrain.getPoseMeters(), // Pose supplier
-      new RamseteController(),
-      new SimpleMotorFeedforward(
-        Constants.DriveConstants.ks,
-        Constants.DriveConstants.kv,
-        Constants.DriveConstants.ka
-      ),
-      Constants.DriveConstants.kDriveKinematics, // DifferentialDriveKinematics
-      () -> driveTrain.getWheelSpeedsMetersPerSecond(), // DifferentialDriveWheelSpeeds supplier
-      new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0
-        // will only use feedforwards.
-      new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
-      (left, right) -> driveTrain.setMotorVoltage(left, right), // voltage
-      useAllianceColor, //uses alliance color to determine starting position
-      driveTrain // Requires this drive subsystem
-    );
-
-    addCommands(
-      RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
-      new DriveForwardGivenDistance(-0.20, driveTrain),
-      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
-      new PrintCommand("place cone on node finished"),
-      // leaves community
-      new DriveForwardGivenDistance(-4.2, driveTrain),
-      new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain),
-      // lower arm
-      RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
-      // drives and intakes cone off ground
-      new ParallelCommandGroup(
-          new DriveForwardGivenDistance(0.3, driveTrain),
-          new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 0.7)
-      ),
-      RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
-      coneTwo,
-      new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE)
-      
-    );
-  }
+        );
+    }
 }
