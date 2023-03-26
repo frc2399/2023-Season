@@ -56,9 +56,7 @@ public class DriveTrain extends SubsystemBase {
     @Override
     public void periodic() {
 
-        // runs sim periodic code in simDrive
-        driveIO.updateForSim();
-        driveIO.updateForReal();
+        driveIO.periodicUpdate();
 
         odometry.update(
             // we want CCW positive, CW negative

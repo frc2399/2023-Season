@@ -93,22 +93,17 @@ public void setMotors(double leftSpeed, double rightSpeed) {
     rightFrontMotorController.set(rightSpeed);
 }
 
-//explode!! :)
-@Override
-public void updateForReal()
-{
-    SmartDashboard.putNumber("drive/lf temp (C)", leftFrontMotorController.getMotorTemperature());
-    SmartDashboard.putNumber("drive/lb temp (C)", leftBackMotorController.getMotorTemperature());
-    SmartDashboard.putNumber("drive/rf temp (C)", rightFrontMotorController.getMotorTemperature());
-    SmartDashboard.putNumber("drive/rb temp (C)", rightBackMotorController.getMotorTemperature());
-}
-
-@Override
-public void updateForSim() {
-}
-
 @Override
 public double getGyroPitch() {
     return -ahrs.getPitch();
+}
+
+
+@Override
+public void periodicUpdate() {
+    SmartDashboard.putNumber("drive/lf temp (C)", leftFrontMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("drive/lb temp (C)", leftBackMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("drive/rf temp (C)", rightFrontMotorController.getMotorTemperature());
+    SmartDashboard.putNumber("drive/rb temp (C)", rightBackMotorController.getMotorTemperature());    
 }
 }

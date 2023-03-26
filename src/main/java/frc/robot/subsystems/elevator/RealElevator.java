@@ -65,12 +65,6 @@ public class RealElevator implements ElevatorIO {
     }
 
     @Override
-    public void updateForSim() {
-        SmartDashboard.putBoolean("elevator/top limit pressed", topLimitSwitch.isPressed());
-        SmartDashboard.putBoolean("elevator/bottom limit pressed", bottomLimitSwitch.isPressed());    
-    }
-
-    @Override
     public void setPosition(double position) {
         elevatorEncoderLeft.setPosition(position);
     }
@@ -88,6 +82,14 @@ public class RealElevator implements ElevatorIO {
     @Override
     public boolean isAtLowerLimit() {
         return bottomLimitSwitch.isPressed();
+    }
+
+    @Override
+    public void periodicUpdate() {
+        SmartDashboard.putBoolean("elevator/top limit pressed", topLimitSwitch.isPressed());
+        SmartDashboard.putBoolean("elevator/bottom limit pressed", bottomLimitSwitch.isPressed()); 
+        SmartDashboard.putNumber("elevator/l temp (C)", elevatorMotorControllerLeft.getMotorTemperature());
+        SmartDashboard.putNumber("elevator/r temp (C)", elevatorMotorControllerRight.getMotorTemperature());   
     }
 
 }

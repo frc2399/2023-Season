@@ -12,8 +12,5 @@ public interface DriveIO {
     public double getLeftEncoderMetersPerSecond();
     public void setMotors(double leftSpeed, double rightSpeed);
     public void setMotorVoltage(double leftVolt, double rightVolt);
-
-    public void updateForSim();
-    //if this breaks delete 17
-    public void updateForReal();
+    public void periodicUpdate();
 }
