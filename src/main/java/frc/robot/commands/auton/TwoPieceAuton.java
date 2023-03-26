@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
@@ -20,6 +21,7 @@ import frc.robot.commands.drivetrain.DriveStraightGivenDistance;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.commands.robot.PlaceConeOnNode;
+import frc.robot.commands.robot.PlaceConeOnNodeNoTurtle;
 import frc.robot.commands.robot.PlaceCubeOnNode;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.DriveTrain;
@@ -45,9 +47,15 @@ public class TwoPieceAuton extends SequentialCommandGroup {
             new InstantCommand(() -> {driveTrain.resetOdometry(new Pose2d(xpose, ypose, new Rotation2d(-3.14)));}, driveTrain),
             RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
             new DriveForwardGivenDistance(-0.20, driveTrain),
-            new PlaceConeOnNode(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
+            new PlaceConeOnNodeNoTurtle(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
-            new DriveStraightGivenDistance(-4.2, driveTrain),
+            new ParallelCommandGroup(
+                RobotContainer.makeSetPositionCommand(arm, ArmConstants.TURTLE_ANGLE),
+                RobotContainer.makeSetPositionCommand(elevator, 0),
+                new WaitUntilCommand(() -> arm.atGoal()),
+                new WaitUntilCommand(() -> elevator.atGoal()),
+                new DriveStraightGivenDistance(-4.2, 1, driveTrain)
+            ),
             new ParallelCommandGroup(
                 // lower arm
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT),
@@ -64,7 +72,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
                  RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
                  new TurnToNAngleCmd(Units.degreesToRadians(angle2), driveTrain)
              ),
-            new DriveStraightGivenDistance(4.5, driveTrain),
+            new DriveStraightGivenDistance(4.5, 1, driveTrain),
             new PlaceCubeOnNode(intake, elevator, arm, ElevatorConstants.CUBE_TOP_HEIGHT, ArmConstants.CUBE_TOP_ANGLE)
 
         );
