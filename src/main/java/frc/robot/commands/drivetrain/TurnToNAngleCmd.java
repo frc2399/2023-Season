@@ -9,6 +9,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.util.PIDUtil;
@@ -27,8 +28,6 @@ public class TurnToNAngleCmd extends CommandBase {
   private double kP = .15;
   private SlewRateLimiter turnLimiter;
   double error; 
-  // TODO: look at this
-  boolean useAllianceColor = true;
 
   public TurnToNAngleCmd(double targetAngle, DriveTrain subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -41,7 +40,7 @@ public class TurnToNAngleCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (useAllianceColor) {
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
       targetAngle = -targetAngle;
       }
     this.turnLimiter = new SlewRateLimiter(1.5);
