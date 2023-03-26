@@ -54,7 +54,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
                 RobotContainer.makeSetPositionCommand(elevator, 0),
                 new WaitUntilCommand(() -> arm.atGoal()),
                 new WaitUntilCommand(() -> elevator.atGoal()),
-                new DriveStraightGivenDistance(-4.2, 1, driveTrain)
+                new DriveStraightGivenDistance(-4.2, 1.2, driveTrain)
             ),
             new ParallelCommandGroup(
                 // lower arm
@@ -72,7 +72,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
                  RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
                  new TurnToNAngleCmd(Units.degreesToRadians(angle2), driveTrain)
              ),
-            new DriveStraightGivenDistance(4.5, 1, driveTrain),
+            new DriveStraightGivenDistance(4.5, 1.2, driveTrain),
             new PlaceCubeOnNode(intake, elevator, arm, ElevatorConstants.CUBE_TOP_HEIGHT, ArmConstants.CUBE_TOP_ANGLE)
 
         );
