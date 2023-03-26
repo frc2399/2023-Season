@@ -39,7 +39,7 @@ public class Elevator extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    elevatorIO.updateForSim();
+    elevatorIO.periodicUpdate();
     double currentPos = getEncoderPosition();
     double currentVel = getEncoderSpeed();
     SmartDashboard.putNumber("elevator/goal (m)", getGoal());

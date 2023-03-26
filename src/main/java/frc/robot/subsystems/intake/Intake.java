@@ -54,5 +54,6 @@ public class Intake extends SubsystemBase {
     // SmartDashboard.putNumber("intake/motor output (%)", RealIntake.intakeMotorController.get());
     // SmartDashboard.putNumber("intake/MOTOR OUTPUT", RealIntake.intakeMotorController.getAppliedOutput());
     
+    intakeIO.periodicUpdate();
   }
 }
