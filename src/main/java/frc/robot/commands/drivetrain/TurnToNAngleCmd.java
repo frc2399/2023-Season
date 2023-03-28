@@ -29,6 +29,7 @@ public class TurnToNAngleCmd extends CommandBase {
   private double kP = .15;
   private SlewRateLimiter turnLimiter;
   double error; 
+  private double transformedTargetAngle;
 
   public TurnToNAngleCmd(double targetAngle, DriveTrain subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -44,9 +45,15 @@ public class TurnToNAngleCmd extends CommandBase {
     this.turnLimiter = new SlewRateLimiter(1.5);
     DataLogManager.log("TurnToNAngle initialized, targetAngle: " + targetAngle);
     System.out.println(DriverStation.getAlliance().toString());
+
     if (Robot.allianceColor == DriverStation.Alliance.Red) {
-      targetAngle = -targetAngle;
-      }
+      transformedTargetAngle = -targetAngle;
+    }
+    else
+    {
+      transformedTargetAngle = targetAngle;
+    }
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,7 +61,7 @@ public class TurnToNAngleCmd extends CommandBase {
   public void execute() {
     double currentAngle = m_driveTrain.getPoseMeters().getRotation().getRadians();
 
-    error = modAngle(targetAngle - currentAngle);
+    error = modAngle(transformedTargetAngle - currentAngle);
     SmartDashboard.putNumber("turn to angle error", error);
 
     double outputSpeed = kP * error;
