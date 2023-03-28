@@ -34,7 +34,6 @@ public class TwoPieceAuton extends SequentialCommandGroup {
         double ypose = 5.06;
 
         addCommands(
-            //TODO: figure out where to reset the pose to 
             new InstantCommand(() -> {driveTrain.resetOdometry(new Pose2d(xpose, ypose, new Rotation2d(-3.14)));}, driveTrain),
             RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
             new DriveForwardGivenDistance(-0.20, driveTrain),
