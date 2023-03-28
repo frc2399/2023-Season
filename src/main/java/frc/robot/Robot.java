@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
     if (!RobotBase.isSimulation()) {
-      // DataLogManager.start();
+      DataLogManager.start();
       DriverStation.startDataLog(DataLogManager.getLog());
     }
 
