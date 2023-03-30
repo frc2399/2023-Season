@@ -101,9 +101,16 @@ public double getGyroPitch() {
 
 @Override
 public void periodicUpdate() {
+    //motor temps
     SmartDashboard.putNumber("drive/lf temp (C)", leftFrontMotorController.getMotorTemperature());
     SmartDashboard.putNumber("drive/lb temp (C)", leftBackMotorController.getMotorTemperature());
     SmartDashboard.putNumber("drive/rf temp (C)", rightFrontMotorController.getMotorTemperature());
-    SmartDashboard.putNumber("drive/rb temp (C)", rightBackMotorController.getMotorTemperature());    
+    SmartDashboard.putNumber("drive/rb temp (C)", rightBackMotorController.getMotorTemperature());
+    
+    //motor inputs
+    SmartDashboard.putNumber("drive/lf motor input (%)", leftFrontMotorController.get());
+    SmartDashboard.putNumber("drive/lb motor input (%)", leftBackMotorController.get());
+    SmartDashboard.putNumber("drive/rf motor input (%)", rightFrontMotorController.get());
+    SmartDashboard.putNumber("drive/rb motor input (%)", rightBackMotorController.get());   
 }
 }
