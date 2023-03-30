@@ -44,7 +44,7 @@ public class OneAndHalfCubeEngage extends SequentialCommandGroup {
             // drives and intakes cone off ground
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
-                    new DriveStraightGivenDistance(0.65, 1.0, driveTrain),
+                    new DriveStraightGivenDistance(0.70, 1.0, driveTrain),
                     new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
                 ),
                 new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),

@@ -55,7 +55,7 @@ public class StallIntakeCmd extends CommandBase {
         }
         else if (Intake.isIntooked)
         {
-            intakeSpeed = 0.1 * (RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED);
+            intakeSpeed = 0.5 * (RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED);
             intakeCurrentLimit = 3;
         }
         else if (!timer.hasElapsed(1)) {
