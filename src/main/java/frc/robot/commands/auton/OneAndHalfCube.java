@@ -48,7 +48,8 @@ public class OneAndHalfCube extends SequentialCommandGroup {
                     new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
                 ),
             new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
-            RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0)
+            RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
+            new InstantCommand(() -> {RobotContainer.coneMode = false;})
           );
     }
 

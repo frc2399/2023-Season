@@ -51,8 +51,9 @@ public class OneAndHalfCubeEngage extends SequentialCommandGroup {
             new ParallelCommandGroup(
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
                 // drive back on charging station
-                new DriveStraightGivenDistance(-3.18, 1.25, driveTrain),
-                new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5)
+                new DriveStraightGivenDistance(-3.15, 1.25, driveTrain),
+                new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5),
+                new InstantCommand(() -> {RobotContainer.coneMode = false;})
             ),
             new EngageCmd(driveTrain)
 
