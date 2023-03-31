@@ -39,9 +39,11 @@ import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OneAndHalfConeEngage;
+import frc.robot.commands.auton.OneAndHalfCube;
 import frc.robot.commands.auton.OneAndHalfCubeEngage;
 import frc.robot.commands.auton.OnePieceCommunity;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
+import frc.robot.commands.auton.OnePieceDoNothing;
 import frc.robot.commands.auton.OnePieceEngage;
 import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
@@ -373,16 +375,17 @@ public class RobotContainer {
     }
 
     private void setUpAutonChooser () {
-        // chooser.addOption("two cone auton", new TwoPieceAutonPP(driveTrain, elevator, intake, arm));
         // chooser.addOption("engage", new Engage(driveTrain, arm, elevator));
         // chooser.addOption("leave and engage", new LeaveEngage(driveTrain, arm, elevator));
+        chooser.addOption("score and do nothing", new OnePieceDoNothing(driveTrain, intake, elevator, arm));
         chooser.addOption("score and engage", new OnePieceEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("score, leave community, and engage", new OnePieceCommunityEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("score and leave community", new OnePieceCommunity(driveTrain, intake, elevator, arm));
-        // chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
+        chooser.addOption("do nothing", new PrintCommand("i am doing nothing"));
         // chooser.addOption("leave community", new DriveForwardGivenDistance(-5, driveTrain));
         chooser.addOption("one and half cone and engage", new OneAndHalfConeEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("one and half cube and engage", new OneAndHalfCubeEngage(driveTrain, intake, elevator, arm));
+        chooser.addOption("one and half cube NO engage", new OneAndHalfCube(driveTrain, intake, elevator, arm));
         // chooser.addOption("two cone auton bottom", new TwoPieceAutonBottom(driveTrain, elevator, intake, arm));
         chooser.addOption("two piece auton", new TwoPieceAuton(driveTrain, intake, elevator, arm));
     }  
