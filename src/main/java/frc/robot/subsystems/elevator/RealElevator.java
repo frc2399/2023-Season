@@ -47,7 +47,7 @@ public class RealElevator implements ElevatorIO {
 
         //set to false b/c manually do limit switch things so elevator doesn't go crazy, check Elevator.java
         topLimitSwitch.enableLimitSwitch(false);
-        bottomLimitSwitch.enableLimitSwitch(true);
+        bottomLimitSwitch.enableLimitSwitch(false);
     }
 
     @Override
