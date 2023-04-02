@@ -76,7 +76,8 @@ public class RealElevator implements ElevatorIO {
 
     @Override
     public boolean isAtUpperLimit() {
-        return topLimitSwitch.isPressed();
+        // return topLimitSwitch.isPressed();
+        return false;
     }
 
     @Override

@@ -20,6 +20,7 @@ public class StallIntakeCmd extends CommandBase {
     int intakeCurrentLimit;
     double velocityThreshold = 100;
 
+
     public StallIntakeCmd(Intake intakeSubsystem, Supplier<Boolean> intake, Supplier<Boolean> outtake) {
         this.intakeSubsystem = intakeSubsystem;
         this.intake = intake;
@@ -74,8 +75,10 @@ public class StallIntakeCmd extends CommandBase {
         }
         intakeSubsystem.setMotor(intakeSpeed);
         intakeSubsystem.setCurrentLimit(intakeCurrentLimit);
+        
         SmartDashboard.putNumber("Intake current limit", intakeCurrentLimit);
-        SmartDashboard.putBoolean("isIntooked", Intake.isIntooked);
+        SmartDashboard.putBoolean("intake/isIntooked", Intake.isIntooked);
+        SmartDashboard.putNumber("intake/encoder speed", intakeSubsystem.getEncoderSpeed());
     }
 
     @Override

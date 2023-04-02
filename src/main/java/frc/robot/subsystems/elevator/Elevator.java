@@ -71,7 +71,7 @@ public class Elevator extends ProfiledPIDSubsystem {
       }
     }
     // caps the elevator speed at 0.5 rather than 1
-    speed = Math.max(Math.min(speed, 0.5), -0.5);
+    // speed = Math.max(Math.min(speed, 0.5), -0.5);
     SmartDashboard.putNumber("elevator/motor input (%)", speed);
     elevatorIO.setSpeed(speed);
   }
