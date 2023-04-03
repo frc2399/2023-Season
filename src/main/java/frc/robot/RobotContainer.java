@@ -39,7 +39,8 @@ import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.auton.Engage;
 import frc.robot.commands.auton.LeaveEngage;
 import frc.robot.commands.auton.OneAndHalfConeEngage;
-import frc.robot.commands.auton.OneAndHalfCube;
+import frc.robot.commands.auton.OneAndHalfConeNoEngage;
+import frc.robot.commands.auton.OneAndHalfCubeNoEngage;
 import frc.robot.commands.auton.OneAndHalfCubeEngage;
 import frc.robot.commands.auton.OnePieceCommunity;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
@@ -385,7 +386,8 @@ public class RobotContainer {
         chooser.addOption("leave community", new DriveForwardGivenDistance(-5, driveTrain));
         chooser.addOption("one and half cone and engage", new OneAndHalfConeEngage(driveTrain, intake, elevator, arm));
         chooser.addOption("one and half cube and engage", new OneAndHalfCubeEngage(driveTrain, intake, elevator, arm));
-        chooser.addOption("one and half cube NO engage", new OneAndHalfCube(driveTrain, intake, elevator, arm));
+        chooser.addOption("one and half cube NO engage", new OneAndHalfCubeNoEngage(driveTrain, intake, elevator, arm));
+        chooser.addOption("one and half cone NO engage", new OneAndHalfConeNoEngage(driveTrain, intake, elevator, arm));
         // chooser.addOption("two cone auton bottom", new TwoPieceAutonBottom(driveTrain, elevator, intake, arm));
         chooser.addOption("two piece auton", new TwoPieceAuton(driveTrain, intake, elevator, arm));
     }  
