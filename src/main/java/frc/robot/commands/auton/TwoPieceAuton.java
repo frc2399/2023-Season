@@ -58,6 +58,7 @@ public class TwoPieceAuton extends SequentialCommandGroup {
                     new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.4) 
                 ),
             new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
+            // intake cube a bit more while turning
             new ParallelDeadlineGroup(
                 new TurnToNAngleCmd(Units.degreesToRadians(angle2), driveTrain),
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),

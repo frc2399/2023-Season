@@ -111,6 +111,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // after auton robot will not stay in slow mode
     CurvatureDriveCmd.isSlow = false;
   }
 

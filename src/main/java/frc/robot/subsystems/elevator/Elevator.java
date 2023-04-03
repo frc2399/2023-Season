@@ -26,6 +26,8 @@ public class Elevator extends ProfiledPIDSubsystem {
 
   //private static final double max_vel = 0.2 / 2;  // m/s
   //private static final double max_accel = 0.4 / 2;  // m/s/s
+
+  // CAUSED SO MANY ISSUES NEED TO IGNORE LIMIT SWITCHES
   public boolean ignoreLimitSwitches = true;
 
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
@@ -70,8 +72,6 @@ public class Elevator extends ProfiledPIDSubsystem {
         speed = Math.max(speed, 0);
       }
     }
-    // caps the elevator speed at 0.5 rather than 1
-    // speed = Math.max(Math.min(speed, 0.5), -0.5);
     SmartDashboard.putNumber("elevator/motor input (%)", speed);
     elevatorIO.setSpeed(speed);
   }
