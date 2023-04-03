@@ -24,9 +24,9 @@ import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
 
-public class OneAndHalfCubeEngage extends SequentialCommandGroup {
+public class OneAndHalfCube extends SequentialCommandGroup {
 
-    public OneAndHalfCubeEngage(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
+    public OneAndHalfCube(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
 
         addCommands(
             new InstantCommand(() -> {driveTrain.resetOdometry(new Pose2d(2.75, 3.26, new Rotation2d(-3.14)));}, driveTrain),
@@ -47,17 +47,9 @@ public class OneAndHalfCubeEngage extends SequentialCommandGroup {
                     new DriveStraightGivenDistance(0.68, 1.0, driveTrain),
                     new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
                 ),
-                new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
-            new ParallelCommandGroup(
-                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
-                // drive back on charging station
-                new DriveStraightGivenDistance(-3.15, 1.25, driveTrain),
-                new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5),
-                new InstantCommand(() -> {RobotContainer.coneMode = false;})
-            ),
-            new EngageCmd(driveTrain)
-
-            
+            new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
+            RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
+            new InstantCommand(() -> {RobotContainer.coneMode = false;})
           );
     }
 

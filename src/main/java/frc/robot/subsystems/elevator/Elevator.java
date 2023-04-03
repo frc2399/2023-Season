@@ -26,7 +26,9 @@ public class Elevator extends ProfiledPIDSubsystem {
 
   //private static final double max_vel = 0.2 / 2;  // m/s
   //private static final double max_accel = 0.4 / 2;  // m/s/s
-  public boolean ignoreLimitSwitches = false;
+
+  // CAUSED SO MANY ISSUES NEED TO IGNORE LIMIT SWITCHES
+  public boolean ignoreLimitSwitches = true;
 
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
   private static double gravityCompensation = 0.025;
@@ -59,7 +61,7 @@ public class Elevator extends ProfiledPIDSubsystem {
     return elevatorIO.getEncoderSpeed();
   }
 
-  //use this method instead of elevatorIO.setSpeed because need to go through limit switches
+  // use this method instead of elevatorIO.setSpeed because need to go through limit switches
   public void setSpeed(double speed) {
     if (!ignoreLimitSwitches) {
       if (elevatorIO.isAtUpperLimit()) {
@@ -70,9 +72,6 @@ public class Elevator extends ProfiledPIDSubsystem {
         speed = Math.max(speed, 0);
       }
     }
-    
-    //caps the elevator speed at 0.5 rather than 1
-    //speed = Math.max(Math.min(speed, 0.5), -0.5);
     SmartDashboard.putNumber("elevator/motor input (%)", speed);
     elevatorIO.setSpeed(speed);
   }
@@ -81,6 +80,7 @@ public class Elevator extends ProfiledPIDSubsystem {
   public void setSpeedGravityCompensation(double speed) {
     //use setSpeed instead of elevatorIO.setSpeed because need to go through limit switches
     setSpeed(speed + gravityCompensation);
+    System.out.println("elevator speed " + speed);
   }
 
   public double getElevatorCurrent() {

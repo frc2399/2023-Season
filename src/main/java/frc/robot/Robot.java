@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 
 /**
@@ -106,6 +107,12 @@ public class Robot extends TimedRobot {
 
         allianceColor = DriverStation.getAlliance();
         SmartDashboard.putString("robot/alliance color", DriverStation.getAlliance().toString()); 
+  }
+
+  @Override
+  public void teleopInit() {
+    // after auton robot will not stay in slow mode
+    CurvatureDriveCmd.isSlow = false;
   }
 
   @Override
