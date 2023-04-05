@@ -15,11 +15,12 @@ public class StallIntakeCmd extends CommandBase {
     private final Intake intakeSubsystem;
     private final Supplier<Boolean> intake, outtake;
     Debouncer debouncer;
-    Timer timer;
+    Timer timer, timerUpperStall;
     double intakeSpeed;
     int intakeCurrentLimit;
     double velocityThreshold = 100;
-
+    double currentSpeed, lastSpeed;
+    boolean upperStalling, fixUpperStall;
 
     public StallIntakeCmd(Intake intakeSubsystem, Supplier<Boolean> intake, Supplier<Boolean> outtake) {
         this.intakeSubsystem = intakeSubsystem;
@@ -28,6 +29,7 @@ public class StallIntakeCmd extends CommandBase {
         //timer in constructor so it doesn't automatically intake when robot starts
         timer = new Timer();
         timer.start();
+        timerUpperStall = new Timer();
         addRequirements(intakeSubsystem);
     }
 
@@ -37,16 +39,30 @@ public class StallIntakeCmd extends CommandBase {
         debouncer = new Debouncer(0.15);
         intakeSpeed = 0.0;
         intakeCurrentLimit = 0;
+        currentSpeed = Math.abs(intakeSubsystem.getEncoderSpeed());
+        upperStalling = false;
+        fixUpperStall = false;
     }
 
     @Override
     public void execute() {
-        if (intake.get()) {
+        if (intake.get() || fixUpperStall) {
             timer.reset();
             intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED;
             intakeCurrentLimit = RobotContainer.coneMode ? IntakeConstants.CONE_IN_CURRENT : IntakeConstants.CUBE_IN_CURRENT;
-            if (debouncer.calculate(Math.abs(intakeSubsystem.getEncoderSpeed()) < velocityThreshold)) {
-                Intake.isIntooked = true;
+            lastSpeed = currentSpeed;
+            currentSpeed = Math.abs(intakeSubsystem.getEncoderSpeed());
+            // if (debouncer.calculate(Math.abs(intakeSubsystem.getEncoderSpeed()) < velocityThreshold)) {
+            //     Intake.isIntooked = true;
+            // }
+            fixUpperStall = false;
+            if (debouncer.calculate((lastSpeed-currentSpeed) < 50)) {
+                if (currentSpeed < 100) {
+                    Intake.isIntooked = true;
+                }
+                else if (currentSpeed < 5000) {
+                    upperStalling = true;
+                }
             }
         }
         else if (outtake.get()) {
@@ -60,11 +76,29 @@ public class StallIntakeCmd extends CommandBase {
             intakeSpeed = 0.5 * (RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED);
             intakeCurrentLimit = 3;
         }
+        else if (upperStalling) {
+            intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_OUT_SPEED : IntakeConstants.CUBE_OUT_SPEED;
+            intakeSubsystem.setMotor(intakeSpeed);
+            timerUpperStall.start();
+            if (timerUpperStall.hasElapsed(0.05)) {
+                upperStalling = false;
+                timerUpperStall.reset();
+                fixUpperStall = true;
+            }
+        }
         // increased timer 
         else if (!timer.hasElapsed(1.5)) {
             intakeSpeed = RobotContainer.coneMode ? IntakeConstants.CONE_IN_SPEED : IntakeConstants.CUBE_IN_SPEED;
-            if (debouncer.calculate(Math.abs(intakeSubsystem.getEncoderSpeed()) < velocityThreshold)) {
-                Intake.isIntooked = true;
+            // if (debouncer.calculate(Math.abs(intakeSubsystem.getEncoderSpeed()) < velocityThreshold)) {
+            //     Intake.isIntooked = true;
+            // }
+            if (debouncer.calculate((lastSpeed-currentSpeed) < 50)) {
+                if (currentSpeed < 100) {
+                    Intake.isIntooked = true;
+                }
+                else if (currentSpeed < 5000) {
+                    upperStalling = true;
+                }
             }
         }
         else {
@@ -75,10 +109,11 @@ public class StallIntakeCmd extends CommandBase {
         if (!intake.get() && timer.hasElapsed(1)) {
             debouncer.calculate(false);
         }
+
         intakeSubsystem.setMotor(intakeSpeed);
         intakeSubsystem.setCurrentLimit(intakeCurrentLimit);
-        
-        SmartDashboard.putNumber("Intake current limit", intakeCurrentLimit);
+        SmartDashboard.putBoolean("intake/upper stalling", upperStalling);
+        SmartDashboard.putNumber("intake/current limit", intakeCurrentLimit);
         SmartDashboard.putBoolean("intake/isIntooked", Intake.isIntooked);
         SmartDashboard.putNumber("intake/encoder speed", intakeSubsystem.getEncoderSpeed());
     }

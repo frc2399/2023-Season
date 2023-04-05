@@ -23,10 +23,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 
 public class PoseEstimator extends SubsystemBase {
@@ -87,7 +85,7 @@ public class PoseEstimator extends SubsystemBase {
     
     tab.addString("Pose", this::getFormattedPose).withPosition(0, 0).withSize(2, 0);
     tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
-    FieldObject2d target = RobotContainer.driveTrain.field.getObject("target 1");
+    // FieldObject2d target = RobotContainer.driveTrain.field.getObject("target 1");
   }
 
   @Override
