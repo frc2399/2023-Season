@@ -273,71 +273,32 @@ public class RobotContainer {
     private void setUpConeCubeCommands () {
         changeMode = new InstantCommand(() -> {coneMode = !coneMode;});
 
-        setTopPieceSetpoint = new ConditionalCommand(
-                new InstantCommand(() -> {
-                    angleHeight = CommandSelector.CONE_TOP;
-                    //UIUtil.setRumblePattern(3, xboxOperator);
-                }),
-                new InstantCommand(() -> {
-                    angleHeight = CommandSelector.CUBE_TOP;
-                    // UIUtil.setRumblePattern(3, xboxOperator);
-                }), 
+        //UIUtil.setRumblePattern(3, xboxOperator);
+        setTopPieceSetpoint = new InstantCommand(() -> {
+                angleHeight = coneMode ? CommandSelector.CONE_TOP : CommandSelector.CUBE_TOP;
+            });
 
-                () -> coneMode);
+        //UIUtil.setRumblePattern(2, xboxOperator);
+        setMidPieceSetpoint = new InstantCommand(() -> {
+                angleHeight = coneMode ? CommandSelector.CONE_MID : CommandSelector.CUBE_MID;
+            });
 
-        setMidPieceSetpoint = new ConditionalCommand(
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CONE_MID;
-                //UIUtil.setRumblePattern(2, xboxOperator);
-            }),
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CUBE_MID;
-               // UIUtil.setRumblePattern(2, xboxOperator);
-            }), 
-
-            () -> coneMode);
-
-        setLowPieceSetpoint = new ConditionalCommand(
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CONE_LOW;
-               // UIUtil.setRumblePattern(1, xboxOperator);
-            }),
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CUBE_LOW;
-                //UIUtil.setRumblePattern(1, xboxOperator);
-            }), 
-
-            () -> coneMode);
+        //UIUtil.setRumblePattern(1, xboxOperator);
+        setLowPieceSetpoint = new InstantCommand(() -> { 
+                angleHeight = coneMode ? CommandSelector.CONE_LOW : CommandSelector.CUBE_LOW;
+            });
     
-        setGroundUpIntakeSetpoint = new ConditionalCommand(
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CONE_GROUND_INTAKE;
-            }),
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CUBE_INTAKE;
-            }), 
+        setGroundUpIntakeSetpoint = new InstantCommand(() -> { 
+                angleHeight = coneMode ? CommandSelector.CONE_GROUND_INTAKE : CommandSelector.CUBE_INTAKE;
+            });
 
-            () -> coneMode);
-
-        setGroundTipIntakeSetpoint = new ConditionalCommand(
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CONE_TIP_INTAKE;
-            }),
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CUBE_INTAKE;
-            }), 
-
-            () -> coneMode);
+        setGroundTipIntakeSetpoint = new InstantCommand(() -> { 
+                angleHeight = coneMode ? CommandSelector.CONE_TIP_INTAKE : CommandSelector.CUBE_INTAKE;
+            });
         
-        setShelfIntakeSetpoint = new ConditionalCommand(
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CONE_SHELF;
-            }),
-            new InstantCommand(() -> {
-                angleHeight = CommandSelector.CUBE_SHELF;
-            }), 
-
-            () -> coneMode);
+        setShelfIntakeSetpoint = new InstantCommand(() -> { 
+                angleHeight = coneMode ? CommandSelector.CONE_SHELF : CommandSelector.CUBE_SHELF;
+            });
 
         selectPositionCommand = selectPositionCommand();
 
