@@ -25,7 +25,7 @@ public class LeaveEngage extends SequentialCommandGroup {
             new DriveForwardGivenDistance(2.1, driveTrain),
             new PrintCommand("finshed driving foward"),
              // balances robot when it's on charging station
-            new EngageCmd(driveTrain)
+            new EngageCmd(driveTrain, 0.2)
           );
 
     }

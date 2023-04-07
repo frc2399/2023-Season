@@ -55,7 +55,7 @@ public class OneAndHalfCubeEngage extends SequentialCommandGroup {
                 new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5),
                 new InstantCommand(() -> {RobotContainer.coneMode = false;})
             ),
-            new EngageCmd(driveTrain)
+            new EngageCmd(driveTrain, 0.2)
 
             
           );

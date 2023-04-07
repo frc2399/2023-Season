@@ -218,7 +218,7 @@ public class RobotContainer {
         new JoystickButton(xboxDriver, Button.kX.value).whileTrue(
             new SequentialCommandGroup(
                 new InstantCommand(() -> {CurvatureDriveCmd.isSlow = true;}),
-                new EngageCmd(driveTrain)
+                new EngageCmd(driveTrain, 0.3)
         ));
 
         //Driver Y(4) - ignore the limit switches

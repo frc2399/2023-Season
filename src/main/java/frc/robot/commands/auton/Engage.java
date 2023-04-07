@@ -24,7 +24,7 @@ public class Engage extends SequentialCommandGroup {
     addCommands(
       RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator),
       new DriveForwardGivenDistance(-2, driveTrain),
-      new EngageCmd(driveTrain)
+      new EngageCmd(driveTrain, 0.2)
     );
   }
 }

@@ -54,7 +54,7 @@ public class OneAndHalfConeEngage extends SequentialCommandGroup {
                 new DriveStraightGivenDistance(-3.10, 1.25, driveTrain),
                 new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 0.5)
             ),
-            new EngageCmd(driveTrain)
+            new EngageCmd(driveTrain, 0.2)
 
             
           );
