@@ -30,7 +30,7 @@ public class TwoPieceAutonBump extends SequentialCommandGroup {
     public TwoPieceAutonBump(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
         // TODO: test turning angle
         double angle1 = 15;
-        double angle2 = -178;
+        double angle2 = 176;
         double xpose = 1.88;
         double ypose = 5.06;
 
@@ -55,18 +55,20 @@ public class TwoPieceAutonBump extends SequentialCommandGroup {
             // // drives and intakes cube off ground
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
-                    new DriveForwardGivenDistance(0.4, driveTrain),
+                    new DriveStraightGivenDistance(0.4, 0.95, driveTrain),
                     new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.4) 
                 ),
-            new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
+            new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)
+            ),
             // intake cube a bit more while turning
             new ParallelDeadlineGroup(
                 new TurnToNAngleCmd(Units.degreesToRadians(angle2), driveTrain),
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
                 new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5)
             ),
-            new DriveStraightGivenDistance(4.95, 1.5, driveTrain),
-            new PlaceCubeOnNode(intake, elevator, arm, ElevatorConstants.CUBE_TOP_HEIGHT, ArmConstants.CUBE_TOP_ANGLE)
+            new DriveStraightGivenDistance(5.05, 1.5, driveTrain),
+            new PlaceCubeOnNode(intake, elevator, arm, ElevatorConstants.CUBE_TOP_HEIGHT, ArmConstants.CUBE_TOP_ANGLE),
+            RobotContainer.resetArmAndElevatorEncoderCommand(arm, elevator)
         );
     }
 }

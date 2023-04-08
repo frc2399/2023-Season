@@ -38,21 +38,20 @@ public class OneAndHalfConeBump extends SequentialCommandGroup {
             new DriveStraightGivenDistance(-4.2, 1.0, driveTrain),
             new ParallelCommandGroup(
                 // lower arm
-                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT),
+                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
                 // TODO: test turning angle
                 new TurnToNAngleCmd(Units.degreesToRadians(15), driveTrain)
             ),
             // drives and intakes cone off ground
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
-                    new DriveStraightGivenDistance(0.68, 1.0, driveTrain),
+                    new DriveStraightGivenDistance(0.68, 1, driveTrain),
                     new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
                 ),
-                new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
+                new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2)),
             new ParallelCommandGroup(
-                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
-                // new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5),
-                new InstantCommand(() -> {RobotContainer.coneMode = false;})
+                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0)
+                // new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5)
             )
             
           );
