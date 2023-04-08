@@ -12,6 +12,7 @@ import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
 
+ // TODO: tune so it stays close to charge station
 public class OnePieceCommunity extends SequentialCommandGroup {
 
     public OnePieceCommunity(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {

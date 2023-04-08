@@ -68,7 +68,7 @@ public class TurnToNAngleCmd extends CommandBase {
     outputSpeed = MathUtil.clamp(outputSpeed, -0.5, 0.5);
     outputSpeed = turnLimiter.calculate(outputSpeed);
     //created a min speed to overcome small errors
-    outputSpeed += 0.07 * Math.signum(outputSpeed);
+    outputSpeed += 0.085 * Math.signum(outputSpeed);
 
     m_driveTrain.setMotors(-outputSpeed, outputSpeed);
 

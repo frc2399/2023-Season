@@ -78,7 +78,7 @@ public class StallIntakeCmd extends CommandBase {
         intakeSubsystem.setMotor(intakeSpeed);
         intakeSubsystem.setCurrentLimit(intakeCurrentLimit);
         
-        SmartDashboard.putNumber("Intake current limit", intakeCurrentLimit);
+        SmartDashboard.putNumber("intake/current limit", intakeCurrentLimit);
         SmartDashboard.putBoolean("intake/isIntooked", Intake.isIntooked);
         SmartDashboard.putNumber("intake/encoder speed", intakeSubsystem.getEncoderSpeed());
     }

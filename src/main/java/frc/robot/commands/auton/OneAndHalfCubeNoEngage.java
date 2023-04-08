@@ -24,9 +24,10 @@ import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
 
-public class OneAndHalfCube extends SequentialCommandGroup {
+public class OneAndHalfCubeNoEngage extends SequentialCommandGroup {
 
-    public OneAndHalfCube(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
+    // TODO: tune so it stays close to charge station
+    public OneAndHalfCubeNoEngage(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
 
         addCommands(
             new InstantCommand(() -> {driveTrain.resetOdometry(new Pose2d(2.75, 3.26, new Rotation2d(-3.14)));}, driveTrain),

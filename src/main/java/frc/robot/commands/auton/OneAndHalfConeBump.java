@@ -24,9 +24,9 @@ import frc.robot.subsystems.drivetrain.DriveTrain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
 
-public class OneAndHalfCubeEngage extends SequentialCommandGroup {
+public class OneAndHalfConeBump extends SequentialCommandGroup {
 
-    public OneAndHalfCubeEngage(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
+    public OneAndHalfConeBump(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
 
         addCommands(
             new InstantCommand(() -> {driveTrain.resetOdometry(new Pose2d(2.75, 3.26, new Rotation2d(-3.14)));}, driveTrain),
@@ -38,25 +38,21 @@ public class OneAndHalfCubeEngage extends SequentialCommandGroup {
             new DriveStraightGivenDistance(-4.2, 1.0, driveTrain),
             new ParallelCommandGroup(
                 // lower arm
-                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT),
-                new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain)
+                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
+                // TODO: test turning angle
+                new TurnToNAngleCmd(Units.degreesToRadians(15), driveTrain)
             ),
             // drives and intakes cone off ground
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
-                    new DriveStraightGivenDistance(0.68, 1.0, driveTrain),
+                    new DriveStraightGivenDistance(0.68, 1, driveTrain),
                     new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
                 ),
-                new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
+                new IntakeForGivenTime(intake, IntakeConstants.CONE_IN_SPEED, 2)),
             new ParallelCommandGroup(
-                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
-                // drive back on charging station
-                new DriveStraightGivenDistance(-3.15, 1.25, driveTrain),
-                new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5),
-                new InstantCommand(() -> {RobotContainer.coneMode = false;})
-            ),
-            new EngageCmd(driveTrain, 0.2)
-
+                RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0)
+                // new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5)
+            )
             
           );
     }

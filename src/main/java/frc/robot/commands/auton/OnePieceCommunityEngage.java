@@ -33,7 +33,7 @@ public class OnePieceCommunityEngage extends SequentialCommandGroup {
             new PrintCommand("drive forward given distance finished "),
 
             // balances robot when it's on charging station
-            new EngageCmd(driveTrain)
+            new EngageCmd(driveTrain, 0.2)
           );
     }
 

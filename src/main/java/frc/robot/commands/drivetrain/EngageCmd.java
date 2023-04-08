@@ -4,6 +4,7 @@
 
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 
@@ -13,10 +14,12 @@ public class EngageCmd extends CommandBase {
   private DriveTrain drivetrain;
 
   private double drivePower;
+  private double speedLimit;
 
   /** Command to use Gyro data to resist the tip angle from the beam - to stabalize and balanace */
-  public EngageCmd(DriveTrain drivetrain) {
+  public EngageCmd(DriveTrain drivetrain, double speedLimit) {
     this.drivetrain = drivetrain;
+    this.speedLimit = speedLimit;
     addRequirements(drivetrain);
   }
 
@@ -26,7 +29,8 @@ public class EngageCmd extends CommandBase {
   @Override
   public void execute() {
     drivePower = 0.01 * drivetrain.getGyroPitch();
-    drivePower = Math.max(Math.min(drivePower, 0.3), -0.3);
+    // drivePower = Math.max(Math.min(drivePower, 0.3), -0.3);
+    drivePower = Math.max(Math.min(drivePower, speedLimit), -speedLimit);
     drivePower = -drivePower;
 
     if (Math.abs(drivetrain.getGyroPitchRate()) > 15) {
