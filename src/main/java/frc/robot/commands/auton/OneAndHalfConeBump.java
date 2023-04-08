@@ -40,7 +40,7 @@ public class OneAndHalfConeBump extends SequentialCommandGroup {
                 // lower arm
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT),
                 // TODO: test turning angle
-                new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain)
+                new TurnToNAngleCmd(Units.degreesToRadians(15), driveTrain)
             ),
             // drives and intakes cone off ground
             new ParallelDeadlineGroup(

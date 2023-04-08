@@ -29,7 +29,7 @@ public class TwoPieceAutonBump extends SequentialCommandGroup {
     
     public TwoPieceAutonBump(DriveTrain driveTrain, Intake intake, Elevator elevator, Arm arm) {
         // TODO: test turning angle
-        double angle1 = -23;
+        double angle1 = 15;
         double angle2 = -178;
         double xpose = 1.88;
         double ypose = 5.06;

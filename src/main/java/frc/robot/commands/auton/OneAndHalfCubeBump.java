@@ -40,7 +40,7 @@ public class OneAndHalfCubeBump extends SequentialCommandGroup {
                 // lower arm
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT),
                 // TODO: test turning angle
-                new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain)
+                new TurnToNAngleCmd(Units.degreesToRadians(15), driveTrain)
             ),
             // drives and intakes cube off ground
             new ParallelDeadlineGroup(
