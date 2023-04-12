@@ -52,6 +52,7 @@ import frc.robot.commands.auton.TwoPieceAuton;
 import frc.robot.commands.auton.TwoPieceAutonBottom;
 import frc.robot.commands.auton.TwoPieceAutonBump;
 import frc.robot.commands.auton.TwoPieceAutonPP;
+import frc.robot.commands.auton.TwoPieceShoot;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.EngageCmd;
@@ -357,6 +358,7 @@ public class RobotContainer {
         chooser.addOption("one and half cube bump", new OneAndHalfCubeBump(driveTrain, intake, elevator, arm));
         chooser.addOption("one and half cone bump", new OneAndHalfConeBump(driveTrain, intake, elevator, arm));
         chooser.addOption("two piece bump", new TwoPieceAutonBump(driveTrain, intake, elevator, arm));
+        chooser.addOption("two piece engage (shooter)", new TwoPieceShoot(driveTrain, intake, elevator, arm));
 
     }  
     

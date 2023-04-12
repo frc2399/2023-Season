@@ -39,7 +39,7 @@ public class OneAndHalfConeNoEngage extends SequentialCommandGroup {
             new ParallelCommandGroup(
                 // lower arm
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT),
-                new TurnToNAngleCmd(Units.degreesToRadians(0), driveTrain)
+                new TurnToNAngleCmd(Units.degreesToRadians(5), driveTrain)
             ),
             // drives and intakes cone off ground
             new ParallelDeadlineGroup(
