@@ -40,10 +40,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     robotContainer = new RobotContainer();
-    if (!RobotBase.isSimulation()) {
-      DataLogManager.start();
-      DriverStation.startDataLog(DataLogManager.getLog());
-    }
+    // if (!RobotBase.isSimulation()) {
+    //   DataLogManager.start();
+    //   DriverStation.startDataLog(DataLogManager.getLog());
+    // }
+
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
 
     PPRamseteCommand.setLoggingCallbacks(
       (PathPlannerTrajectory activeTrajectory) -> {
@@ -73,6 +76,10 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putString("branch and date", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE);
     Shuffleboard.getTab("Driver").add("robot/branch info", MyVersion.GIT_BRANCH + " " + MyVersion.GIT_DATE + " " + MyVersion.GIT_SHA);
     SmartDashboard.putData("PDP", RobotContainer.pdp);
+
+    CommandScheduler.getInstance( ).onCommandInitialize(cmd -> DataLogManager.log(cmd.getName( ) + ": Init"));
+    CommandScheduler.getInstance( ).onCommandInterrupt(cmd -> DataLogManager.log(cmd.getName( ) + ": Interrupted"));
+    CommandScheduler.getInstance( ).onCommandFinish(cmd -> DataLogManager.log(cmd.getName( ) + ": End"));
   }
 
   @Override

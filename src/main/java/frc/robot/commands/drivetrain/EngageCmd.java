@@ -4,6 +4,7 @@
 
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveTrain;
@@ -24,7 +25,9 @@ public class EngageCmd extends CommandBase {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    DataLogManager.log("EngageCmd started");
+  }
 
   @Override
   public void execute() {
@@ -46,6 +49,7 @@ public class EngageCmd extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drivetrain.setMotorVoltage(0, 0);
+    DataLogManager.log("EngageCmd ended");
   }
 
   @Override
