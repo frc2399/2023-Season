@@ -42,6 +42,8 @@ public class DriveForwardGivenDistance extends CommandBase {
             m_driveTrain.getLeftEncoderMeters() + 
             m_driveTrain.getRightEncoderMeters() )/ 2;
         DataLogManager.log("starting current position " + currentPosition);
+        DataLogManager.log("DriveForwardGivenDistance started");
+
         
         // find distance robot needs to travel to from its current position
         newTargetDistance = currentPosition + targetDistanceMeters;

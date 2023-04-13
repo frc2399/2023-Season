@@ -3,6 +3,7 @@ package frc.robot.commands.intake;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -37,6 +38,7 @@ public class StallIntakeCmd extends CommandBase {
         debouncer = new Debouncer(0.15);
         intakeSpeed = 0.0;
         intakeCurrentLimit = 0;
+        DataLogManager.log("StallIntakeCmd started");
     }
 
     @Override
@@ -85,7 +87,8 @@ public class StallIntakeCmd extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("StallIntakeCmd ended!");
+        DataLogManager.log("StallIntakeCmd ended");
+
     }
 
     @Override
