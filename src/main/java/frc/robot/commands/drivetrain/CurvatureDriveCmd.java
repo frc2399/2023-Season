@@ -83,7 +83,7 @@ public class CurvatureDriveCmd extends CommandBase {
         //transforming the turn value
         // SmartDashboard.putNumber("Raw Turn Value", realTimeTurn);
         realTimeTurn = DriveUtil.computeDeadband(realTimeTurn, turnDeadband);
-        realTimeTurn = realTimeTurn * realTimeTurn * Math.signum(realTimeTurn);
+        realTimeTurn = realTimeTurn * realTimeTurn * realTimeTurn;
         // SmartDashboard.putNumber("Transformed Turn Value", realTimeTurn);
 
         if(m_debouncer.calculate(Math.abs(realTimeSpeed) <= Constants.XboxConstants.FORWARD_DEADBAND) && realTimeTurn != 0)
