@@ -69,7 +69,7 @@ public class CurvatureDriveCmd extends CommandBase {
         realTimeTurn = -turnFunction.get();
     
         //transforming the drive value
-        SmartDashboard.putNumber("drive/joystick for/back (%)", realTimeSpeed);
+        SmartDashboard.putNumber("drive/joystick for back (%)", realTimeSpeed);
         SmartDashboard.putNumber("drive/joystick turn (%)", realTimeTurn);
 
         realTimeSpeed = realTimeSpeed * realTimeSpeed * Math.signum(realTimeSpeed);
