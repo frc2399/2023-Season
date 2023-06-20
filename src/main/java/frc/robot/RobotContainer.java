@@ -55,6 +55,7 @@ import frc.robot.commands.auton.TwoPieceAutonBump;
 import frc.robot.commands.auton.TwoPieceAutonPP;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
+import frc.robot.commands.drivetrain.DriveStraightGivenTime;
 import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
@@ -195,7 +196,7 @@ public class RobotContainer {
 
       
         //Driver Button X - turn to angle 180 degrees
-        new JoystickButton(xboxDriver, Button.kX.value).onTrue(new TurnToNAngleCmd(Math.PI, driveTrain));
+        new JoystickButton(xboxDriver, Button.kX.value).onTrue(new DriveStraightGivenTime(DanceConstants.DRIVE_FWD_TIME, DanceConstants.DRIVE_FWD_SPD_LIMIT, driveTrain));
 
         //intake for given time button
         new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, DanceConstants.DANCE_INTAKE_SPEED, 1.5));

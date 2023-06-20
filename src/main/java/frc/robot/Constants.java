@@ -186,7 +186,8 @@ public class Constants {
         //multiplied this value by maximum possible error (2pi) to get desired speed of 0.5 
         public static final double kP = 0.08; 
         public static final double ANGLE_ERROR_TOLERANCE = Units.degreesToRadians(3);
-
+        public static final double DRIVE_FWD_TIME = 4.0;
+        public static final double DRIVE_FWD_SPD_LIMIT = 1.0;
 
         
     }
