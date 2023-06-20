@@ -104,6 +104,7 @@ public class Constants {
         //arm min and max angles in radians
         public static final double MAX_ARM_ANGLE = Math.PI/4;
         public static final double MIN_ARM_ANGLE = -Math.PI/4 * 3;
+    
         //arm mass in kg
         public static final double ARM_MASS = 2.72155;
         //arm length in meters
@@ -126,6 +127,10 @@ public class Constants {
         public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
 
         public static final double TURTLE_ANGLE = 0.5;
+
+        public static final double SAD_ANGLE = -Math.PI/4 * 2;
+
+        public static final double HAPPY_ANGLE = Math.PI/8;
 
         public static final double RADIANS_PER_REVOLUTION = 0.0837;
         // initial offset is 0.711 + (0.287) - (0.308)

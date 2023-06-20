@@ -129,6 +129,8 @@ public class RobotContainer {
     private Command selectPositionCommand;
 
     private Command turtleMode;
+    private Command sadSetpoint;
+    private Command happySetpoint;
 
     // so the enum is not initialized to dangerous position
     public static CommandSelector angleHeight = CommandSelector.CONE_GROUND_INTAKE;
@@ -185,6 +187,12 @@ public class RobotContainer {
 
         // Driver Right Bumper (6) - robot goes into turtle mode (arm all the  way up, elevator all the way down)
         new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
+
+        // Driver Y - robot goes into sad mode (arm all the  way down, elevator all the way up)
+        new JoystickButton(xboxDriver, Button.kY.value).onTrue(sadSetpoint);
+
+        // Driver left Bumper (5) - robot goes into happy mode (arm all the way up. elevator all the way up)
+        new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(happySetpoint);
 
         // Operator Right Bumper (6) - kill command (sets speeds of subsystems to 0)
         new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
@@ -275,6 +283,8 @@ public class RobotContainer {
         // coneTipIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT);
         // conePhalangeIntakePosition = makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_PHALANGE_INTAKE_ANGLE, ElevatorConstants.CONE_PHALANGE_INTAKE_HEIGHT);
         turtleMode = makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0.0);
+        sadSetpoint = makeSetPositionArmAndElevatorCommand (ArmConstants.SAD_ANGLE, ElevatorConstants.MAX_ELEVATOR_HEIGHT);
+        happySetpoint = makeSetPositionArmAndElevatorCommand (ArmConstants.HAPPY_ANGLE, ElevatorConstants.MAX_ELEVATOR_HEIGHT);
     }
 
     private void setUpSubsystems () {
