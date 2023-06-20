@@ -64,7 +64,7 @@ public class Elevator extends ProfiledPIDSubsystem {
   // use this method instead of elevatorIO.setSpeed because need to go through limit switches
   public void setSpeed(double speed) {
     if (!ignoreLimitSwitches) {
-      speed = Math.max(Math.min(speed, 0.3), -0.3);
+      speed = Math.max(Math.min(speed, 0.2), -0.2);
     }
     SmartDashboard.putNumber("elevator/motor input (%)", speed);
     elevatorIO.setSpeed(speed);
