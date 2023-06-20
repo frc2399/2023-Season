@@ -20,7 +20,7 @@ public class RealDrive implements DriveIO {
    // Basically copy over the entire rest of the drive subsystem that is "not sim"
    private static CANSparkMax leftFrontMotorController, rightFrontMotorController, leftBackMotorController, rightBackMotorController;
    public static RelativeEncoder leftEncoder, rightEncoder;
-   public AHRS ahrs;
+   public static AHRS ahrs;
 
 
    public RealDrive() {
@@ -79,7 +79,6 @@ public double getLeftEncoderMetersPerSecond() {
 @Override
 public Rotation2d getGyroAngle() {
     return new Rotation2d(Units.degreesToRadians(-ahrs.getAngle()));
-
 }
 
 @Override

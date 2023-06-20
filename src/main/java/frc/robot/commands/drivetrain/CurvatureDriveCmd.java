@@ -8,6 +8,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DanceConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.drivetrain.DriveTrain;
@@ -26,7 +27,7 @@ public class CurvatureDriveCmd extends CommandBase {
     private final double driveDeadband = 0.05;
     private final double turnDeadband = 0.05;
 
-    public static boolean isSlow = false;
+    public static boolean isSlow = true;
 
 
     /* This command does this (fill in)... */
@@ -108,7 +109,7 @@ public class CurvatureDriveCmd extends CommandBase {
         right /= maxValue;
 
         if (isSlow || elevatorHeight.get() > ElevatorConstants.MAX_ELEVATOR_HEIGHT / 2) {        
-            this.driveSubsystem.setMotors(left * DriveConstants.SLOW_SPEED_FRACTION, right * DriveConstants.SLOW_SPEED_FRACTION);
+            this.driveSubsystem.setMotors(left * DanceConstants.DANCE_SLOW_SPEED_FRACTION, right * DanceConstants.DANCE_SLOW_SPEED_FRACTION);
             SmartDashboard.putBoolean("drive/slow mode", true);
         }
         else {

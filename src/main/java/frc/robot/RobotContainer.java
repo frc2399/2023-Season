@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DanceConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.XboxConstants;
@@ -54,6 +55,7 @@ import frc.robot.commands.auton.TwoPieceAutonBump;
 import frc.robot.commands.auton.TwoPieceAutonPP;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
+import frc.robot.commands.drivetrain.DriveStraightGivenTime;
 import frc.robot.commands.drivetrain.EngageCmd;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
@@ -162,10 +164,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
        
         // Operator Left Bumper (5) - changes from cone to cube mode (intially cone mode, shows on smartdashboard)
-        new JoystickButton(xboxOperator, Button.kLeftBumper.value).onTrue(changeMode);
-
-        // Driver Left Stick (9) - change from normal to slow mode
-        new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {CurvatureDriveCmd.isSlow = !CurvatureDriveCmd.isSlow;}));
+        // new JoystickButton(xboxOperator, Button.kLeftBumper.value).onTrue(changeMode);
         
         // Operator Right Y Axis (5) - moves arm up at 0.2 speed, moves arm down at 0.2 speed
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
@@ -174,65 +173,33 @@ public class RobotContainer {
         // Driver Button A (1) - resets arm encoder position to intial offset (at the top)
         new JoystickButton(xboxDriver, Button.kA.value).onTrue(resetArmEncoderCommand(arm));
 
-        // Operator Left Y Axis (1) - moves elevator up at 0.2 speed, moves elevator down at 0.4 speed
+        // Operator Left Y Axis (1) - moves elevator up at 0.2 speed, moves elevator down at 0.2 speed
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.4)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(elevator, -0.2)).onFalse(makeSetSpeedGravityCompensationCommand(elevator, 0));
 
         // Driver Button B (2) - resets elevator encoder to intial offset (at the bottom)
         new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));
-        
-        // Operator Button A (1) - sets the arm and elevator setpoints for the low node
-        new JoystickButton(xboxOperator, Button.kA.value).onTrue(setLowPieceSetpoint);
-
-        // Operator Button X (3) - sets the arm and elevator setpoints for the mid node
-        new JoystickButton(xboxOperator, Button.kX.value).onTrue(setMidPieceSetpoint);
-
-        // Operator Button Y (4) - sets the arm and elevator setpoints for the top node
-        new JoystickButton(xboxOperator, Button.kY.value).onTrue(setTopPieceSetpoint);
 
         // Driver Left Bumper (5) - sends arm and elevator to selected setpoint
-        new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(selectPositionCommand);
-        
-        // Operator Right Trigger Axis (3) - sends the arm and elevator to the positions for intaking pieces from the ground
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(setGroundUpIntakeSetpoint);
+        // new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(selectPositionCommand);
 
-        // Operator Left Trigger Axis (2) - sends the arm and elevator to the positions for intaking cones from the tip on the ground and cubes
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(setGroundTipIntakeSetpoint);
-
-        // Operator Button B (2) - sends the arm and elevator to the positions for intaking pieces from the shelf
-        new JoystickButton(xboxOperator, Button.kB.value).onTrue(setShelfIntakeSetpoint);
-
-        //Kill command - sets speeds of subsystems to 0
 
         // Driver Right Bumper (6) - robot goes into turtle mode (arm all the  way up, elevator all the way down)
         new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
 
         // Operator Right Bumper (6) - kill command (sets speeds of subsystems to 0)
-        // new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
-        //     makeSetSpeedGravityCompensationCommand(elevator, 0);
-        //     makeSetSpeedGravityCompensationCommand(arm, 0);
-        //     intake.setMotor(0);
-        // }, elevator, arm, intake, driveTrain));
+        new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
+            makeSetSpeedGravityCompensationCommand(elevator, 0);
+            makeSetSpeedGravityCompensationCommand(arm, 0);
+            intake.setMotor(0);
+        }, elevator, arm, intake, driveTrain));
 
-        // Driver X(3) - engage command
-        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(
-            new SequentialCommandGroup(
-                new InstantCommand(() -> {CurvatureDriveCmd.isSlow = true;}),
-                new EngageCmd(driveTrain, 0.3)
-        ));
-
-        //Driver Y(4) - ignore the limit switches
-        new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
-
-        //Unused Buttons
-            //Driver - 
-            //Operator - 
-
-        //Turn to angle button
-        // new JoystickButton(xboxDriver, Button.kRightStick.value).onTrue(new TurnToNAngleCmd(Math.PI, driveTrain));
+      
+        //Driver Button X - turn to angle 180 degrees
+        new JoystickButton(xboxDriver, Button.kX.value).onTrue(new DriveStraightGivenTime(DanceConstants.DRIVE_FWD_TIME, DanceConstants.DRIVE_FWD_SPD_LIMIT, driveTrain));
 
         //intake for given time button
-        new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 1.5));
+        new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, DanceConstants.DANCE_INTAKE_SPEED, 1.5));
 
     }
 
