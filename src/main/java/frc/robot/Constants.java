@@ -193,6 +193,10 @@ public class Constants {
         public static final double ANGLE_ERROR_TOLERANCE = Units.degreesToRadians(3);
         public static final double DRIVE_FWD_TIME = 4.0;
         public static final double DRIVE_FWD_SPD_LIMIT = 1.0;
+        //This is in RADIANS
+        public static double PIROUETTE_ANGLE = Units.degreesToRadians(540.0);
+        //fiddle with this as needed. untested. 
+        public static double PIROUETTE_kP = 0.1;
 
         
     }
