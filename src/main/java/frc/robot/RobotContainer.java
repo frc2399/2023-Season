@@ -127,6 +127,7 @@ public class RobotContainer {
     private Command setGroundUpIntakeSetpoint;
     private Command setGroundTipIntakeSetpoint;
     private Command setShelfIntakeSetpoint;
+    private Command sadRobotColor;
 
     private Command selectPositionCommand;
 
@@ -207,12 +208,17 @@ public class RobotContainer {
         //Driver Button X (3) - drive forward for given time
         new JoystickButton(xboxDriver, Button.kX.value).onTrue(new DriveStraightGivenTime(DanceConstants.DRIVE_FWD_TIME, DanceConstants.DRIVE_FWD_SPD_LIMIT, driveTrain));
 
-        //Driver Button Y () - Pirouette to N Angle (can input numbers over 2 * pi)
+        //Operator Button Y () - Pirouette to N Angle (can input numbers over 2 * pi)
         new JoystickButton(xboxOperator, Button.kY.value).onTrue(new PirouetteCmd(1, DanceConstants.PIROUETTE_ANGLE, driveTrain));
 
         //intake for given time button
         new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, DanceConstants.DANCE_INTAKE_SPEED, 1.5));
 
+        sadRobotColor = new InstantCommand(() -> { 
+            led.setColor(255, 0, 0, 0);
+        });
+
+        new JoystickButton(xboxOperator, Button.kX.value).onTrue(sadRobotColor);
     }
 
     private void setDefaultCommands() {

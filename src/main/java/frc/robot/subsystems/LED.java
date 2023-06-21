@@ -60,17 +60,17 @@ public void setColor(int r, int g, int b, int w) {
     //   timer.start();
     // }
 
-    if (Intake.isIntooked) {
-      this.setColor(0, 255, 0, 0);
-    }
-    else {
-      if(RobotContainer.coneMode == true) {
-        this.setColor(254, 117, 0, 2);
-      }
-      else {
-        this.setColor(150, 0, 254, 5);
-      }
-    }
+  //   if (Intake.isIntooked) {
+  //     this.setColor(0, 255, 0, 0);
+  //   }
+  //   else {
+  //     if(RobotContainer.coneMode == true) {
+  //       this.setColor(254, 117, 0, 2);
+  //     }
+  //     else {
+  //       this.setColor(150, 0, 254, 5);
+  //     }
+  //   }
 
-  }
+   }
 }
