@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
@@ -57,6 +58,8 @@ import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.DriveStraightGivenTime;
 import frc.robot.commands.drivetrain.EngageCmd;
+import frc.robot.commands.drivetrain.ShakingNo;
+import frc.robot.commands.drivetrain.TurnNAngle;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.commands.intake.StallIntakeCmd;
@@ -132,6 +135,7 @@ public class RobotContainer {
     private Command turtleMode;
     private Command sadSetpoint;
     private Command happySetpoint;
+    private Command shakingNo;
 
     // so the enum is not initialized to dangerous position
     public static CommandSelector angleHeight = CommandSelector.CONE_GROUND_INTAKE;
@@ -158,6 +162,7 @@ public class RobotContainer {
 
         setUpAutonChooser();
         setUpConeCubeCommands();
+        shakingNo = new ShakingNo(driveTrain);
         configureButtonBindings();
         setDefaultCommands();
         simulationMechanisms();
@@ -194,6 +199,12 @@ public class RobotContainer {
 
         // Driver left Bumper (5) - robot goes into happy mode (arm all the way up. elevator all the way up)
         new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(happySetpoint);
+
+        // Operator A (1) - robot goes into yes mode (arm goes up and down)
+        new JoystickButton(xboxOperator, Button.kA.value).onTrue(armNodding());
+
+        // Operator B (2) - robot goes into no mode (arm goes up and down)
+        new JoystickButton(xboxOperator, Button.kB.value).onTrue(shakingNo);
 
         // Operator Right Bumper (6) - kill command (sets speeds of subsystems to 0)
         new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
@@ -382,7 +393,7 @@ public class RobotContainer {
         );
     }
 
-    public static Command resetArmAndElevatorEncoderCommand(Arm a, Elevator e) {
+    public static Command resetArmAndElevatorEncoderCommand(Arm a, Elevator e) { 
         return new ParallelCommandGroup(resetArmEncoderCommand(arm), 
         resetElevatorEncoderCommand(elevator)
      );
@@ -394,6 +405,21 @@ public class RobotContainer {
             makeSetPositionCommand(elevator, height)
         );
     }
+
+    public static Command armNodding() {
+        return new SequentialCommandGroup(
+            makeSetPositionCommand(arm,ArmConstants.TURTLE_ANGLE),
+            new WaitUntilCommand(() -> arm.atGoal()),
+            makeSetPositionCommand(arm, 0),
+            new WaitUntilCommand(() -> arm.atGoal()),
+            makeSetPositionCommand(arm,ArmConstants.TURTLE_ANGLE),
+            new WaitUntilCommand(() -> arm.atGoal()),
+            makeSetPositionCommand(arm, 0)
+        );
+
+    }
+
+    
 
     public enum CommandSelector {
         CONE_TOP,
