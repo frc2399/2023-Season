@@ -57,6 +57,7 @@ import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.commands.drivetrain.DriveForwardGivenDistance;
 import frc.robot.commands.drivetrain.DriveStraightGivenTime;
 import frc.robot.commands.drivetrain.EngageCmd;
+import frc.robot.commands.drivetrain.PirouetteCmd;
 import frc.robot.commands.drivetrain.TurnToNAngleCmd;
 import frc.robot.commands.intake.IntakeForGivenTime;
 import frc.robot.commands.intake.StallIntakeCmd;
@@ -195,8 +196,11 @@ public class RobotContainer {
         }, elevator, arm, intake, driveTrain));
 
       
-        //Driver Button X - turn to angle 180 degrees
+        //Driver Button X (3) - drive forward for given time
         new JoystickButton(xboxDriver, Button.kX.value).onTrue(new DriveStraightGivenTime(DanceConstants.DRIVE_FWD_TIME, DanceConstants.DRIVE_FWD_SPD_LIMIT, driveTrain));
+
+        //Driver Button Y () - Pirouette to N Angle (can input numbers over 2 * pi)
+        new JoystickButton(xboxDriver, Button.kY.value).onTrue(new PirouetteCmd(1, DanceConstants.PIROUETTE_ANGLE, driveTrain));
 
         //intake for given time button
         new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, DanceConstants.DANCE_INTAKE_SPEED, 1.5));
