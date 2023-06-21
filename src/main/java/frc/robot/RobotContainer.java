@@ -200,7 +200,7 @@ public class RobotContainer {
         new JoystickButton(xboxDriver, Button.kX.value).onTrue(new DriveStraightGivenTime(DanceConstants.DRIVE_FWD_TIME, DanceConstants.DRIVE_FWD_SPD_LIMIT, driveTrain));
 
         //Driver Button Y () - Pirouette to N Angle (can input numbers over 2 * pi)
-        new JoystickButton(xboxDriver, Button.kY.value).onTrue(new PirouetteCmd(1, DanceConstants.PIROUETTE_ANGLE, driveTrain));
+        new JoystickButton(xboxOperator, Button.kY.value).onTrue(new PirouetteCmd(1, DanceConstants.PIROUETTE_ANGLE, driveTrain));
 
         //intake for given time button
         new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, DanceConstants.DANCE_INTAKE_SPEED, 1.5));
