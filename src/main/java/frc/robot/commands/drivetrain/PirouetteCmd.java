@@ -72,7 +72,7 @@ public class PirouetteCmd extends CommandBase {
 
     m_driveTrain.setMotors(0, 0);
     
-    System.out.println("TurnNangle ended");
+    System.out.println("Pirouette ended");
   }
 
   // Returns true when the command should end.
