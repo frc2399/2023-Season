@@ -37,7 +37,7 @@ public class TurnNAngle extends CommandBase {
     System.out.println("TurnNAngle initialized, turnAngle: " + turnAngle);
 
 
-    currentAngle = Units.degreesToRadians(-RealDrive.ahrs.getAngle());
+    currentAngle = Units.degreesToRadians(RealDrive.ahrs.getAngle());
     
     currentAngle = modAngle(currentAngle);
     
@@ -50,7 +50,7 @@ public class TurnNAngle extends CommandBase {
   public void execute() {
 
    
-    currentAngle = Units.degreesToRadians(-RealDrive.ahrs.getAngle());
+    currentAngle = Units.degreesToRadians(RealDrive.ahrs.getAngle());
 
     currentAngle = modAngle(currentAngle);
 
