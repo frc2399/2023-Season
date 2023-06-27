@@ -28,7 +28,8 @@ public class Arm extends ProfiledPIDSubsystem {
   private static final double max_vel = 1.5;  // rad/s
   private static final double max_accel = 2.7;  // rad/s/s
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
-  private static double gravityCompensation = 0.04;
+  // private static double gravityCompensation = 0.04;
+  private static double gravityCompensation = 0.06;
 
   public Arm(ArmIO io) {
     super(new ProfiledPIDController(kpPos, 0, 0, constraints));
@@ -57,7 +58,7 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public void setSpeed(double speed) {
-    speed = Math.max(Math.min(speed, 0.3), -0.3);
+    speed = Math.max(Math.min(speed, 0.15), -0.15);
     armIO.setSpeed(speed);
     SmartDashboard.putNumber("arm/speed", speed);
   }
@@ -72,6 +73,8 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public void setSpeedGravityCompensation(double speed) {
+    // System.out.println("speed " + speed);
+    // System.out.println("encoder " + getEncoderPosition());
     // calls set speed function in the file that does armIO.setSpeed after capping speed
     setSpeed(speed + gravityCompensation * Math.cos(getEncoderPosition()));
   }

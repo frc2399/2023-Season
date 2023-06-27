@@ -188,6 +188,7 @@ public class Constants {
     public static final class DanceConstants {
         public static final double DANCE_INTAKE_SPEED = 0.3; 
         public static final double DANCE_SLOW_SPEED_FRACTION = 0.2;
+        public static final double DANCE_FAST_SPEED_FRACTION = 0.4;
         //multiplied this value by maximum possible error (2pi) to get desired speed of 0.5 
         public static final double kP = 0.08; 
         public static final double ANGLE_ERROR_TOLERANCE = Units.degreesToRadians(3);

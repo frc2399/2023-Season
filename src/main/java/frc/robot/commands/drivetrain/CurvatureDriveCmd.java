@@ -115,7 +115,9 @@ public class CurvatureDriveCmd extends CommandBase {
         else {
             // SmartDashboard.putNumber("left motor speed", left);
             // SmartDashboard.putNumber("right motor speed", right);
-            this.driveSubsystem.setMotors(left, right);
+            this.driveSubsystem.setMotors(left * DanceConstants.DANCE_FAST_SPEED_FRACTION, right * DanceConstants.DANCE_FAST_SPEED_FRACTION);
+
+            // this.driveSubsystem.setMotors(left, right);
             SmartDashboard.putBoolean("drive/slow mode", false);
         }
         

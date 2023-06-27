@@ -172,6 +172,10 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
        
+         // Driver Left Stick (9) - change from normal to slow mode
+         new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {CurvatureDriveCmd.isSlow = !CurvatureDriveCmd.isSlow;}));
+
+ 
         // Operator Left Bumper (5) - changes from cone to cube mode (intially cone mode, shows on smartdashboard)
         // new JoystickButton(xboxOperator, Button.kLeftBumper.value).onTrue(changeMode);
         

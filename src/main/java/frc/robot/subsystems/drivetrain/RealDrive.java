@@ -88,6 +88,11 @@ public void setMotorVoltage(double leftVolt, double rightVolt) {
 } 
 
 public void setMotors(double leftSpeed, double rightSpeed) {
+
+    leftSpeed = Math.max(Math.min(leftSpeed, 0.4), -0.4);
+
+    rightSpeed = Math.max(Math.min(rightSpeed, 0.4), -0.4);
+
     leftFrontMotorController.set(leftSpeed);
     rightFrontMotorController.set(rightSpeed);
 }
