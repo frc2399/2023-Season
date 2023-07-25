@@ -222,7 +222,7 @@ public class RobotContainer {
         ));
 
         //Driver Y(4) - ignore the limit switches
-        new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
+        // new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
 
         //Unused Buttons
             //Driver - 
