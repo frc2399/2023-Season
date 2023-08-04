@@ -20,9 +20,9 @@ public class Elevator extends ProfiledPIDSubsystem {
 
   // Trapezoidal profile constants and variables
   
-  private static final double max_vel = 1.25;  // m/s //0.2
-  // private static final double max_vel = 0.45;  // m/s //0.2
-  private static final double max_accel = 2.50;  // m/s/s //0.4
+  private static final double max_vel = 1;  // m/s //changed from 1.25 to slow down the elevator 
+  // private static final double max_vel = 0.45;  // m/s 
+  private static final double max_accel = 2;  // m/s/s //changed from 2.50 to slow down elevator 
 
   //private static final double max_vel = 0.2 / 2;  // m/s
   //private static final double max_accel = 0.4 / 2;  // m/s/s

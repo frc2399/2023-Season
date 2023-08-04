@@ -16,7 +16,7 @@ public class ArcadeDriveCmd extends CommandBase {
     private final DriveTrain driveSubsystem;
     private SlewRateLimiter driveLimiter;
     private SlewRateLimiter turnLimiter;
-    public static boolean isSlow = false;
+    public static boolean isSlow = true;
     private final Supplier<Double> speedFunction, turnFunction;
 
     /* This command does this (fill in)... */

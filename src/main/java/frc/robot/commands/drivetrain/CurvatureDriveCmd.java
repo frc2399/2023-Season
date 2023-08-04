@@ -26,7 +26,7 @@ public class CurvatureDriveCmd extends CommandBase {
     private final double driveDeadband = 0.05;
     private final double turnDeadband = 0.05;
 
-    public static boolean isSlow = false;
+    public static boolean isSlow = true;
 
 
     /* This command does this (fill in)... */
@@ -41,7 +41,7 @@ public class CurvatureDriveCmd extends CommandBase {
         // Creates a Debouncer in "both" mode.
         m_debouncer = new Debouncer(0.1, Debouncer.DebounceType.kRising);
         // set isSlow to false in constructor not initialize so when curvatureDdriveCmd is initialized and default not automatically set to false
-        isSlow = false;
+        isSlow = true;
 
 
         // So if currently false the signal must go true for at least .1 seconds before being read as a True signal.
