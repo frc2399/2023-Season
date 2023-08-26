@@ -1,7 +1,9 @@
 package frc.robot;
 
+import java.util.List;
 import java.util.Map;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.XboxConstants;
@@ -72,6 +75,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.RealIntake;
 import frc.robot.subsystems.intake.SimIntake;
+import frc.robot.util.DriveUtil;
 
 
 /**
@@ -92,12 +96,12 @@ public class RobotContainer {
     public static LED led = new LED();
     public static Arm arm;
    // public static Camera camera;
-    
+
     public static Intake intake;
     public static Elevator elevator;
     // public static PoseEstimator poseEstimator;
     // public static PhotonCamera photonCamera;
-     
+
     public static MechanismLigament2d elevatorMechanism;
     public static MechanismLigament2d armMechanism;
     public static MechanismLigament2d LEDMechanism;
@@ -109,7 +113,7 @@ public class RobotContainer {
     public static PowerDistribution pdp;
 
     public static boolean coneMode = true;
-    
+
     private Command changeMode;
 
     private Command setTopPieceSetpoint;
@@ -125,12 +129,12 @@ public class RobotContainer {
 
     // so the enum is not initialized to dangerous position
     public static CommandSelector angleHeight = CommandSelector.CONE_GROUND_INTAKE;
-    
+
      // A chooser for autonomous commands
      final SendableChooser<Command> chooser = new SendableChooser<>();
      final ComplexWidget autonChooser = Shuffleboard.getTab("Driver")
      .add("Choose Auton", chooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withPosition(4, 4).withSize(9, 1);
-    
+
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
@@ -141,7 +145,7 @@ public class RobotContainer {
         // if (RobotBase.isReal()) {
         //     CameraServer.startAutomaticCapture();
         // }
-        
+
         setUpSubsystems();
 
         // poseEstimator = new PoseEstimator(photonCamera, driveTrain);
@@ -154,13 +158,13 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-       
+
         // Operator Left Bumper (5) - changes from cone to cube mode (intially cone mode, shows on smartdashboard)
         new JoystickButton(xboxOperator, Button.kLeftBumper.value).onTrue(changeMode);
 
         // Driver Left Stick (9) - change from normal to slow mode
         new JoystickButton(xboxDriver, Button.kLeftStick.value).onTrue(new InstantCommand(() -> {CurvatureDriveCmd.isSlow = !CurvatureDriveCmd.isSlow;}));
-        
+
         // Operator Right Y Axis (5) - moves arm up at 0.2 speed, moves arm down at 0.2 speed
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) < -0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, 0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightY.value) > 0.1).whileTrue(makeSetSpeedGravityCompensationCommand(arm, -0.2)).onFalse(makeSetSpeedGravityCompensationCommand(arm, 0));
@@ -174,7 +178,7 @@ public class RobotContainer {
 
         // Driver Button B (2) - resets elevator encoder to intial offset (at the bottom)
         new JoystickButton(xboxDriver, Button.kB.value).onTrue(resetElevatorEncoderCommand(elevator));
-        
+
         // Operator Button A (1) - sets the arm and elevator setpoints for the low node
         new JoystickButton(xboxOperator, Button.kA.value).onTrue(setLowPieceSetpoint);
 
@@ -186,7 +190,7 @@ public class RobotContainer {
 
         // Driver Left Bumper (5) - sends arm and elevator to selected setpoint
         new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(selectPositionCommand);
-        
+
         // Operator Right Trigger Axis (3) - sends the arm and elevator to the positions for intaking pieces from the ground
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(setGroundUpIntakeSetpoint);
 
@@ -216,8 +220,8 @@ public class RobotContainer {
         ));
 
         //Unused Buttons
-            //Driver - 
-            //Operator - 
+            //Driver -
+            //Operator -
 
         //Turn to angle button
         // new JoystickButton(xboxDriver, Button.kRightStick.value).onTrue(new TurnToNAngleCmd(Math.PI, driveTrain));
@@ -228,20 +232,65 @@ public class RobotContainer {
     }
 
     private void setDefaultCommands() {
+        // Classic curvature
+        // driveTrain.setDefaultCommand(
+        //     new CurvatureDriveCmd(driveTrain,
+        //         () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
+        //         () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value),
+        //         () -> elevator.getEncoderPosition()));
+
+
+        // Tank Drive
+        // driveTrain.setDefaultCommand(
+        //         new RunCommand(
+        //             () -> {
+        //                 driveTrain.setMotors(
+        //                     DriveUtil.computeDeadband(-1*xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value), 0.05),
+        //                     DriveUtil.computeDeadband(-1*xboxDriver.getRawAxis(XboxController.Axis.kRightY.value), 0.05));
+        //             }, driveTrain));
+
+
+        // Cleaner curvature
         driveTrain.setDefaultCommand(
-            new CurvatureDriveCmd(driveTrain,
-                () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value),
-                () -> xboxDriver.getRawAxis(XboxController.Axis.kRightX.value), 
-                () -> elevator.getEncoderPosition()));  
-                
+            new RunCommand(() -> {
+                var speed = -xboxDriver.getRawAxis(XboxController.Axis.kLeftY.value);
+                var turn_cw = xboxDriver.getRawAxis(XboxController.Axis.kRightX.value);
+
+                speed = speed * speed * speed;
+                turn_cw = turn_cw * turn_cw * turn_cw;
+
+                speed = MathUtil.applyDeadband(speed, 0.05);
+                turn_cw = MathUtil.applyDeadband(turn_cw, 0.05);
+
+                // Turn proportional to fwd speed, unless fwd speed is too small in which case we still want to be able to turn
+                turn_cw *= Math.max(Math.abs(speed), 0.6);
+
+                var speed_left = speed + turn_cw;
+                var speed_right = speed -turn_cw;
+                var max_output = List.of(speed_left, speed_right).stream().max((a, b) -> (int) (a - b)).orElse(1.0);
+                if (max_output > 1) {
+                    speed_left /= max_output;
+                    speed_right /= max_output;
+                }
+
+                if (CurvatureDriveCmd.isSlow || elevator.getEncoderPosition() > ElevatorConstants.MAX_ELEVATOR_HEIGHT / 2) {
+                    speed_left *= DriveConstants.SLOW_SPEED_FRACTION;
+                    speed_right *= DriveConstants.SLOW_SPEED_FRACTION;
+                }
+
+                driveTrain.setMotors(speed_left, speed_right);
+            }, driveTrain)
+        );
+
         intake.setDefaultCommand(
-            new StallIntakeCmd(intake, 
-            () -> (xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1 || xboxOperator.getRawButtonPressed(XboxController.Button.kRightBumper.value)), 
+            new StallIntakeCmd(intake,
+            () -> (xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1 || xboxOperator.getRawButtonPressed(XboxController.Button.kRightBumper.value)),
             () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.1));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));
+
     }
-    
+
     private void simulationMechanisms() {
         //Makes a mechanism (lines to show elevator and arm) in simulator
         //Team colors!
@@ -279,19 +328,19 @@ public class RobotContainer {
             });
 
         //UIUtil.setRumblePattern(1, xboxOperator);
-        setLowPieceSetpoint = new InstantCommand(() -> { 
+        setLowPieceSetpoint = new InstantCommand(() -> {
                 angleHeight = coneMode ? CommandSelector.CONE_LOW : CommandSelector.CUBE_LOW;
             });
-    
-        setGroundUpIntakeSetpoint = new InstantCommand(() -> { 
+
+        setGroundUpIntakeSetpoint = new InstantCommand(() -> {
                 angleHeight = coneMode ? CommandSelector.CONE_GROUND_INTAKE : CommandSelector.CUBE_INTAKE;
             });
 
-        setGroundTipIntakeSetpoint = new InstantCommand(() -> { 
+        setGroundTipIntakeSetpoint = new InstantCommand(() -> {
                 angleHeight = coneMode ? CommandSelector.CONE_TIP_INTAKE : CommandSelector.CUBE_INTAKE;
             });
-        
-        setShelfIntakeSetpoint = new InstantCommand(() -> { 
+
+        setShelfIntakeSetpoint = new InstantCommand(() -> {
                 angleHeight = coneMode ? CommandSelector.CONE_SHELF : CommandSelector.CUBE_SHELF;
             });
 
@@ -308,7 +357,7 @@ public class RobotContainer {
         ElevatorIO elevatorIO;
         ArmIO armIO;
         IntakeIO intakeIO;
-        // implemented driveIO interface 
+        // implemented driveIO interface
         if (RobotBase.isSimulation()) {
             driveIO = new SimDrive();
             elevatorIO = new SimElevator();
@@ -349,25 +398,25 @@ public class RobotContainer {
         chooser.addOption("one and half cone bump", new OneAndHalfConeBump(driveTrain, intake, elevator, arm));
         chooser.addOption("two piece bump", new TwoPieceAutonBump(driveTrain, intake, elevator, arm));
 
-    }  
-    
+    }
+
     public static Command makeSetPositionCommand(ProfiledPIDSubsystem base, double target) {
         return new SequentialCommandGroup(
-            new ConditionalCommand(new InstantCommand(() -> {}), new InstantCommand(() -> base.enable()), () -> base.isEnabled()),    
+            new ConditionalCommand(new InstantCommand(() -> {}), new InstantCommand(() -> base.enable()), () -> base.isEnabled()),
             new InstantCommand(() -> base.setGoal(target), base)
         );
     }
 
     private Command makeSetSpeedGravityCompensationCommand(Arm a, double speed) {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> a.disable()), 
+            new InstantCommand(() -> a.disable()),
             new RunCommand(() -> a.setSpeedGravityCompensation(speed), a)
         );
     }
 
     private Command makeSetSpeedGravityCompensationCommand(Elevator e, double speed) {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> e.disable()), 
+            new InstantCommand(() -> e.disable()),
             new RunCommand(() -> e.setSpeedGravityCompensation(speed), e)
         );
     }
@@ -397,7 +446,7 @@ public class RobotContainer {
     }
 
     public static Command resetArmAndElevatorEncoderCommand(Arm a, Elevator e) {
-        return new ParallelCommandGroup(resetArmEncoderCommand(arm), 
+        return new ParallelCommandGroup(resetArmEncoderCommand(arm),
         resetElevatorEncoderCommand(elevator)
      );
     }
@@ -426,7 +475,7 @@ public class RobotContainer {
     private CommandSelector select() {
         return angleHeight;
     }
-    
+
     public static String toString(CommandSelector node) {
         return "Node: " + node;
     }
@@ -445,6 +494,6 @@ public class RobotContainer {
                 Map.entry(CommandSelector.CONE_GROUND_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT)),
                 Map.entry(CommandSelector.CUBE_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT)),
                 Map.entry(CommandSelector.CONE_TIP_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT))),
-            this::select); 
+            this::select);
     }
 }
