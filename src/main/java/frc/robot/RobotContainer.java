@@ -215,9 +215,6 @@ public class RobotContainer {
                 new EngageCmd(driveTrain, 0.3)
         ));
 
-        //Driver Y(4) - ignore the limit switches
-        new JoystickButton(xboxDriver, Button.kY.value).onTrue(new InstantCommand(() -> {elevator.ignoreLimitSwitches = !elevator.ignoreLimitSwitches;}));
-
         //Unused Buttons
             //Driver - 
             //Operator - 
