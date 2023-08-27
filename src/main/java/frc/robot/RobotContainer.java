@@ -188,9 +188,6 @@ public class RobotContainer {
         // Operator Button Y (4) - sets the arm and elevator setpoints for the top node
         new JoystickButton(xboxOperator, Button.kY.value).onTrue(setTopPieceSetpoint);
 
-        // Driver Left Bumper (5) - sends arm and elevator to selected setpoint
-        new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(selectPositionCommand);
-
         // Operator Right Trigger Axis (3) - sends the arm and elevator to the positions for intaking pieces from the ground
         new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(setGroundUpIntakeSetpoint);
 
@@ -202,8 +199,11 @@ public class RobotContainer {
 
         //Kill command - sets speeds of subsystems to 0
 
-        // Driver Right Bumper (6) - robot goes into turtle mode (arm all the  way up, elevator all the way down)
-        new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(turtleMode);
+        // Driver Right Bumper - sends arm and elevator to selected setpoint
+        new JoystickButton(xboxDriver, Button.kRightBumper.value).onTrue(selectPositionCommand);
+
+        // Driver Left Bumper - robot goes into turtle mode (arm all the  way up, elevator all the way down)
+        new JoystickButton(xboxDriver, Button.kLeftBumper.value).onTrue(turtleMode);
 
         // Operator Right Bumper (6) - kill command (sets speeds of subsystems to 0)
         // new JoystickButton(xboxOperator,Button.kRightBumper.value).whileTrue(new InstantCommand(() -> {
