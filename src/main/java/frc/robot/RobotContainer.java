@@ -188,11 +188,17 @@ public class RobotContainer {
         // Operator Button Y (4) - sets the arm and elevator setpoints for the top node
         new JoystickButton(xboxOperator, Button.kY.value).onTrue(setTopPieceSetpoint);
 
-        // Operator Right Trigger Axis (3) - sends the arm and elevator to the positions for intaking pieces from the ground
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(setGroundUpIntakeSetpoint);
+        // Operator Right Trigger Axis (3) - sends arm and elevator to selected setpoint
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kRightTrigger.value) > 0.1).whileTrue(selectPositionCommand);
+
+        // Operator Right Bupmper
+        new JoystickButton(xboxOperator, Button.kRightBumper.value).onTrue(setGroundUpIntakeSetpoint);
 
         // Operator Left Trigger Axis (2) - sends the arm and elevator to the positions for intaking cones from the tip on the ground and cubes
-        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(setGroundTipIntakeSetpoint);
+        new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(turtleMode);
+
+        // Currently no binding to `setGroundTipIntakeSetpoint`
+        // new Trigger(() -> xboxOperator.getRawAxis(Axis.kLeftTrigger.value) > 0.1).whileTrue(setGroundTipIntakeSetpoint);
 
         // Operator Button B (2) - sends the arm and elevator to the positions for intaking pieces from the shelf
         new JoystickButton(xboxOperator, Button.kB.value).onTrue(setShelfIntakeSetpoint);
@@ -284,7 +290,7 @@ public class RobotContainer {
 
         intake.setDefaultCommand(
             new StallIntakeCmd(intake,
-            () -> (xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1 || xboxOperator.getRawButtonPressed(XboxController.Button.kRightBumper.value)),
+            () -> (xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1),
             () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.1));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));
