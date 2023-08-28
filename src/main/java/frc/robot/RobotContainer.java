@@ -290,7 +290,7 @@ public class RobotContainer {
 
         intake.setDefaultCommand(
             new StallIntakeCmd(intake,
-            () -> (xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1),
+            () -> (xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1 || xboxOperator.getPOV() == 90),
             () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.1));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));
