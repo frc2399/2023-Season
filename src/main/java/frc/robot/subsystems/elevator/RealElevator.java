@@ -75,17 +75,6 @@ public class RealElevator implements ElevatorIO {
     }
 
     @Override
-    public boolean isAtUpperLimit() {
-        // return topLimitSwitch.isPressed();
-        return false;
-    }
-
-    @Override
-    public boolean isAtLowerLimit() {
-        return bottomLimitSwitch.isPressed();
-    }
-
-    @Override
     public void periodicUpdate() {
         SmartDashboard.putBoolean("elevator/top limit pressed", topLimitSwitch.isPressed());
         SmartDashboard.putBoolean("elevator/bottom limit pressed", bottomLimitSwitch.isPressed()); 

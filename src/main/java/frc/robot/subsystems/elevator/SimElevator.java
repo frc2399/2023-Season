@@ -68,14 +68,7 @@ public class SimElevator implements ElevatorIO {
     public double getElevatorCurrent() {
         return elevatorSim.getCurrentDrawAmps();
     }
-    @Override
-    public boolean isAtUpperLimit() {
-        return elevatorSim.hasHitUpperLimit();
-    }
-    @Override
-    public boolean isAtLowerLimit() {
-        return elevatorSim.hasHitLowerLimit();
-    }
+
     @Override
     public void periodicUpdate() {
         // sets input for elevator motor in simulation

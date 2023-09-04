@@ -75,7 +75,7 @@ public class Constants {
         public static final double CONE_UP_INTAKE_HEIGHT = 0.18;
         public static final double CONE_TIP_INTAKE_HEIGHT = 0.017;
         public static final double CUBE_INTAKE_HEIGHT = 0.06;
-        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.727;
+        public static final double CONE_SHELF_INTAKE_HEIGHT = 0.743;
         public static final double CUBE_SHELF_INTAKE_HEIGHT = 0.463;
 
         //27 inches per 41.951946 encoder counts
