@@ -288,9 +288,12 @@ public class RobotContainer {
             }, driveTrain)
         );
 
+        //right d-pad to intake on operator
         intake.setDefaultCommand(
             new StallIntakeCmd(intake,
+            //right d-pad to intake on operator
             () -> (xboxDriver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.1 || xboxOperator.getPOV() == 90),
+            //allows left d-pad to outtake
             () -> xboxDriver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.1 || xboxOperator.getPOV() == 270));
         // elevator.setDefaultCommand(new InstantCommand(() -> elevator.setSpeed(0), elevator));
         // arm.setDefaultCommand(new SetArmAngleCmd(arm));
