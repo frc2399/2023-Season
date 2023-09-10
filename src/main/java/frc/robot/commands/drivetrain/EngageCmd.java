@@ -5,7 +5,6 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 

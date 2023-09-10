@@ -44,14 +44,14 @@ public class OneAndHalfCubeEngage extends SequentialCommandGroup {
             // drives and intakes cone off ground
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
-                    new DriveStraightGivenDistance(0.68, 1.0, driveTrain),
+                    new DriveStraightGivenDistance(0.73, 1.0, driveTrain),
                     new RunCommand(() -> driveTrain.setMotors(0.1, 0.1), driveTrain).withTimeout(0.25) 
                 ),
                 new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 2)),
             new ParallelCommandGroup(
                 RobotContainer.makeSetPositionArmAndElevatorCommand(ArmConstants.TURTLE_ANGLE, 0),
                 // drive back on charging station
-                new DriveStraightGivenDistance(-3.15, 1.25, driveTrain),
+                new DriveStraightGivenDistance(-3.20, 1.25, driveTrain),
                 new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 0.5),
                 new InstantCommand(() -> {RobotContainer.coneMode = false;})
             ),

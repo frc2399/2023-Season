@@ -27,9 +27,6 @@ public class Elevator extends ProfiledPIDSubsystem {
   //private static final double max_vel = 0.2 / 2;  // m/s
   //private static final double max_accel = 0.4 / 2;  // m/s/s
 
-  // CAUSED SO MANY ISSUES NEED TO IGNORE LIMIT SWITCHES
-  public boolean ignoreLimitSwitches = true;
-
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
   private static double gravityCompensation = 0.025;
 
@@ -47,7 +44,6 @@ public class Elevator extends ProfiledPIDSubsystem {
     SmartDashboard.putNumber("elevator/goal (m)", getGoal());
     SmartDashboard.putNumber("elevator/position (m)", currentPos); 
     SmartDashboard.putNumber("elevator/velocity (m per s)", currentVel); 
-    SmartDashboard.putBoolean("elevator/ignore limit switches", ignoreLimitSwitches);
     RobotContainer.elevatorMechanism.setLength(Constants.ElevatorConstants.MIN_ELEVATOR_HEIGHT + currentPos);
   }
 
@@ -63,15 +59,6 @@ public class Elevator extends ProfiledPIDSubsystem {
 
   // use this method instead of elevatorIO.setSpeed because need to go through limit switches
   public void setSpeed(double speed) {
-    if (!ignoreLimitSwitches) {
-      if (elevatorIO.isAtUpperLimit()) {
-        //+0.005 so the elevator doesnt fall down
-        speed = Math.min(speed, gravityCompensation + 0.005);
-      }
-      if (elevatorIO.isAtLowerLimit()) {
-        speed = Math.max(speed, 0);
-      }
-    }
     SmartDashboard.putNumber("elevator/motor input (%)", speed);
     elevatorIO.setSpeed(speed);
   }

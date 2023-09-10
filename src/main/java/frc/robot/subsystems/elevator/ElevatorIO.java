@@ -8,6 +8,4 @@ public interface ElevatorIO {
     public void setPosition(double position);
     public void periodicUpdate();
     public double getElevatorCurrent();
-    public boolean isAtUpperLimit();
-    public boolean isAtLowerLimit();
 }

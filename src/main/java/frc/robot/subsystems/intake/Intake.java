@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
 
   private IntakeIO intakeIO;
-  private double intakeSP;
   public static boolean isIntooked = false;
 
   /** Creates a new Intake. */
@@ -21,7 +20,6 @@ public class Intake extends SubsystemBase {
   }
 
   public void setMotor(double intakeSpeed) {
-    intakeSP = intakeSpeed;  
     intakeIO.setMotor(intakeSpeed);
     SmartDashboard.putNumber("intake/motor input (%)", intakeSpeed);
 }

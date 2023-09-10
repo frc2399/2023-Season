@@ -112,5 +112,13 @@ public void periodicUpdate() {
     SmartDashboard.putNumber("drive/lb motor input (%)", leftBackMotorController.get());
     SmartDashboard.putNumber("drive/rf motor input (%)", rightFrontMotorController.get());
     SmartDashboard.putNumber("drive/rb motor input (%)", rightBackMotorController.get());   
+
+    // motor currents
+    SmartDashboard.putNumber("drive/rb motor current ", rightBackMotorController.getOutputCurrent());   
+    SmartDashboard.putNumber("drive/lb motor current ", leftBackMotorController.getOutputCurrent());   
+    SmartDashboard.putNumber("drive/rf motor current ", rightFrontMotorController.getOutputCurrent());   
+    SmartDashboard.putNumber("drive/lf motor current ", leftFrontMotorController.getOutputCurrent());   
+
+
 }
 }
