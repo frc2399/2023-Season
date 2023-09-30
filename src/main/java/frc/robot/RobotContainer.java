@@ -46,6 +46,8 @@ import frc.robot.commands.auton.OneAndHalfConeEngage;
 import frc.robot.commands.auton.OneAndHalfConeNoEngage;
 import frc.robot.commands.auton.OneAndHalfCubeBump;
 import frc.robot.commands.auton.OneAndHalfCubeNoEngage;
+import frc.robot.commands.auton.OneCubeCommunity;
+import frc.robot.commands.auton.OneCubeCommunityEngage;
 import frc.robot.commands.auton.OneAndHalfCubeEngage;
 import frc.robot.commands.auton.OnePieceCommunity;
 import frc.robot.commands.auton.OnePieceCommunityEngage;
@@ -406,6 +408,10 @@ public class RobotContainer {
         chooser.addOption("one and half cube bump", new OneAndHalfCubeBump(driveTrain, intake, elevator, arm));
         chooser.addOption("one and half cone bump", new OneAndHalfConeBump(driveTrain, intake, elevator, arm));
         chooser.addOption("two piece bump", new TwoPieceAutonBump(driveTrain, intake, elevator, arm));
+        chooser.addOption("one cube, leave community, and engage ", new OneCubeCommunityEngage(driveTrain, intake, elevator, arm));
+        chooser.addOption("one cube, leave community", new OneCubeCommunity(driveTrain, intake, elevator, arm));
+
+
 
     }
 
