@@ -7,12 +7,15 @@ package frc.robot;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPRamseteCommand;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -23,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.RealArm;
 import frc.robot.subsystems.drivetrain.DriveTrain;
 
 /**
@@ -33,6 +38,7 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Command m_autonomousCommand;
   public static Alliance allianceColor;
+  private SparkMaxPIDController controller;
 
   @Override
   public void robotInit() {
@@ -96,6 +102,29 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putBoolean("robot/cone cube mode", RobotContainer.coneMode);
     SmartDashboard.putString("robot/node height", RobotContainer.angleHeight.toString());
+  }
+
+  @Override
+  public void testInit() {
+    // SmartDashboard.putNumber("reference arm angle (degrees)", 0);
+    // SmartDashboard.putNumber("arm P gain", 0);
+    // SmartDashboard.putNumber("arm D gain", 0);
+    // SmartDashboard.putNumber("arm FF gain", 0);
+
+    controller = RealArm.armMotorController.getPIDController();
+    controller.setP(SmartDashboard.getNumber("arm P gain", -0.08));
+    controller.setI(0);
+    controller.setD(SmartDashboard.getNumber("arm D gain", 0));
+    controller.setFF(SmartDashboard.getNumber("arm FF gain", 0)); 
+    controller.setFeedbackDevice(RealArm.armEncoder);
+   
+
+  }
+
+  @Override
+  public void testPeriodic() {
+    controller.setReference(Units.degreesToRadians(SmartDashboard.getNumber("reference arm angle (degrees)", 0)), CANSparkMax.ControlType.kPosition);
+    System.out.println("test periodic running!!");
   }
 
   @Override

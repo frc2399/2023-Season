@@ -10,7 +10,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.util.MotorUtil;
 
 public class RealArm implements ArmIO {
-    private static CANSparkMax armMotorController;
+    public static CANSparkMax armMotorController;
     public static RelativeEncoder armEncoder;
     public static DutyCycleEncoder armAbsoluteEncoder;
 
