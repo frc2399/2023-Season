@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.drivetrain.CurvatureDriveCmd;
 import frc.robot.subsystems.arm.Arm;
@@ -106,16 +107,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    // SmartDashboard.putNumber("reference arm angle (degrees)", 0);
-    // SmartDashboard.putNumber("arm P gain", 0);
+    SmartDashboard.putNumber("reference arm angle (degrees)", SmartDashboard.getNumber("reference arm angle (degrees)", 0));
+    SmartDashboard.putNumber("arm P gain", SmartDashboard.getNumber("arm P gain", 0));
     // SmartDashboard.putNumber("arm D gain", 0);
     // SmartDashboard.putNumber("arm FF gain", 0);
+    SmartDashboard.putNumber("gravity compensation", SmartDashboard.getNumber("gravity compensation", 0));
+
 
     controller = RealArm.armMotorController.getPIDController();
-    controller.setP(SmartDashboard.getNumber("arm P gain", -0.08));
+    controller.setP(SmartDashboard.getNumber("arm P gain", 0));
     controller.setI(0);
     controller.setD(SmartDashboard.getNumber("arm D gain", 0));
-    controller.setFF(SmartDashboard.getNumber("arm FF gain", 0)); 
+    controller.setFF(0.05); 
     controller.setFeedbackDevice(RealArm.armEncoder);
    
 
@@ -123,8 +126,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    controller.setReference(Units.degreesToRadians(SmartDashboard.getNumber("reference arm angle (degrees)", 0)), CANSparkMax.ControlType.kPosition);
-    System.out.println("test periodic running!!");
+    SmartDashboard.putNumber("arm output", RealArm.armMotorController.get());
+    SmartDashboard.putNumber("arm/testing postion", Units.radiansToDegrees(robotContainer.arm.getEncoderPosition())); 
+    controller.setReference(
+      Units.degreesToRadians(SmartDashboard.getNumber("reference arm angle (degrees)", 0)), 
+      CANSparkMax.ControlType.kPosition, 
+      0, 
+      SmartDashboard.getNumber("gravity compensation", 0) *
+         Math.cos(Units.degreesToRadians(SmartDashboard.getNumber("reference arm angle (degrees)", 
+         0))),
+      SparkMaxPIDController.ArbFFUnits.kPercentOut);
+   
   }
 
   @Override

@@ -11,8 +11,8 @@ public final class MyVersion {
 	public static final String GIT_SHA = "UNKNOWN";
 	public static final String GIT_DATE = "UNKNOWN";
 	public static final String GIT_BRANCH = "UNKNOWN";
-	public static final String BUILD_DATE = "2023-10-16 19:51";
-	public static final long BUILD_UNIX_TIME = 1697503905693L;
+	public static final String BUILD_DATE = "2023-10-19 19:40";
+	public static final long BUILD_UNIX_TIME = 1697762419656L;
 	public static final int DIRTY = 1;
 
 	private MyVersion(){}

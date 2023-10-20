@@ -127,12 +127,14 @@ public class Constants {
 
         public static final double TURTLE_ANGLE = 0.5;
 
-        public static final double RADIANS_PER_REVOLUTION = 0.0837;
+        public static final double RADIANS_PER_REVOLUTION = 1;
         // initial offset is 0.711 + (0.287) - (0.308)
         public static final double INITIAL_OFFSET = 0.660;
 
         //can be 2 degrees off from goal setpoints and still considered at goal; made higher so arm.atGoal() in placeConeOnNode cmd will execute in auton
         public static final double ANGLE_TOLERANCE_AUTON = Units.degreesToRadians(2);
+
+        public static final double GRAVITY_COMPENSATION = 0.0559;
 
     }
 
