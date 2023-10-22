@@ -108,15 +108,18 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     SmartDashboard.putNumber("reference arm angle (degrees)", SmartDashboard.getNumber("reference arm angle (degrees)", 0));
+    SmartDashboard.putNumber("arm IZone", SmartDashboard.getNumber("arm IZone", 0));
     SmartDashboard.putNumber("arm P gain", SmartDashboard.getNumber("arm P gain", 0));
-    // SmartDashboard.putNumber("arm D gain", 0);
+    SmartDashboard.putNumber("arm I gain", SmartDashboard.getNumber("arm I gain", 0));
+    SmartDashboard.putNumber("arm D gain", SmartDashboard.getNumber("arm D gain", 0));
     // SmartDashboard.putNumber("arm FF gain", 0);
     SmartDashboard.putNumber("gravity compensation", SmartDashboard.getNumber("gravity compensation", 0));
 
 
     controller = RealArm.armMotorController.getPIDController();
+    controller.setIZone(SmartDashboard.getNumber("arm IZone", 0));
     controller.setP(SmartDashboard.getNumber("arm P gain", 0));
-    controller.setI(0);
+    controller.setI(SmartDashboard.getNumber("arm I gain", 0));
     controller.setD(SmartDashboard.getNumber("arm D gain", 0));
     controller.setFF(0); 
     controller.setFeedbackDevice(RealArm.armEncoder);
@@ -127,6 +130,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     SmartDashboard.putNumber("arm output", RealArm.armMotorController.get());
+    SmartDashboard.putNumber("arm test position", Units.radiansToDegrees(RobotContainer.arm.getEncoderPosition()));
     controller.setReference(
       Units.degreesToRadians(SmartDashboard.getNumber("reference arm angle (degrees)", 0)), 
       CANSparkMax.ControlType.kPosition, 
