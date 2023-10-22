@@ -127,9 +127,10 @@ public class Constants {
 
         public static final double TURTLE_ANGLE = 0.5;
 
-        public static final double RADIANS_PER_REVOLUTION = 1;
+        //2 5-1 gearboxes, then a 3-1 reduction from the sprocket/chain; 5*5*3 = 75
+        public static final double RADIANS_PER_REVOLUTION = 2 * Math.PI/75.0;
         // initial offset is 0.711 + (0.287) - (0.308)
-        public static final double INITIAL_OFFSET = 0.660;
+        public static final double INITIAL_OFFSET = 0.558505;
 
         //can be 2 degrees off from goal setpoints and still considered at goal; made higher so arm.atGoal() in placeConeOnNode cmd will execute in auton
         public static final double ANGLE_TOLERANCE_AUTON = Units.degreesToRadians(2);

@@ -118,7 +118,7 @@ public class Robot extends TimedRobot {
     controller.setP(SmartDashboard.getNumber("arm P gain", 0));
     controller.setI(0);
     controller.setD(SmartDashboard.getNumber("arm D gain", 0));
-    controller.setFF(0.05); 
+    controller.setFF(0); 
     controller.setFeedbackDevice(RealArm.armEncoder);
    
 
@@ -127,14 +127,12 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     SmartDashboard.putNumber("arm output", RealArm.armMotorController.get());
-    SmartDashboard.putNumber("arm/testing postion", Units.radiansToDegrees(robotContainer.arm.getEncoderPosition())); 
     controller.setReference(
       Units.degreesToRadians(SmartDashboard.getNumber("reference arm angle (degrees)", 0)), 
       CANSparkMax.ControlType.kPosition, 
       0, 
       SmartDashboard.getNumber("gravity compensation", 0) *
-         Math.cos(Units.degreesToRadians(SmartDashboard.getNumber("reference arm angle (degrees)", 
-         0))),
+         Math.cos(robotContainer.arm.getEncoderPosition()),
       SparkMaxPIDController.ArbFFUnits.kPercentOut);
    
   }

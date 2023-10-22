@@ -43,7 +43,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     SmartDashboard.putNumber("arm/goal position", getGoal());
     SmartDashboard.putNumber("arm/velocity", getEncoderSpeed()); 
-    SmartDashboard.putNumber("arm/postion", Units.radiansToDegrees(getEncoderPosition())); 
+    SmartDashboard.putNumber("arm/position", Units.radiansToDegrees(getEncoderPosition())); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);
   
   }
