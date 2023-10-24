@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public static Alliance allianceColor;
   private SparkMaxPIDController controller;
+  public double kP, kI, kD, kIZone, kFF;
 
   @Override
   public void robotInit() {
@@ -107,28 +108,49 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    //puts PID values on smart dashboard
     SmartDashboard.putNumber("reference arm angle (degrees)", SmartDashboard.getNumber("reference arm angle (degrees)", 0));
     SmartDashboard.putNumber("arm IZone", SmartDashboard.getNumber("arm IZone", 0));
     SmartDashboard.putNumber("arm P gain", SmartDashboard.getNumber("arm P gain", 0));
     SmartDashboard.putNumber("arm I gain", SmartDashboard.getNumber("arm I gain", 0));
     SmartDashboard.putNumber("arm D gain", SmartDashboard.getNumber("arm D gain", 0));
     // SmartDashboard.putNumber("arm FF gain", 0);
-    SmartDashboard.putNumber("gravity compensation", SmartDashboard.getNumber("gravity compensation", 0));
+    SmartDashboard.putNumber("gravity compensation", SmartDashboard.getNumber("gravity compensation", 0.057));
 
 
+    //PID initial values
+    kIZone = .0209;
+    kP = 0.2;
+    kI = 0.001;
+    kD = 0.0001;
+
+    //sets PID values on the controller 
     controller = RealArm.armMotorController.getPIDController();
-    controller.setIZone(SmartDashboard.getNumber("arm IZone", 0));
-    controller.setP(SmartDashboard.getNumber("arm P gain", 0));
-    controller.setI(SmartDashboard.getNumber("arm I gain", 0));
-    controller.setD(SmartDashboard.getNumber("arm D gain", 0));
-    controller.setFF(0); 
     controller.setFeedbackDevice(RealArm.armEncoder);
+
+    controller.setIZone(kIZone);
+    controller.setP(kP);
+    controller.setI(kI);
+    controller.setD(kD);
+    controller.setFF(kFF);
    
 
   }
 
   @Override
   public void testPeriodic() {
+    double iZone = (SmartDashboard.getNumber("arm IZone", 0));
+    double p = (SmartDashboard.getNumber("arm P gain", 0));
+    double i = (SmartDashboard.getNumber("arm I gain", 0));
+    double d = (SmartDashboard.getNumber("arm D gain", 0));
+    double ff = 0; 
+
+     // if PID coefficients on SmartDashboard have changed, write new values to controller
+     if((p != kP)) { controller.setP(p); kP = p; }
+     if((i != kI)) { controller.setI(i); kI = i; }
+     if((d != kD)) { controller.setD(d); kD = d; }
+     if((iZone != kIZone)) { controller.setIZone(iZone); kIZone = iZone; }
+
     SmartDashboard.putNumber("arm output", RealArm.armMotorController.get());
     SmartDashboard.putNumber("arm test position", Units.radiansToDegrees(RobotContainer.arm.getEncoderPosition()));
     controller.setReference(
