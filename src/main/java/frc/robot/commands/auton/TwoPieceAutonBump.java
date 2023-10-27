@@ -41,7 +41,7 @@ public class TwoPieceAutonBump extends SequentialCommandGroup {
             new PlaceConeOnNodeNoTurtle(intake, elevator, arm, ElevatorConstants.CONE_TOP_HEIGHT, ArmConstants.CONE_TOP_ANGLE),
             new PrintCommand("place cone on node finished"),
             new ParallelCommandGroup(
-                RobotContainer.makeSetPositionCommand(arm, ArmConstants.TURTLE_ANGLE),
+                RobotContainer.makeMotionProfileCommand(arm, ArmConstants.TURTLE_ANGLE),
                 RobotContainer.makeSetPositionCommand(elevator, 0),
                 new WaitUntilCommand(() -> arm.atGoal()),
                 new WaitUntilCommand(() -> elevator.atGoal()),

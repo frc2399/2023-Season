@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -64,5 +65,11 @@ public class SimArm implements ArmIO{
     @Override
     public double getArmCurrent() {
         return armSim.getCurrentDrawAmps();
-    } 
+    }
+
+    @Override
+    public void setSetpoint(State setpoint, double feedforward) {
+        // TODO Auto-generated method stub
+        
+    }
 }

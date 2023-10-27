@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.TrapezoidProfileSubsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
@@ -422,6 +423,13 @@ public class RobotContainer {
         );
     }
 
+    public static Command makeMotionProfileCommand(TrapezoidProfileSubsystem base, double target) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> base.enable()),
+            new InstantCommand(() -> base.setGoal(target), base)
+        );
+    }
+
     private Command makeSetSpeedGravityCompensationCommand(Arm a, double speed) {
         return new SequentialCommandGroup(
             new InstantCommand(() -> a.disable()),
@@ -444,7 +452,7 @@ public class RobotContainer {
             new RunCommand(() -> a.setSpeed(0.15)).withTimeout(0.2),
             new RunCommand(() -> a.setSpeed(0.15)).until(() -> debouncer.calculate(Math.abs(a.getEncoderSpeed()) < 0.01)),
             new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET)),
-            makeSetPositionCommand(a, ArmConstants.TURTLE_ANGLE)
+            makeMotionProfileCommand(a, ArmConstants.TURTLE_ANGLE)
         );
     }
 
@@ -468,7 +476,7 @@ public class RobotContainer {
 
     public static Command makeSetPositionArmAndElevatorCommand(double angle, double height) {
         return new ParallelCommandGroup(
-            makeSetPositionCommand(arm, angle),
+            makeMotionProfileCommand(arm, angle),
             makeSetPositionCommand(elevator, height)
         );
     }

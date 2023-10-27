@@ -17,17 +17,17 @@ public class PlaceCubeOnNode extends SequentialCommandGroup {
     public PlaceCubeOnNode(Intake intake, Elevator elevator, Arm arm, double height, double armAngle) {
 
         addCommands(
-            RobotContainer.makeSetPositionCommand(arm, ArmConstants.TURTLE_ANGLE),
+            RobotContainer.makeMotionProfileCommand(arm, ArmConstants.TURTLE_ANGLE),
             new WaitUntilCommand(() -> arm.atGoal()),
             RobotContainer.makeSetPositionCommand(elevator, height),
-            RobotContainer.makeSetPositionCommand(arm, armAngle),
+            RobotContainer.makeMotionProfileCommand(arm, armAngle),
             new WaitUntilCommand(() -> elevator.atGoal()),
             new PrintCommand("elevator at goal"),
             new WaitUntilCommand(() -> arm.atGoal()),
             new PrintCommand("arm at goal"),
             new DriveForwardGivenDistance(0.08, RobotContainer.driveTrain),
             new IntakeForGivenTime(intake, IntakeConstants.CUBE_OUT_SPEED, 0.5),
-            RobotContainer.makeSetPositionCommand(arm, ArmConstants.TURTLE_ANGLE),
+            RobotContainer.makeMotionProfileCommand(arm, ArmConstants.TURTLE_ANGLE),
             RobotContainer.makeSetPositionCommand(elevator, 0),
             new WaitUntilCommand(() -> arm.atGoal()),
             new WaitUntilCommand(() -> elevator.atGoal())

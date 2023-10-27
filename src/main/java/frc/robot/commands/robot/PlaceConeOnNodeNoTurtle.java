@@ -17,10 +17,10 @@ public class PlaceConeOnNodeNoTurtle extends SequentialCommandGroup {
     public PlaceConeOnNodeNoTurtle(Intake intake, Elevator elevator, Arm arm, double height, double armAngle) {
 
         addCommands(
-            RobotContainer.makeSetPositionCommand(arm, ArmConstants.TURTLE_ANGLE),
+            RobotContainer.makeMotionProfileCommand(arm, ArmConstants.TURTLE_ANGLE),
             new WaitUntilCommand(() -> arm.atGoal()),
             RobotContainer.makeSetPositionCommand(elevator, height),
-            RobotContainer.makeSetPositionCommand(arm, armAngle),
+            RobotContainer.makeMotionProfileCommand(arm, armAngle),
             new WaitUntilCommand(() -> elevator.atGoal()),
             new PrintCommand("elevator at goal"),
             new WaitUntilCommand(() -> arm.atGoal()),
