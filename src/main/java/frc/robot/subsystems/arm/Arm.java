@@ -58,7 +58,7 @@ public class Arm extends TrapezoidProfileSubsystem {
   //only using kg for now; can tune ks later. kv and ka theoretically not necessary. 
   private final ArmFeedforward m_feedforward =
        new ArmFeedforward(
-           0, .057,
+           0, .04,
            0, 0);
 
   public Arm(ArmIO io) {
@@ -144,10 +144,11 @@ public class Arm extends TrapezoidProfileSubsystem {
   }
 
   public double getGoal() {
-    return targetAngle;
+     return targetAngle;
   }
 
   public Command setArmGoalCommand(double kArmOffsetRads) {
+    targetAngle = kArmOffsetRads;
     return Commands.runOnce(() -> setGoal(kArmOffsetRads), this);
   }
 

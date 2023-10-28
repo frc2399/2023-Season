@@ -32,6 +32,10 @@ public class RealArm implements ArmIO {
         armPidController = armMotorController.getPIDController();
 
         //TODO: set gains for armPidController.
+        armPidController.setP(0.4);
+        armPidController.setD(0);
+        armPidController.setI(0);
+        armPidController.setFF(0);
         
         armEncoder.setPositionConversionFactor(ArmConstants.RADIANS_PER_REVOLUTION);
         armEncoder.setVelocityConversionFactor(ArmConstants.RADIANS_PER_REVOLUTION / 60);

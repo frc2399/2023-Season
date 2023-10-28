@@ -125,7 +125,8 @@ public class Constants {
         public static final double CONE_SHELF_INTAKE_ANGLE = -0.302;
         public static final double CUBE_SHELF_INTAKE_ANGLE = 0.308;
 
-        public static final double TURTLE_ANGLE = 0.5;
+        public static final double TURTLE_ANGLE = 0.3;
+        //0.5
 
         //2 5-1 gearboxes, then a 3-1 reduction from the sprocket/chain; 5*5*3 = 75
         public static final double RADIANS_PER_REVOLUTION = 2 * Math.PI/75.0;

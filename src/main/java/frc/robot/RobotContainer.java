@@ -125,6 +125,7 @@ public class RobotContainer {
     private Command setGroundUpIntakeSetpoint;
     private Command setGroundTipIntakeSetpoint;
     private Command setShelfIntakeSetpoint;
+    private Command setArmOnlySetpoint;
 
     private Command selectPositionCommand;
 
@@ -236,7 +237,8 @@ public class RobotContainer {
         // new JoystickButton(xboxDriver, Button.kRightStick.value).onTrue(new TurnToNAngleCmd(Math.PI, driveTrain));
 
         //intake for given time button
-        new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 1.5));
+        new JoystickButton(xboxDriver, Button.kY.value).onTrue(moveArmCommand(arm, 0));
+        //new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 1.5));
 
     }
 
@@ -355,6 +357,10 @@ public class RobotContainer {
         setShelfIntakeSetpoint = new InstantCommand(() -> {
                 angleHeight = coneMode ? CommandSelector.CONE_SHELF : CommandSelector.CUBE_SHELF;
             });
+        
+        setArmOnlySetpoint = new InstantCommand(() -> {
+                angleHeight = coneMode ? CommandSelector.CONE_ARM : CommandSelector.CUBE_ARM;
+            });
 
         selectPositionCommand = selectPositionCommand();
 
@@ -430,6 +436,14 @@ public class RobotContainer {
         );
     }
 
+    public static Command moveArmCommand(Arm arm, double target) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> arm.enable(), arm ),
+            arm.setArmGoalCommand(target)
+            // new InstantCommand(() -> arm.setArmGoalCommand(target), arm)
+        );
+    }
+
     private Command makeSetSpeedGravityCompensationCommand(Arm a, double speed) {
         return new SequentialCommandGroup(
             new InstantCommand(() -> a.disable()),
@@ -452,7 +466,10 @@ public class RobotContainer {
             new RunCommand(() -> a.setSpeed(0.15)).withTimeout(0.2),
             new RunCommand(() -> a.setSpeed(0.15)).until(() -> debouncer.calculate(Math.abs(a.getEncoderSpeed()) < 0.01)),
             new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET)),
-            makeMotionProfileCommand(a, ArmConstants.TURTLE_ANGLE)
+            new PrintCommand("Arm reset, moving to motion profile command"),
+            new InstantCommand(() -> a.enable()),
+            a.setArmGoalCommand(ArmConstants.TURTLE_ANGLE),
+            new PrintCommand("Escaped!")
         );
     }
 
@@ -492,7 +509,9 @@ public class RobotContainer {
         CUBE_SHELF,
         CONE_GROUND_INTAKE,
         CUBE_INTAKE,
-        CONE_TIP_INTAKE
+        CONE_TIP_INTAKE,
+        CONE_ARM, 
+        CUBE_ARM
       }
 
     private CommandSelector select() {
@@ -516,7 +535,9 @@ public class RobotContainer {
                 Map.entry(CommandSelector.CUBE_SHELF,  makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_SHELF_INTAKE_ANGLE, ElevatorConstants.CUBE_SHELF_INTAKE_HEIGHT)),
                 Map.entry(CommandSelector.CONE_GROUND_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_UP_INTAKE_ANGLE, ElevatorConstants.CONE_UP_INTAKE_HEIGHT)),
                 Map.entry(CommandSelector.CUBE_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CUBE_INTAKE_ANGLE, ElevatorConstants.CUBE_INTAKE_HEIGHT)),
-                Map.entry(CommandSelector.CONE_TIP_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT))),
+                Map.entry(CommandSelector.CONE_TIP_INTAKE, makeSetPositionArmAndElevatorCommand(ArmConstants.CONE_TIP_INTAKE_ANGLE, ElevatorConstants.CONE_TIP_INTAKE_HEIGHT)),
+                Map.entry(CommandSelector.CONE_ARM, makeMotionProfileCommand(arm, 0)),
+                Map.entry(CommandSelector.CUBE_ARM, makeMotionProfileCommand(arm, 0))),
             this::select);
         }
 }
