@@ -50,16 +50,16 @@ public class Arm extends TrapezoidProfileSubsystem {
   private static final double kpPos = 0.8;
 
   // Trapezoidal profile constants and variables
-  private static final double max_vel = 1.5;  // rad/s
-  private static final double max_accel = 2.7;  // rad/s/s
+  private static final double max_vel = 7.9;  // rad/s (NEO specs / gear ratio, converted into rad/s)
+  private static final double max_accel = 4.3;  // rad/s/s (2.7)
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
   private static double gravityCompensation = 0.04;
 
-  //only using kg for now; can tune ks later. kv and ka theoretically not necessary. 
+  //only using kg for now; can tune ks later.
   private final ArmFeedforward m_feedforward =
        new ArmFeedforward(
-           0, .04,
-           0, 0);
+           0.0, .04,
+           1 / max_vel, 0);
 
   public Arm(ArmIO io) {
     super(
@@ -78,7 +78,7 @@ public class Arm extends TrapezoidProfileSubsystem {
 
     SmartDashboard.putNumber("arm/goal position", getGoal());
     SmartDashboard.putNumber("arm/velocity", getEncoderSpeed()); 
-    SmartDashboard.putNumber("arm/position", Units.radiansToDegrees(getEncoderPosition())); 
+    SmartDashboard.putNumber("arm/position", getEncoderPosition()); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);
   
   }
@@ -136,6 +136,9 @@ public class Arm extends TrapezoidProfileSubsystem {
      double feedforward = m_feedforward.calculate(setpoint.position, setpoint.velocity);
      // Add the feedforward to the PID output to get the motor output
      armIO.setSetpoint(setpoint, feedforward);
+
+     SmartDashboard.putNumber("arm/setpoint position", setpoint.position);
+     SmartDashboard.putNumber("arm/setpoint velocity", setpoint.velocity);
    }
 
   

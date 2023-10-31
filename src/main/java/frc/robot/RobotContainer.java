@@ -223,11 +223,11 @@ public class RobotContainer {
         // }, elevator, arm, intake, driveTrain));
 
         // Driver X(3) - engage command
-        new JoystickButton(xboxDriver, Button.kX.value).whileTrue(
-            new SequentialCommandGroup(
-                new InstantCommand(() -> {CurvatureDriveCmd.isSlow = true;}),
-                new EngageCmd(driveTrain, 0.3)
-        ));
+        // new JoystickButton(xboxDriver, Button.kX.value).whileTrue(
+        //     new SequentialCommandGroup(
+        //         new InstantCommand(() -> {CurvatureDriveCmd.isSlow = true;}),
+        //         new EngageCmd(driveTrain, 0.3)
+        // ));
 
         //Unused Buttons
             //Driver -
@@ -238,6 +238,7 @@ public class RobotContainer {
 
         //intake for given time button
         new JoystickButton(xboxDriver, Button.kY.value).onTrue(moveArmCommand(arm, 0));
+        new JoystickButton(xboxDriver, Button.kX.value).onTrue(moveArmCommand(arm, 0.35));
         //new JoystickButton(xboxDriver, 8).onTrue(new IntakeForGivenTime(intake, IntakeConstants.CUBE_IN_SPEED, 1.5));
 
     }
