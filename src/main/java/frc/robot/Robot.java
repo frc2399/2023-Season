@@ -107,6 +107,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    CommandScheduler.getInstance().cancelAll();
     SmartDashboard.putNumber("reference arm angle (degrees)", SmartDashboard.getNumber("reference arm angle (degrees)", 0));
     SmartDashboard.putNumber("arm IZone", SmartDashboard.getNumber("arm IZone", 0));
     SmartDashboard.putNumber("arm P gain", SmartDashboard.getNumber("arm P gain", 0));

@@ -89,4 +89,11 @@ public class RealArm implements ArmIO {
             ArbFFUnits.kPercentOut);
         
     }
+
+    @Override
+    public double getMotorDutyCycle()
+    {
+        return armMotorController.getAppliedOutput();
+    };
+
 }

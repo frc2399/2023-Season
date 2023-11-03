@@ -10,4 +10,5 @@ public interface ArmIO {
     public void periodicUpdate();
     public double getArmCurrent();
     public void setSetpoint(State setpoint, double feedforward);
+    public double getMotorDutyCycle();
 }

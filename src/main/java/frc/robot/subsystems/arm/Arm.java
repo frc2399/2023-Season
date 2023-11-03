@@ -50,8 +50,8 @@ public class Arm extends TrapezoidProfileSubsystem {
   private static final double kpPos = 0.8;
 
   // Trapezoidal profile constants and variables
-  private static final double max_vel = 7.9;  // rad/s (NEO specs / gear ratio, converted into rad/s)
-  private static final double max_accel = 4.3;  // rad/s/s (2.7)
+  private static final double max_vel = 9.0;  // rad/s (NEO specs / gear ratio, converted into rad/s)
+  private static final double max_accel = 8;  // rad/s/s (2.7)
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
   private static double gravityCompensation = 0.04;
 
@@ -80,6 +80,7 @@ public class Arm extends TrapezoidProfileSubsystem {
     SmartDashboard.putNumber("arm/velocity", getEncoderSpeed()); 
     SmartDashboard.putNumber("arm/position", getEncoderPosition()); 
     RobotContainer.armMechanism.setAngle(Units.radiansToDegrees(getEncoderPosition()) - 50);
+    SmartDashboard.putNumber("arm/motor speed(pct)", armIO.getMotorDutyCycle());
   
   }
   

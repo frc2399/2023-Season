@@ -72,4 +72,11 @@ public class SimArm implements ArmIO{
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public double getMotorDutyCycle()
+    {
+        return 0.0; // TODO can we do better?
+    };
+
 }
