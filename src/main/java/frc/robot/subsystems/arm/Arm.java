@@ -63,7 +63,7 @@ public class Arm extends TrapezoidProfileSubsystem {
   private final ArmFeedforward m_feedforward =
        new ArmFeedforward(
            0.0, .04,
-           1 / max_vel, 0);
+           1 / max_vel, 0.001);
 
   public Arm(ArmIO io) {
     super(
