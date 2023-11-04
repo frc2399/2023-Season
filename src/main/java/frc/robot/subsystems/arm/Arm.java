@@ -9,6 +9,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.RobotContainer;
@@ -54,6 +55,9 @@ public class Arm extends TrapezoidProfileSubsystem {
   private static final double max_accel = 8;  // rad/s/s (2.7)
   private static final Constraints constraints = new Constraints(max_vel, max_accel);
   private static double gravityCompensation = 0.04;
+
+  private double prev_velocity = 0;
+  private double prev_time = 0;
 
   //only using kg for now; can tune ks later.
   private final ArmFeedforward m_feedforward =
@@ -134,12 +138,17 @@ public class Arm extends TrapezoidProfileSubsystem {
   @Override
    public void useState(TrapezoidProfile.State setpoint) {
      // Calculate the feedforward from the sepoint
-     double feedforward = m_feedforward.calculate(setpoint.position, setpoint.velocity);
-     // Add the feedforward to the PID output to get the motor output
-     armIO.setSetpoint(setpoint, feedforward);
+    double time = Timer.getFPGATimestamp();
+    double accel = (setpoint.velocity - prev_velocity) / (time - prev_time);
+    prev_velocity = setpoint.velocity;
+    prev_time = time;
+    double feedforward = m_feedforward.calculate(setpoint.position, setpoint.velocity, accel);
+    // Add the feedforward to the PID output to get the motor output
+    armIO.setSetpoint(setpoint, feedforward);
 
-     SmartDashboard.putNumber("arm/setpoint position", setpoint.position);
-     SmartDashboard.putNumber("arm/setpoint velocity", setpoint.velocity);
+    SmartDashboard.putNumber("arm/setpoint accel", accel);
+    SmartDashboard.putNumber("arm/setpoint position", setpoint.position);
+    SmartDashboard.putNumber("arm/setpoint velocity", setpoint.velocity);
    }
 
   

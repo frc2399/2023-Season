@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.TrapezoidProfileSubsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
@@ -470,8 +471,10 @@ public class RobotContainer {
             new RunCommand(() -> a.setSpeed(0.15)).until(() -> debouncer.calculate(Math.abs(a.getEncoderSpeed()) < 0.01)),
             new InstantCommand(() -> a.setPosition(Constants.ArmConstants.INITIAL_OFFSET)),
             new PrintCommand("Arm reset, moving to motion profile command"),
-            new InstantCommand(() -> a.enable()),
             a.setArmGoalCommand(ArmConstants.TURTLE_ANGLE),
+            //Needed to let the PID realize that it shouldn't go to the previous setpoint before TURTLE_ANGLE. 
+            new WaitCommand(0.1),
+            new InstantCommand(() -> a.enable()),
             new PrintCommand("Escaped!")
         );
     }
